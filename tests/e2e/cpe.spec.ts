@@ -106,6 +106,7 @@ test.describe("CPE live workspace", () => {
       page.getByRole("link", { name: "อาคารทดสอบ E2E", exact: true }),
     ).toBeVisible();
     await page.goto("/cpe/estimate");
+    await page.getByRole("link", { name: "อาคารทดสอบ E2E", exact: true }).click();
     for (const i of [5, 4, 3, 2])
       await page
         .getByRole("button", { name: `ลบรายการ ${i}`, exact: true })
@@ -125,6 +126,7 @@ test.describe("CPE live workspace", () => {
       .click();
     await expect(page.getByText(/รุ่น 2/)).toBeVisible();
     await page.goto("/cpe/costcheck");
+    await page.getByRole("link", { name: "อาคารทดสอบ E2E", exact: true }).click();
     await page
       .getByRole("button", {
         name: "ยืนยันผลตรวจและส่งให้ฝ่ายขาย",
@@ -133,6 +135,7 @@ test.describe("CPE live workspace", () => {
       .click();
     await expect(page.getByText(/ยืนยันต้นทุนแล้วเมื่อ/)).toBeVisible();
     await page.goto("/cpe/bidsim");
+    await page.getByRole("link", { name: "อาคารทดสอบ E2E", exact: true }).click();
     await page
       .getByRole("button", { name: "ใช้ราคานี้เป็นราคาเสนอ", exact: true })
       .click();

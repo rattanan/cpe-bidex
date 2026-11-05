@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type ReactNode } from "react";
-import { Plus, ArrowUpRight, FolderOpen, Search } from "lucide-react";
+import { useState, useTransition, type MouseEvent, type ReactNode } from "react";
+import { Plus, FolderOpen, Search, PanelRightOpen, LoaderCircle } from "lucide-react";
 import { PageNumberNavigation } from "@/components/page-number-navigation";
 import { SortableTableHeader } from "@/components/sortable-table-header";
 import {
@@ -121,9 +121,19 @@ function url(data: CpePageData, overrides: Record<string, string> = {}) {
 }
 export function CpeWorkspace({ data }: { data: CpePageData }) {
   const router = useRouter();
-  const [create, setCreate] = useState(data.filters.create === "1");
+  const [isOpening, startNavigation] = useTransition();
   const definition = SCREENS.find((s) => s.id === data.screen)!;
   const { filters: f, screen } = data;
+  const create = f.create === "1";
+  const navigate = (href: string, replace = false) => startNavigation(() => {
+    if (replace) router.replace(href, { scroll: false });
+    else router.push(href, { scroll: false });
+  });
+  const openRecord = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (!isOpening) navigate(url(data, { id, create: "" }));
+  };
   const createPermission = (
     {
       sales: "cpe.sales.manage",
@@ -151,8 +161,9 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
   const lost = data.totals.find((t) => t.status === OS.lost);
   const active = data.totals.find((t) => t.status === OS.active);
   return (
-    <div className="cpe-workspace">
+    <div className="cpe-workspace" aria-busy={isOpening}>
       <Toast />
+      {isOpening && <div className="cpe-opening" role="status"><LoaderCircle aria-hidden="true" />กำลังโหลดข้อมูล…</div>}
       <nav className="cpe-process" aria-label="กระบวนการทำงาน 9 ขั้น">
         {PROCESS.map(([label, target], i) => {
           const allowed = data.permissions.includes(
@@ -210,8 +221,8 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
           {createPermission && permission(data, createPermission) && (
             <button
               className="primary"
-              onClick={() => setCreate(true)}
-              disabled={!f.organizationId}
+              onClick={() => navigate(url(data, { create: "1" }))}
+              disabled={!f.organizationId || isOpening}
             >
               <Plus size={16} />{" "}
               {screen === "sales"
@@ -480,7 +491,7 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
                       label={label}
                     />
                   ))}
-                  <th scope="col">รายละเอียด</th>
+                  <th scope="col">ดำเนินการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -488,14 +499,13 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
                   <tr key={row.id}>
                     <td className="cpe-code">{row.code}</td>
                     <td>
-                      <Link className="link" href={url(data, { id: row.id })}>
-                        {row.name}
-                      </Link>
+                      {screen === "cash" ? <strong>{row.name}</strong> : <Link className="link" href={url(data, { id: row.id, create: "" })} scroll={false} onClick={(event) => openRecord(event, row.id)} aria-haspopup="dialog">{row.name}</Link>}
                       <small className="cpe-sub block">{row.description}</small>
                     </td>
                     <td className="cpe-number">{fmt(row.amount)}</td>
                     <td>
                       <span className="cpe-chip">{row.status}</span>
+                      {screen !== "cash" && row.detail && <small className="cpe-sub block">{row.detail}</small>}
                     </td>
                     <td>
                       {screen === "cash" ? (
@@ -511,11 +521,14 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
                         ) : null
                       ) : (
                         <Link
-                          href={url(data, { id: row.id })}
+                          href={url(data, { id: row.id, create: "" })}
                           className="cpe-detail-link"
+                          scroll={false}
+                          onClick={(event) => openRecord(event, row.id)}
+                          aria-haspopup="dialog"
+                          aria-label={`เปิดรายละเอียด ${row.code} ${row.name}`}
                         >
-                          {row.detail || "เปิดรายละเอียด"}
-                          <ArrowUpRight size={14} />
+                          <PanelRightOpen size={18} aria-hidden="true" /> เปิดรายละเอียด
                         </Link>
                       )}
                     </td>
@@ -551,13 +564,6 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
           />
         </section>
       )}
-      {["estimate", "costcheck", "bidsim"].includes(screen) &&
-        data.opportunityDetail && (
-          <OpportunityPanel
-            key={`${screen}:${data.opportunityDetail.id}:${data.opportunityDetail.version}`}
-            data={data}
-          />
-        )}
       {screen === "forecast" && <ForecastSummary data={data} />}
       {screen === "knowledge" && (
         <Knowledge data={data} key={data.masterVersion} />
@@ -568,15 +574,13 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
             <RfqGenerator data={data} />
           </Card>
         )}
-      {f.id &&
-        !["estimate", "costcheck", "bidsim", "knowledge", "cash"].includes(
-          screen,
-        ) && (
+      {f.id && !create && screen !== "cash" && (
           <Drawer
-            title={definition.label + " · รายละเอียด"}
-            onClose={() => router.push(url(data, { id: "" }))}
+            key={`detail:${screen}:${f.id}`}
+            title={definition.label + " · " + (data.opportunityDetail?.code ?? data.catalogDetail?.code ?? data.vendorDetail?.code ?? data.rfqDetail?.code ?? data.projectDetail?.code ?? "รายละเอียด")}
+            onClose={() => navigate(url(data, { id: "" }), true)}
           >
-            {screen === "sales" && (
+            {["sales", "estimate", "costcheck", "bidsim", "knowledge"].includes(screen) && (
               <OpportunityPanel
                 key={data.opportunityDetail?.version}
                 data={data}
@@ -590,6 +594,7 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
         )}
       {create && (
         <Drawer
+          key={`create:${screen}`}
           title={
             screen === "sales"
               ? "รับงานใหม่"
@@ -600,15 +605,13 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
                   : "เพิ่มลูกหนี้ / เจ้าหนี้"
           }
           onClose={() => {
-            setCreate(false);
-            router.replace(url(data, { create: "" }));
+            navigate(url(data, { create: "" }), true);
           }}
         >
           <CreateForm
             data={data}
             onSaved={() => {
-              setCreate(false);
-              router.replace(url(data, { create: "" }));
+              navigate(url(data, { create: "" }), true);
             }}
           />
         </Drawer>
@@ -791,6 +794,7 @@ function OpportunityPanel({ data }: { data: CpePageData }) {
           </Note>
         )}
       </Card>
+      {data.screen === "estimate" && closed && <Note>งานนี้บันทึกผล “{o.status}” แล้ว จึงแสดงเป็นข้อมูลอ้างอิง การแก้ไข BOQ ใช้กับงานที่ยังอยู่ระหว่างเสนอราคา</Note>}
       {data.screen === "estimate" &&
         !closed &&
         permission(data, "cpe.estimate.manage") && (
@@ -2427,7 +2431,7 @@ function Knowledge({ data }: { data: CpePageData }) {
               ค้นหา กรองประเภทงาน/ผล และเปลี่ยนหน้าจากตารางด้านบนได้ ·
               งานที่ไม่ได้และงานที่ได้จะคงอยู่เพื่อใช้วิเคราะห์ครั้งถัดไป
             </Note>
-            {data.opportunityDetail && <OpportunityPanel data={data} />}
+            <p className="cpe-sub">กด “เปิดรายละเอียด” ที่รายการด้านบนเพื่อดูข้อมูลและแบบฟอร์มของงานนั้น</p>
           </Card>
         ) : (
           <MasterEditor data={data} />

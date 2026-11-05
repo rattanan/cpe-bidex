@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect, type ReactNode } from "react";
+import { useId, useRef, useState, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 export type Field = {
   name: string;
@@ -214,10 +214,24 @@ export function Drawer({
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const titleId = useId();
+  const close = () => {
+    ref.current?.close();
+    onClose();
+    document.querySelector<HTMLElement>("#main-content")?.focus({ preventScroll: true });
+  };
   useEffect(() => {
     const dialog = ref.current;
-    dialog?.showModal();
-    return () => dialog?.close();
+    if (!dialog) return;
+    const previousOverflow = document.body.style.overflow;
+    if (!dialog.open) dialog.showModal();
+    document.body.style.overflow = "hidden";
+    heading.current?.focus({ preventScroll: true });
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
   }, []);
   return (
     <dialog
@@ -225,7 +239,7 @@ export function Drawer({
       ref={ref}
       onCancel={(event) => {
         event.preventDefault();
-        onClose();
+        close();
       }}
       onClick={(event) => {
         if (event.target === event.currentTarget) {
@@ -236,23 +250,24 @@ export function Drawer({
             event.clientY < rect.top ||
             event.clientY > rect.bottom
           )
-            onClose();
+            close();
         }
       }}
-      aria-labelledby="cpe-drawer-title"
+      aria-labelledby={titleId}
     >
       <div className="cpe-drawer-head">
-        <h2 id="cpe-drawer-title">{title}</h2>
+        <div><p className="cpe-drawer-eyebrow">รายละเอียดและแบบฟอร์ม</p><h2 id={titleId} ref={heading} tabIndex={-1}>{title}</h2></div>
         <button
           className="secondary"
           type="button"
-          onClick={onClose}
+          onClick={close}
           aria-label="ปิดรายละเอียด"
         >
-          ✕
+          ✕ ปิด
         </button>
       </div>
       <div className="cpe-drawer-body">{children}</div>
+      <div className="cpe-drawer-footer"><span>ตรวจสอบข้อมูลให้ครบก่อนบันทึก</span><button type="button" className="secondary" onClick={close}>ปิดหน้าต่าง</button></div>
     </dialog>
   );
 }

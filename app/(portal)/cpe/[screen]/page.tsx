@@ -40,7 +40,7 @@ export default async function CpePage({
     );
   return (
     <CpeWorkspace
-      key={`${screen}:${data.filters.organizationId}:${data.filters.id}:${data.filters.page}`}
+      key={`${screen}:${data.filters.organizationId}:${data.filters.id}:${data.filters.page}:${data.filters.create}`}
       data={data}
     />
   );

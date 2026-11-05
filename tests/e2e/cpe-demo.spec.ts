@@ -43,6 +43,73 @@ test.describe("CPE seeded prototype preview", () => {
     await page.goto("/cpe/exec");
     await page.screenshot({ path: "/tmp/cpe-demo-preview/admin-dashboard.png", fullPage: true });
   });
+  test("record dialogs and same-page quick-create reopen reliably", async ({ page }) => {
+    test.setTimeout(180000);
+    const file = process.env.CPE_DEMO_CREDENTIALS_FILE;
+    if (!file) throw new Error("Provide protected demo credentials");
+    const user = JSON.parse(fs.readFileSync(file, "utf8")).accounts.find((account: { key: string }) => account.key === "tester");
+    await page.goto("/login");
+    await page.getByLabel("อีเมล").fill(user.email);
+    await page.getByLabel("รหัสผ่าน", { exact: true }).fill(user.password);
+    await page.getByRole("button", { name: "เข้าสู่ระบบ", exact: true }).click();
+    await expect(page).toHaveURL(/\/cpe\//);
+    const dialog = page.getByRole("dialog");
+    await page.getByRole("button", { name: "ใช้โหมดมืด", exact: true }).click();
+    for (const screen of ["estimate", "costcheck", "bidsim", "sales", "catalog", "forecast", "vendors", "procurement", "projects", "knowledge"]) {
+      await page.goto(`/cpe/${screen}`);
+      const action = page.locator(".cpe-detail-link").first();
+      const href = await action.getAttribute("href");
+      const code = await page.locator("table.table tbody tr").first().locator("td").first().innerText();
+      await action.click();
+      await expect(dialog).toBeVisible();
+      await expect(dialog.locator(".cpe-drawer-head h2")).toContainText(code);
+      await expect(dialog.locator(".cpe-drawer-head h2")).toBeFocused();
+      if (screen === "estimate") await expect(dialog.getByText(/งานนี้บันทึกผล/)).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(dialog).not.toBeVisible();
+      await expect(page).not.toHaveURL(/[?&]id=/);
+      await page.locator(".cpe-detail-link").first().click();
+      await expect(dialog).toBeVisible();
+      await dialog.getByRole("button", { name: "ปิดหน้าต่าง", exact: true }).click();
+      await expect(page).not.toHaveURL(/[?&]id=/);
+      await page.goto(href!);
+      await expect(dialog).toBeVisible();
+      await page.goBack();
+      await expect(dialog).not.toBeVisible();
+      await page.goForward();
+      await expect(dialog).toBeVisible();
+      if (screen === "estimate") await page.screenshot({ path: "/tmp/cpe-demo-preview/estimate-dialog.png" });
+      await dialog.getByRole("button", { name: "ปิดรายละเอียด", exact: true }).click();
+      await expect(page).not.toHaveURL(/[?&]id=/);
+    }
+    for (const [screen, action, quick] of [["sales", "รับงานใหม่", "รับงานใหม่"], ["catalog", "เพิ่มรายการต้นทุน", "เพิ่มฐานต้นทุน"], ["vendors", "เพิ่มผู้รับเหมา", "เพิ่มผู้รับเหมา"], ["cash", "เพิ่มลูกหนี้ / เจ้าหนี้", ""]]) {
+      await page.goto(`/cpe/${screen}`);
+      for (let round = 0; round < 2; round++) {
+        await page.locator("#main-content").getByRole("button", { name: action, exact: true }).click();
+        await expect(dialog).toBeVisible();
+        await page.keyboard.press("Escape");
+        await expect(page).not.toHaveURL(/[?&]create=1/);
+      }
+      if (quick) {
+        await page.locator(".quick-create summary").click();
+        await page.locator(".quick-create-menu").getByRole("link", { name: quick, exact: true }).click();
+        await expect(dialog).toBeVisible();
+        await dialog.getByRole("button", { name: "ปิดหน้าต่าง", exact: true }).click();
+        await expect(page).not.toHaveURL(/[?&]create=1/);
+      }
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/cpe/estimate");
+    await page.locator(".cpe-detail-link").first().click();
+    await expect(dialog).toBeVisible();
+    const bounds = await dialog.boundingBox();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.y).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+    expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(844);
+    await expect(dialog.getByRole("button", { name: "ปิดหน้าต่าง", exact: true })).toBeInViewport();
+    await page.screenshot({ path: "/tmp/cpe-demo-preview/estimate-dialog-mobile.png" });
+  });
   test("renders the populated screens and checks a restricted PM account", async ({
     page,
   }) => {

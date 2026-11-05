@@ -11,6 +11,10 @@ NTOP routes, business records, `/api/v1` contracts and historical migrations are
 The active sidebar, command palette and quick-create surface CPE plus the existing user, organization and audit administration pages.
 The legacy AI assistant and field-assistance behavior remain available on legacy routes and do not decorate CPE forms.
 
+Record details now open consistently in a centered native dialog, including Estimate/BOQ, Cost Check, Bid Simulation and Knowledge archive entries that formerly rendered below the list. The URL `id` identifies the record and `create=1` is the sole create-dialog state, so same-page quick-create, direct links and browser back/forward work consistently. Search, sort, organization and numbered-page parameters are preserved when opening/closing. Stage labels such as “ทำสัญญา” are displayed as record information; a separate “เปิดรายละเอียด” action clearly opens the dialog. Cash register names are plain text, retaining the existing explicit settlement action.
+
+Dialogs have a dimmed backdrop, descriptive record heading, internal scrolling, visible header/footer close buttons, heading focus on open and main-content focus on close. Closed historical estimates explicitly explain their read-only BOQ behavior. Loading feedback is shown while record navigation is pending. E2E covers repeated opening, same-page quick-create, direct links, history navigation, desktop/mobile bounds and the full local BOQ → review → bid → won/project workflow. No business transitions, permissions or schema change.
+
 Reuse: authentication/session/login controls; users and effective role assignments; organization hierarchy; database-backed permission grants; append-only hash-chained audit; Next/React/Prisma/Vitest/Playwright; `PageNumberNavigation`, `SortableTableHeader`, table and shell primitives.
 Construction aggregates own their new `Cpe*` tables. They do not rewrite telecom Opportunity, Solution Design, BOQ, Quote or Contract records. The old telecom BOQ contains recurring service charges and cannot safely be relabelled as a construction estimate.
 
