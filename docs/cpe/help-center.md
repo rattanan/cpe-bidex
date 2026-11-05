@@ -21,3 +21,11 @@ AI retrieval selects only active CPE guides, ranks the actual `/cpe/<screen>` or
 - When a CPE screen or command changes, review its guide against actual labels and constraints, update its review date, related links and tests. Keep company/private data and secrets out of article text.
 
 No database migration, seed, role assignment or new runtime setting is required. This is an application release; retain database/audit state when rolling back code.
+
+## Changed files
+
+- Content and compatibility: `lib/help-center.ts`, `lib/help-center-types.ts`, `lib/help-center-legacy.ts`.
+- Help pages: `app/(portal)/help/page.tsx`, `app/(portal)/help/[slug]/page.tsx`.
+- Existing UI styling/helpers: `components/company-brand.css`, `components/form-field-assistance.tsx`, `components/expandable-text-assistance.tsx`, `components/province-input-assistance.tsx`. Legacy automatic field helpers skip documentation pages; the separate page assistant is retained.
+- Regression coverage: `tests/unit/cpe/help-center.test.ts`, `tests/unit/app-shell-help-contract.test.ts`, `tests/unit/page-assistant-service.test.ts`, `tests/e2e/cpe-help.spec.ts`, `tests/e2e/cpe-demo.spec.ts`.
+- Documentation: this file and `docs/server-deployment.md`.
