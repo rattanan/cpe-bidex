@@ -1,3 +1,33 @@
+# CPE server deployment — confirmed target
+
+The owner explicitly confirmed this target on 2026-11-05:
+
+- SSH: `ntop`
+- Application: `/opt/apps/cpe-bidex`
+- PM2 process: `cpe-bidex`, bound to `127.0.0.1:3015`
+- MySQL: local `cpe_bidex` (MySQL 8.4 verified)
+- Source delivery: reviewed Git archive; the deployed CPE directory has no Git checkout.
+
+The retained NTOP runbook below is not the deployment procedure for this CPE copy.
+Server preflight found that `/opt/apps/ntop` and `/opt/apps/ntop-dev` share the
+`ntop` database. CPE deployment and demo seeding must use the separate CPE target.
+
+Before activation, back up the CPE database and preserve the current application
+release. Build a separate staging directory using the existing protected CPE
+environment, run lint/typecheck/tests/build, apply migrations explicitly to
+`cpe_bidex`, initialize the first admin only if the database has no users, and
+activate the release while restarting only PM2 `cpe-bidex`. Keep CPE document
+storage under `/opt/apps/cpe-bidex-private/documents`. Retain the previous release
+and database backup for rollback; do not delete audit or existing records.
+
+After activation, run the opt-in demo command from `/opt/apps/cpe-bidex` with
+`--target cpe-bidex`; it checks the exact application path and local database.
+Deliver generated credentials from a protected file, verify real login and all
+twelve CPE screens, and record the release hash and checks. Do not reuse or modify
+NTOP production configuration or restart its processes.
+
+---
+
 # Self-hosted NTOP server deployment
 
 ## Decision status

@@ -68,20 +68,24 @@ Set `DATABASE_URL` using the normal protected environment mechanism. The local t
 
 The credential output path must be absolute and resolve outside the repository. The file is created exclusively with mode **0600**; credentials are not printed to stdout, application logs or audit. An existing credential file is never overwritten. If its destination fails, the database transaction rolls back. If a commit itself fails after credentials were persisted, inspect the protected file and database before retrying; do not delete users or reset passwords automatically.
 
-## NTOP development server
+## Confirmed CPE server
 
-Follow `docs/server-deployment.md`: commit/push the reviewed revision, `ssh ntop`, `/opt/apps/ntop-dev`, then `./deploy.sh`, including the explicit CPE migration. Verify the actual development database before running:
+The owner confirmed `/opt/apps/cpe-bidex`, local database `cpe_bidex`, and PM2
+process `cpe-bidex` on port 3015. See `docs/server-deployment.md` for the isolated
+release procedure. The database was empty at preflight; apply all forward
+migrations and bootstrap the first administrative account before the demo seed.
 
 ```sh
 CPE_DEMO_SEED=1 npm run db:seed:cpe-demo -- \
-  --target ntop-dev \
-  --actor-email YOUR_EXISTING_DEV_ADMIN_EMAIL \
-  --credentials-out /tmp/cpe-demo-accounts.json
+  --target cpe-bidex \
+  --actor-email YOUR_EXISTING_CPE_ADMIN_EMAIL \
+  --credentials-out /opt/apps/cpe-bidex-private/demo-accounts.json
 ```
 
-The `ntop-dev` guard requires the exact deployment path and an explicitly named development/test database. Read the protected credential file only for delivery to the owner, then use the new role accounts to verify the deployed site. Do not run a general production seed or change deployment secrets.
-
-As of this change, SSH access and the earlier requested default-branch push confirmation are still outstanding. Sample data and accounts have been exercised on the local isolated test database; this document does not claim that the public server has been updated.
+This explicit target only permits the exact CPE application path and local
+`cpe_bidex` database. It does not permit the shared `ntop` database. Keep the
+credential file mode 0600 and deliver it only to the owner. No deployment seed
+runs automatically during app startup.
 
 ## Replay and verification
 

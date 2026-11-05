@@ -206,4 +206,21 @@ describe("explicit CPE prototype sample data", () => {
     ])
       expect(() => assertDemoSeedTarget(input)).toThrow();
   });
+  it("allows the owner-confirmed CPE target only with its exact path and local database", () => {
+    const approved = {
+      url: "mysql://user:synthetic@localhost/cpe_bidex",
+      target: "cpe-bidex",
+      cwd: "/opt/apps/cpe-bidex",
+      optIn: "1",
+    };
+    expect(assertDemoSeedTarget(approved).database).toBe("cpe_bidex");
+    for (const input of [
+      { ...approved, cwd: "/opt/apps/ntop-dev" },
+      { ...approved, url: "mysql://user:synthetic@localhost/ntop" },
+      { ...approved, url: "mysql://user:synthetic@remote.example/cpe_bidex" },
+      { ...approved, target: "local" },
+      { ...approved, optIn: undefined },
+    ])
+      expect(() => assertDemoSeedTarget(input)).toThrow();
+  });
 });

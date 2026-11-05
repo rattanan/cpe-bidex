@@ -49,6 +49,7 @@ async function main() {
   const result = await seedCpeDemo(prisma, {
     actorId: actor.id,
     asOf,
+    target,
     persistCredentials: (credentials) => {
       const fd = fs.openSync(protectedOutput, "wx", 0o600);
       try {

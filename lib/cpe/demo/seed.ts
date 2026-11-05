@@ -47,9 +47,14 @@ export function assertDemoSeedTarget(input: {
     );
   const url = new URL(input.url);
   const database = decodeURIComponent(url.pathname.slice(1));
+  const approvedCpe =
+    input.target === "cpe-bidex" &&
+    path.resolve(input.cwd) === "/opt/apps/cpe-bidex" &&
+    ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) &&
+    database === "cpe_bidex";
   if (
     !/^(mysql):$/.test(url.protocol) ||
-    !/(^|[_-])(dev|test|uat|demo)([_-]|$)/i.test(database) ||
+    (!/(^|[_-])(dev|test|uat|demo)([_-]|$)/i.test(database) && !approvedCpe) ||
     /prod(uction)?/i.test(database)
   )
     throw new Error(
@@ -61,7 +66,15 @@ export function assertDemoSeedTarget(input: {
   } else if (input.target === "ntop-dev") {
     if (path.resolve(input.cwd) !== "/opt/apps/ntop-dev")
       throw new Error("ntop-dev must run from /opt/apps/ntop-dev");
-  } else throw new Error("Only local or ntop-dev targets are supported");
+  } else if (input.target === "cpe-bidex") {
+    if (!approvedCpe)
+      throw new Error(
+        "CPE requires /opt/apps/cpe-bidex and the local cpe_bidex database",
+      );
+  } else
+    throw new Error(
+      "Only local, ntop-dev or the confirmed cpe-bidex target is supported",
+    );
   return { database, host: url.hostname };
 }
 export type DemoCredentials = {
@@ -78,6 +91,7 @@ export async function seedCpeDemo(
     actorId: string;
     asOf: string;
     namespace?: string;
+    target?: string;
     persistCredentials: (credentials: DemoCredentials[]) => void;
   },
 ) {
@@ -86,7 +100,12 @@ export async function seedCpeDemo(
   >`SELECT DATABASE() AS name`;
   if (
     !database[0]?.name ||
-    !/(^|[_-])(dev|test|uat|demo)([_-]|$)/i.test(database[0].name) ||
+    (!/(^|[_-])(dev|test|uat|demo)([_-]|$)/i.test(database[0].name) &&
+      !(
+        database[0].name === "cpe_bidex" &&
+        input.target === "cpe-bidex" &&
+        path.resolve(process.cwd()) === "/opt/apps/cpe-bidex"
+      )) ||
     /prod(uction)?/i.test(database[0].name)
   )
     throw new Error(
