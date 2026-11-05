@@ -26,3 +26,9 @@ Self-hosted Noto Sans Thai 400/500/600/700 is sourced from Google Fonts and dist
 No database migration, seed, user change or new environment configuration is needed. Rollback is an application release change only.
 
 Product labels are shared through `PRODUCT` in `lib/company-profile.ts`: CPE Project Bid Excellence, CPE, and CPE AI Assistant. Help Center, administrative copy and handoff badges use this identity; spreadsheet author metadata uses the legal company name. The page assistant's identity prompt is versioned as `page-assistant.prompt.v2`; its grounding, read-only constraints and input isolation remain intact. Retained compatibility identifiers (session/storage keys, encryption context, integration environment variables and issued API key prefixes) are technical contracts, not product labels, and remain stable.
+
+## Login contrast correction — 2026-11-06
+
+The login card remains white in both themes. It now defines its own foreground, muted foreground, input surface and color-scheme tokens so the shared dark-theme field-label rule cannot inherit a white foreground into this white card. Typed text, caret, placeholders and browser autofill also have explicit readable colors. Portal forms continue to use their actual light/dark surfaces.
+
+Browser regression measures composited text/background contrast (minimum 4.5:1) for login labels and typed inputs at desktop/mobile sizes in both themes, controls across all twelve CPE pages, and the sales/catalog/vendor/finance creation drawers. The optional `CPE_ADMIN_CREDENTIALS_FILE` acceptance case checks the administrator's populated demo dashboard without logging credentials.

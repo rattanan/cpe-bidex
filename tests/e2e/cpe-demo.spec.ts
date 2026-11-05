@@ -1,12 +1,48 @@
 import fs from "node:fs";
 import { test, expect } from "@playwright/test";
 import { SCREENS } from "../../lib/cpe/config";
+import { expectReadableText } from "./helpers/contrast";
 const enabled = process.env.CPE_DEMO_E2E === "1";
 test.describe("CPE seeded prototype preview", () => {
   test.skip(
     !enabled,
     "Requires the explicit local demo seed and its protected credential file",
   );
+  test("login labels and typed text remain readable in both themes and viewport sizes", async ({ page }) => {
+    fs.mkdirSync("/tmp/cpe-demo-preview", { recursive: true });
+    for (const theme of ["light", "dark"]) {
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto("/login");
+        await page.evaluate((value) => {
+          document.documentElement.dataset.theme = value;
+          document.documentElement.style.colorScheme = value;
+        }, theme);
+        await page.getByLabel("อีเมล").fill("contrast.preview@example.test");
+        await page.getByLabel("รหัสผ่าน", { exact: true }).fill("PreviewOnlyNotACredential");
+        for (const selector of ['label[for="email"]', 'label[for="password"]', '#email', '#password']) {
+          await expectReadableText(page.locator(selector));
+        }
+        await page.screenshot({ path: `/tmp/cpe-demo-preview/login-contrast-${theme}-${width}.png`, fullPage: true });
+      }
+    }
+  });
+  test("configured administrator can see the existing demo dashboard", async ({ page }) => {
+    const file = process.env.CPE_ADMIN_CREDENTIALS_FILE;
+    test.skip(!file, "Requires the owner-provisioned CPE administrator credential file");
+    const administrator = JSON.parse(fs.readFileSync(file!, "utf8")) as { email: string; password: string };
+    await page.goto("/login");
+    await page.getByLabel("อีเมล").fill(administrator.email);
+    await page.getByLabel("รหัสผ่าน", { exact: true }).fill(administrator.password);
+    await page.getByRole("button", { name: "เข้าสู่ระบบ", exact: true }).click();
+    await expect(page).toHaveURL(/\/cpe\//);
+    await expect(page.getByLabel("เลือกหน่วยงาน")).toContainText("ข้อมูลตัวอย่างสำหรับทดสอบ");
+    await expect(page.locator(".cpe-kpi").first().locator("strong")).not.toHaveText(/^0(?:\.0+)? ลบ\.$/);
+    await page.goto("/cpe/sales");
+    expect(await page.locator("table.table > tbody > tr").count()).toBeGreaterThan(1);
+    await page.goto("/cpe/exec");
+    await page.screenshot({ path: "/tmp/cpe-demo-preview/admin-dashboard.png", fullPage: true });
+  });
   test("renders the populated screens and checks a restricted PM account", async ({
     page,
   }) => {
@@ -51,6 +87,26 @@ test.describe("CPE seeded prototype preview", () => {
         expect(
           await page.locator("table.table > tbody > tr").count(),
         ).toBeGreaterThan(0);
+      for (const theme of ["dark", "light"]) {
+        await page.getByRole("button", { name: theme === "dark" ? "ใช้โหมดมืด" : "ใช้โหมดสว่าง", exact: true }).click();
+        for (const control of await page.locator('.cpe-workspace input:not([type="hidden"]):not([type="checkbox"]):not([type="range"]), .cpe-workspace select, .cpe-workspace textarea').all()) {
+          if (await control.isVisible()) await expectReadableText(control);
+        }
+      }
+    }
+    for (const [screen, action] of [["sales", "รับงานใหม่"], ["catalog", "เพิ่มรายการต้นทุน"], ["vendors", "เพิ่มผู้รับเหมา"], ["cash", "เพิ่มลูกหนี้ / เจ้าหนี้"]]) {
+      await page.goto(`/cpe/${screen}`);
+      for (const theme of ["dark", "light"]) {
+        await page.getByRole("button", { name: theme === "dark" ? "ใช้โหมดมืด" : "ใช้โหมดสว่าง", exact: true }).click();
+        await page.locator("#main-content").getByRole("button", { name: action, exact: true }).click();
+        const drawer = page.locator("dialog.cpe-drawer");
+        await expect(drawer).toBeVisible();
+        for (const item of await drawer.locator('.cpe-field > span, input:not([type="hidden"]):not([type="checkbox"]), select, textarea').all()) {
+          if (await item.isVisible()) await expectReadableText(item);
+        }
+        await page.keyboard.press("Escape");
+        await expect(drawer).not.toBeVisible();
+      }
     }
     fs.mkdirSync("/tmp/cpe-demo-preview", { recursive: true });
     await page.setViewportSize({ width: 1440, height: 1050 });

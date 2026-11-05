@@ -89,6 +89,8 @@ runs automatically during app startup.
 
 ## Replay and verification
 
+On 2026-11-06 the owner explicitly requested that `admin@cpe-bidex.local` be assigned to the populated demo organization. A protected database backup preceded one-time environment provisioning of an active `ADMIN` / `ORG_UNIT` assignment to `CPE-DEMO-V1`, recorded as `authorization.role-assignment.bootstrap` with the owner's authorization reason. This is a scoped environment correction; interactive self-assignment restrictions and authorization code remain unchanged. A repeated seed returned `already-seeded`, preserving the 44 opportunities, 10 projects, existing edits and account passwords. Real administrator login then verified the populated dashboard and sales list.
+
 The completed seed receipt prevents a second import, even if a different date/operator is supplied. A replay does not recreate users, replace passwords, reset master values or overwrite user edits. A changed fixture requires an explicit dataset-version change and review; it does not update an already seeded organization automatically.
 
 - `tests/unit/cpe/cpe-demo.test.ts`: counts, linkage, Decimal totals/rounding, source commitments, price dates, reference closure, units, deterministic IDs, target guards and unprivileged account roles.
