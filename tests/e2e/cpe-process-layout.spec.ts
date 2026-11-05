@@ -69,7 +69,8 @@ test("live CPE navigation fits with actual page content and fonts", async ({ pag
     await page.evaluate(() => document.fonts.ready);
     const nav = page.getByRole("navigation", { name: "กระบวนการทำงาน 9 ขั้น" });
     await expect(nav.locator(":scope > *")).toHaveCount(9);
-    expect(await nav.evaluate((element) => {
+    // Resizing animates the shell's sidebar margin; wait for its final geometry.
+    await expect.poll(() => nav.evaluate((element) => {
       const bounds = element.getBoundingClientRect();
       return bounds.left >= 0 && bounds.right <= innerWidth && element.scrollWidth <= element.clientWidth + 1
         && [...element.children].every((child) => {

@@ -90,6 +90,14 @@ Rollback material is under `/opt/apps/cpe-bidex-private/backups`: original datab
 
 ---
 
+## Nine-step navigation fit — 2026-11-06
+
+- Active application revision: `46a47478edc71580ec6433cc298de320e3bba086`, pushed to CPE `origin/main`. The process navigation shows nine columns above 1400px and a three-by-three grid on smaller viewports, with wrapping labels and no horizontal menu scrolling. Removed the branding override that forced each step to be at least 200px wide.
+- Source archive SHA-256: `af0ff57412c2b3ede18b446f32c8a73978f4ffb51df7efe23e4771b62518fd76`, verified before staging. Local and server lint/typecheck/test/build passed; 828 tests passed, 34 opt-in tests skipped, and lint retains seven existing prospect warnings.
+- Live HTTPS acceptance: the six retained assistant, login contrast, administrator scope, record dialog, all-screen/PM-denial and Help Center scenarios passed. All fifteen navigation tests passed, including real page/font bounds at 320–1728px and fourteen isolated CSS/sidebar cases. The first live navigation assertion measured the existing sidebar margin animation during resizing; its follow-up test-only correction polls for final geometry. No application behavior correction was required.
+- Only PM2 `cpe-bidex` restarted. Local login returned HTTP 200 and active release metadata matched. NTOP and NTOP development process IDs remained unchanged. No migrations, seed, account/permission or AI configuration changes were made. AI still requires provider configuration in `/admin/ai-settings`.
+- Protected database backup: `/opt/apps/cpe-bidex-private/backups/db-before-46a4747.sql`; prior application: `/opt/apps/cpe-bidex-private/backups/app-before-46a4747`. Code rollback retains current business data and audit history.
+
 # Self-hosted NTOP server deployment
 
 ## Decision status
