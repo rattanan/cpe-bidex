@@ -684,7 +684,8 @@ export async function loadCpePage(
       SUM(m.cashIn) AS cashIn, SUM(m.cashOut) AS cashOut, SUM(m.forecastIn) AS forecastIn, SUM(m.forecastOut) AS forecastOut
     FROM CpeProjectMonth m JOIN CpeProject p ON p.id=m.projectId JOIN CpeOpportunity o ON o.id=p.opportunityId
     WHERE ${sqlScope("o")}
-    GROUP BY month ORDER BY month DESC LIMIT 24`)
+    GROUP BY DATE_FORMAT(DATE_ADD(p.startAt, INTERVAL (m.month - 1) MONTH), '%Y-%m')
+    ORDER BY month DESC LIMIT 24`)
       : [];
   const aging = ["cash", "exec"].includes(screen)
     ? await prisma.$queryRaw<

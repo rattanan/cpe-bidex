@@ -304,6 +304,17 @@ suite("CPE real database workflow", () => {
       );
       expect(data.screen).toBe(screen.id);
       expect(data.currentCash).toBe("40000");
+      if (screen.id === "exec" || screen.id === "cash") {
+        expect(data.monthly).toHaveLength(2);
+        expect(data.monthly.map((month) => month.cashIn)).toEqual([
+          "50000",
+          "100000",
+        ]);
+        expect(data.monthly.map((month) => month.cashOut)).toEqual([
+          "60000",
+          "50000",
+        ]);
+      }
     }
     const data = await loadCpePage(
       actor,
