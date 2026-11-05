@@ -44,13 +44,22 @@ Rollback material is under `/opt/apps/cpe-bidex-private/backups`: original datab
 
 ## Branding release — 2026-11-06 (Asia/Bangkok)
 
-- Active application revision: `ddfdea2d3a910692b84f31f7de194931ca311198` from `rattanan/cpe-bidex`. It includes CP Engineering's original logo, navy/cyan theme, self-hosted readable Thai fonts, public company profile at `/company`, and the remaining product-name cleanup including **CPE AI Assistant**. See [brand guidelines](brand-guidelines.md) for asset provenance and typography.
+- Branding application revision: `ddfdea2d3a910692b84f31f7de194931ca311198` from `rattanan/cpe-bidex`. It includes CP Engineering's original logo, navy/cyan theme, self-hosted readable Thai fonts, public company profile at `/company`, and the remaining product-name cleanup including **CPE AI Assistant**. See [brand guidelines](brand-guidelines.md) for asset provenance and typography.
 - Source archive SHA-256: `0b961478a6e0361cfc80ee18942e9638d06e2d92e4f59232aa06f41ac4070572`. Archive verified before extraction into a separate staging directory; dependency lock unchanged.
 - Server staging gates passed: `npm run lint` (0 errors, 7 existing prospect warnings), `npm run typecheck`, `npm test` (813 passed, 34 opt-in tests skipped), `npm run build`.
 - Public HTTPS Playwright acceptance passed (1 test): real tester login, all twelve populated CPE screens, rendered body/table/control font sizes, company contact links, dark mode, mobile overflow, Help Center and the **CPE AI Assistant** dialog title, logout and PM access denial. No browser runtime errors. The check opened the assistant without calling an AI provider.
 - `.cpe-release.json` confirms the active revision. Local port 3015 login returns HTTP 200. Only PM2 `cpe-bidex` was restarted and its process configuration saved.
 - No schema changes, migration execution, seeding, account/password changes or new environment configuration. Existing sample data and credentials are retained.
 - Transaction-consistent database backup: `/opt/apps/cpe-bidex-private/backups/db-before-ddfdea2.sql` (mode 0600). Prior application: `/opt/apps/cpe-bidex-private/backups/app-before-ddfdea2`. Roll back code using the procedure above while preserving the populated database and audit ledger.
+
+## Contrast and administrator demo access — 2026-11-06
+
+- Active application revision: `df2d0766995d45fcf21882ba8f82fbcdfddb2a45`. The login card defines local color tokens to prevent shared dark-mode labels becoming white on its white surface, with explicit typed-text/caret/autofill colors. Changed CSS and regression coverage are documented in [brand guidelines](brand-guidelines.md).
+- Owner explicitly requested demo access for `admin@cpe-bidex.local`. One-time scoped `ADMIN` / `ORG_UNIT` provisioning to `CPE-DEMO-V1` was recorded in append-only audit; interactive self-assignment rules remain unchanged. A protected backup preceded the assignment: `/opt/apps/cpe-bidex-private/backups/db-before-admin-demo-scope-20261106.sql` (0600).
+- The explicit CPE demo seed returned `already-seeded`: existing 44 opportunities, 10 projects, other sample records, user edits and passwords remain intact. No second dataset, account reset, schema change or migration was needed.
+- Local and server `lint`, `typecheck`, `test` (813 passed, 34 opt-in tests skipped) and production build passed; lint retains 7 existing prospect warnings.
+- Live HTTPS Playwright acceptance: **3 passed**. It measures text/background contrast >= 4.5:1 for login labels and filled inputs in light/dark desktop/mobile views, verifies the actual administrator's populated dashboard and sales list, checks controls on all twelve CPE pages and sales/catalog/vendor/finance drawers in both themes, and retains company/chat/mobile/PM-denial coverage.
+- The release delta was verified file-by-file against SHA-256 checksums before building. Only PM2 `cpe-bidex` was restarted; `.cpe-release.json` confirms the active revision and local login returns HTTP 200. Prior application is `/opt/apps/cpe-bidex-private/backups/app-before-df2d076` for code rollback; preserve current database/audit and the owner-approved scope assignment.
 
 ---
 
