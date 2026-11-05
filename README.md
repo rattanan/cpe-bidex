@@ -1,6 +1,6 @@
 # CPE Project Bid Excellence
 
-The active application is the CPE construction sales, estimating, procurement, project and cash workspace at `/cpe`. See [the requirement trace, setup and migration guide](docs/cpe/implementation.md). Existing NTOP routes and data are retained; unused menus are hidden.
+The active application is the CPE construction sales, estimating, procurement, project and cash workspace at `/cpe`. See [the requirement trace, setup and migration guide](docs/cpe/implementation.md). Existing NTOP routes and data are retained; unused menus are hidden. Optional [prototype-style sample data and scoped test accounts](docs/cpe/demo-data.md) use a separate explicit development seed.
 
 CPE requires MySQL 8-compatible JSON and analytical SQL. The MariaDB 5.5 bootstrap below applies to retained legacy NTOP tables and does not provision the new CPE workspace.
 

@@ -879,3 +879,9 @@
   color: inherit;
   cursor: pointer;
 }
+.cpe-app .user-chip small {
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

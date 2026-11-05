@@ -15,7 +15,9 @@
     "ai:key:ensure": "node scripts/ensure-ai-master-key.mjs",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "db:seed:cpe-demo": "node --import tsx scripts/seed-cpe-demo.ts",
+    "test:cpe:db": "RUN_CPE_DB_INTEGRATION=1 vitest run tests/integration/cpe-real-db.test.ts tests/integration/cpe-demo-real-db.test.ts --no-file-parallelism"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

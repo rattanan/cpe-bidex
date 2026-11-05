@@ -114,3 +114,7 @@ Both opt-in suites reject a non-local database or a database name outside the ex
 - `git diff --check`: passed.
 - The separate legacy `npm run test:db` suite was not run; its NTOP fixture setup is outside this CPE test environment. No claim is made about legacy database integration or MySQL 8 cluster/load/security acceptance.
 - Screenshots of desktop dashboard/project and mobile drawer were visually reviewed. No production data, migration, seed, deployment or external purchasing/payment action was executed.
+
+## Optional prototype dataset
+
+The owner subsequently requested realistic prototype-style sample data. See [CPE sample data and accounts](demo-data.md) for the opt-in development seed, six scoped accounts, data normalization and replay/target protections. The application still never substitutes mock data for empty production records.
