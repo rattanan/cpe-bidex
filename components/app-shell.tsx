@@ -80,6 +80,6 @@ export function AppShell({ children, user, notifications, version }: { children:
       <nav className="cpe-mobile-nav" aria-label="เมนู CPE สำหรับจอเล็ก">{visibleGroups.flatMap(group=>group.items).map(item=><Link key={item.href} href={item.href} aria-current={isActive(pathname,item.href)?"page":undefined}>{item.label}</Link>)}<Link href="/company" aria-current={pathname === "/company" ? "page" : undefined}>เกี่ยวกับบริษัท</Link></nav>
       <main className="content" id="main-content" tabIndex={-1}>{children}</main>
     </div>
-    {!pathname.startsWith("/cpe") && pathname !== "/company" && <AiChatBalloon key={pathname} pageLabel={currentLabel}/>}
+    <AiChatBalloon key={pathname} pageLabel={currentLabel}/>
   </div>;
 }

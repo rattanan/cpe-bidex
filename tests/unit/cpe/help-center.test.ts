@@ -48,7 +48,7 @@ describe("CPE Bidex Help Center", () => {
     expect(text("cpe-rfq-po")).toContain("ไม่ใช่การอัปโหลด");
     expect(text("cpe-material-forecast")).toContain("ไม่มีการดึงราคาตลาด");
     expect(text("cpe-knowledge-master")).toContain("ไม่อนุญาตให้ผู้เสนออนุมัติข้อเสนอของตนเอง");
-    expect(text("ai-page-assistant")).toContain("ไม่ได้มีผู้ช่วย AI เปิดใช้งานในทุกหน้า");
+    expect(text("ai-page-assistant")).toContain("12 หน้า CPE");
     expect(text("cpe-forms-troubleshooting")).toContain("ไม่ใช่ปุ่มยืนยันสัญญา");
   });
 });

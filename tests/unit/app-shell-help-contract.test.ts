@@ -22,6 +22,15 @@ describe("App shell and Help Center", () => {
     expect(shell).toContain('href: "/admin/audit"');
   });
 
+  it("mounts the assistant on all authenticated routes and retains the landscape launcher", () => {
+    const shell = read("components/app-shell.tsx");
+    expect(shell).toContain('    <AiChatBalloon key={pathname} pageLabel={currentLabel}/>');
+    expect(shell).not.toContain('pathname !== "/company" && <AiChatBalloon');
+    const css = read("app/globals.css");
+    expect(css).toContain('.ai-chat.open .ai-chat-trigger { display:none; }');
+    expect(css).not.toContain('  .ai-chat-trigger { display:none; }');
+  });
+
   it("loads notifications from owned production records instead of mock data", () => {
     const query = read("lib/notifications/header-notifications.ts");
     expect(query).toContain("ownerId: actorId");

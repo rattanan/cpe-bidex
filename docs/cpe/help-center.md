@@ -4,7 +4,7 @@ The owner requested replacing the active sales-platform Help Center with CPE Bid
 
 ## Sources and scope
 
-Content follows `docs/cpe/implementation.md`, `docs/cpe/demo-data.md`, the live CPE screen configuration, UI labels and command validation. It explains the actual BOQ/cost-review/bid/RFQ/PO/project/cash/master workflow. It does not advertise document upload/scanning, market-price feeds, bank transfers or AI approval as CPE capabilities. Provider settings and the optional assistant behavior are retained; CPE business pages do not acquire a new AI feature.
+Content follows `docs/cpe/implementation.md`, `docs/cpe/demo-data.md`, the live CPE screen configuration, UI labels and command validation. It explains the actual BOQ/cost-review/bid/RFQ/PO/project/cash/master workflow. It does not advertise document upload/scanning, market-price feeds, bank transfers or AI approval as CPE capabilities. Provider settings and the optional assistant behavior are retained; The existing read-only assistant is available on every authenticated CPE screen and the company page after the owner requested restoring its missing launcher.
 
 `lib/help-center.ts` is the active article/search/retrieval source, with shared types in `lib/help-center-types.ts`. Role filters use Executive, Sales, Estimator, Procurement, PM and Administrator labels. These filters choose documentation, not record access permissions. Article pages include a contents list and a link to the related workspace; existing page authorization still applies.
 

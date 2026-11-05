@@ -57,14 +57,19 @@ export function AiChatBalloon({ pageLabel }: { pageLabel: string }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      if (wasOpenRef.current) triggerRef.current?.focus();
+      wasOpenRef.current = false;
+      return;
+    }
+    wasOpenRef.current = true;
     const frame = requestAnimationFrame(() => inputRef.current?.focus());
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
-        triggerRef.current?.focus();
       }
     };
     window.addEventListener("keydown", closeOnEscape);
@@ -80,7 +85,6 @@ export function AiChatBalloon({ pageLabel }: { pageLabel: string }) {
 
   const close = () => {
     setOpen(false);
-    triggerRef.current?.focus();
   };
 
   const ask = async (nextQuestion: string) => {

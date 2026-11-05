@@ -9,7 +9,7 @@ The owner explicitly chose: use the CPE SRS as the new baseline; retain NTOP fun
 CPE is the default landing workspace at `/cpe`, with twelve screens under `/cpe/[screen]`.
 NTOP routes, business records, `/api/v1` contracts and historical migrations are retained.
 The active sidebar, command palette and quick-create surface CPE plus the existing user, organization and audit administration pages.
-The legacy AI assistant and field-assistance behavior remain available on legacy routes and do not decorate CPE forms.
+The existing read-only CPE AI Assistant is available throughout the authenticated portal, including all twelve CPE workspaces and the company page. It uses visible page text and current CPE Help Center guides; business authorization, provider configuration and read-only limits remain unchanged. Legacy automatic field-assistance behavior stays on legacy routes and does not decorate CPE forms. The launcher remains available in short landscape viewports; only its open-panel duplicate is hidden there, with the panel close button retained.
 
 Record details now open consistently in a centered native dialog, including Estimate/BOQ, Cost Check, Bid Simulation and Knowledge archive entries that formerly rendered below the list. The URL `id` identifies the record and `create=1` is the sole create-dialog state, so same-page quick-create, direct links and browser back/forward work consistently. Search, sort, organization and numbered-page parameters are preserved when opening/closing. Stage labels such as “ทำสัญญา” are displayed as record information; a separate “เปิดรายละเอียด” action clearly opens the dialog. Cash register names are plain text, retaining the existing explicit settlement action.
 

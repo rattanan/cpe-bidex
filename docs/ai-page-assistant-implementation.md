@@ -38,3 +38,13 @@ AI Page Assistant เป็นบอลลูนแบบ read-only ที่ม
 - เปิด/ปิด AI และแก้ URL, model, timeout หรือ key ที่ `/admin/ai-settings`; Page Assistant ไม่มี config แยก
 - ต้องมี active AI Provider Configuration ที่ Enabled และ `AI_CONFIG_MASTER_KEY` ที่ถูกต้องสำหรับถอดรหัส key ที่หน้า AI Settings บันทึกไว้
 - คำตอบเป็นคำแนะนำ ผู้ใช้ต้องตรวจสอบกับข้อมูลต้นทาง โดยเฉพาะข้อมูล commercial และ workflow
+
+## CPE availability correction — 2026-11-06
+
+The owner reported missing balloons on CPE pages. The shell had excluded `/cpe` and `/company`; it now mounts the existing assistant on every authenticated portal route. The public login page remains outside that shell. Short landscape CSS now hides the duplicate launcher only while the panel is open, so a closed assistant can always be opened; the panel header close control remains visible. Focus returns to the launcher after React commits the closed state, including when the launcher was hidden while open in landscape.
+
+Acceptance: the launcher opens/closes on all twelve CPE workspaces, company and Help Center; Escape returns focus; portrait and short landscape viewports retain a usable launcher and panel close button. Page context follows the current route, and an unavailable provider displays a recoverable error while the workspace remains usable. No business writes or provider-setting changes are involved.
+
+Changed files: `components/app-shell.tsx`, `components/ai-chat-balloon.tsx`, `app/globals.css`, `lib/help-center.ts`, `tests/unit/app-shell-help-contract.test.ts`, `tests/unit/cpe/help-center.test.ts`, `tests/e2e/cpe-assistant.spec.ts`, `docs/cpe/implementation.md`, `docs/cpe/help-center.md`, this document and release evidence in `docs/server-deployment.md`.
+
+The opt-in browser regression uses protected test credentials and intercepts the provider request to exercise the unavailable state without paid provider traffic. Existing session enforcement, payload validation, secret rejection, audit and read-only boundaries remain unchanged.

@@ -1479,8 +1479,8 @@ textarea.control { min-height:112px;resize:vertical;line-height:1.55; }
   .ai-chat-messages { padding-inline:13px; }
 }
 @media (max-height:560px) and (orientation:landscape) {
-  .ai-chat-panel { height:calc(100dvh - 22px);bottom:11px; }
-  .ai-chat-trigger { display:none; }
+  .ai-chat-panel { position:fixed;right:14px;left:auto;width:min(390px,calc(100vw - 28px));height:calc(100dvh - 22px);min-height:0;bottom:11px; }
+  .ai-chat.open .ai-chat-trigger { display:none; }
 }
 @media (prefers-reduced-motion:reduce) {
   .ai-chat-message.typing i { animation:none;opacity:.7; }
