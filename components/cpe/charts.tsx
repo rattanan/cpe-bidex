@@ -35,7 +35,7 @@ export function LineChart({
               x="40"
               y={34 + i * 40}
               textAnchor="end"
-              fontSize="9"
+              fontSize="16"
               fill="currentColor"
             >
               {new Intl.NumberFormat("th-TH", { notation: "compact" }).format(
@@ -75,16 +75,17 @@ export function LineChart({
           </g>
         ))}
         {labels.map((l, i) =>
-          labels.length < 14 || i % Math.ceil(labels.length / 12) === 0 ? (
+          labels.length < 9 || i % Math.ceil(labels.length / 8) === 0 ? (
             <text
               key={i}
               x={45 + (i * 600) / Math.max(1, labels.length - 1)}
               y="215"
               textAnchor="middle"
-              fontSize="9"
+              fontSize="16"
               fill="currentColor"
             >
-              {l}
+              <title>{l}</title>
+              {/^(\d{4})-(\d{2})$/.test(l) ? `${l.slice(5)}/${l.slice(2, 4)}` : l}
             </text>
           ) : null,
         )}
@@ -156,7 +157,7 @@ export function Scatter({
           y="215"
           textAnchor="middle"
           fill="currentColor"
-          fontSize="11"
+          fontSize="16"
         >
           ราคาเสนอต่อหน่วย (บาท)
         </text>

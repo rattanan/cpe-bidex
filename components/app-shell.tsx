@@ -10,6 +10,7 @@ import { AiChatBalloon } from "@/components/ai-chat-balloon";
 import { EnterpriseCommandPalette } from "@/components/enterprise-command-palette";
 import { CPE_NAV_GROUPS as NAV_GROUPS, cpeNavigationLabel as navigationLabel, visibleCpeNavigation as visibleNavigation, CPE_QUICK_CREATE } from "@/components/cpe/navigation";
 import { CPE_ROLE_GRANTS, CPE_ROLE_LABELS } from "@/lib/cpe/config";
+import { CompanyBrand } from "@/components/company-brand";
 import type { HeaderNotification } from "@/lib/notifications/header-notifications";
 
 // Static route contracts are implemented by the navigation configuration in app-navigation.ts.
@@ -35,7 +36,7 @@ export function AppShell({ children, user, notifications, version }: { children:
   const visibleGroups = visibleNavigation(viewPermissions);
   const quickCreateItems = CPE_QUICK_CREATE.filter(item => user.grantedPermissions.includes(item.requiredPermission));
   const displayedNotifications = pathname.startsWith("/cpe") ? [] : notifications;
-  const currentLabel = navigationLabel(pathname);
+  const currentLabel = pathname === "/company" ? "เกี่ยวกับบริษัท" : navigationLabel(pathname);
   const roleLabel = user.roles.map((role) => CPE_ROLE_LABELS[role] ?? role.replaceAll("_", " ")).join(" · ");
 
   const navigation = <>
@@ -56,12 +57,13 @@ export function AppShell({ children, user, notifications, version }: { children:
     <EnterpriseCommandPalette open={commandOpen} onOpenChange={setCommandVisibility} grantedPermissions={user.grantedPermissions}/>
     {mobileOpen && <button className="sidebar-backdrop" aria-label="ปิดเมนู" onClick={() => setMobileOpen(false)}/>}
     <aside className={`app-sidebar ${mobileOpen ? "mobile-open" : ""}`}>
-      <div className="sidebar-brand"><Link href="/cpe"><span className="cpe-brand-mark">CPE</span><span><strong>BID EXCELLENCE</strong><small>Project Cost & Procurement</small></span></Link><button className="mobile-close" onClick={() => setMobileOpen(false)} aria-label="ปิดเมนู"><X/></button></div>
+      <div className="sidebar-brand"><Link href="/cpe" aria-label="CP Engineering — Project Bid Excellence"><CompanyBrand compact /></Link><button className="mobile-close" onClick={() => setMobileOpen(false)} aria-label="ปิดเมนู"><X/></button></div>
       <nav className="sidebar-nav" aria-label="เมนูหลัก">{navigation}</nav>
-      <div className="sidebar-footer"><button type="button" onClick={toggleCollapsed} aria-label={collapsed ? "ขยายเมนู" : "ย่อเมนู"}>{collapsed ? <PanelLeftOpen/> : <PanelLeftClose/>}<span>{collapsed ? "ขยาย" : "ย่อเมนู"}</span></button><small className="sidebar-version">Version {version}</small></div>
+      <div className="sidebar-footer"><Link className={`sidebar-link ${pathname === "/company" ? "active" : ""}`} href="/company" title="เกี่ยวกับบริษัท"><CircleHelp className="sidebar-icon"/><span>เกี่ยวกับบริษัท</span></Link><button type="button" onClick={toggleCollapsed} aria-label={collapsed ? "ขยายเมนู" : "ย่อเมนู"}>{collapsed ? <PanelLeftOpen/> : <PanelLeftClose/>}<span>{collapsed ? "ขยาย" : "ย่อเมนู"}</span></button><small className="sidebar-version">CP Engineering · Version {version}</small></div>
     </aside>
     <div className="app-workspace">
       <header className="workspace-header">
+        <Link href="/cpe" className="workspace-company-logo" aria-label="CP Engineering — หน้าแรก"><CompanyBrand compact /></Link>
         <button className="mobile-menu" onClick={() => setMobileOpen(true)} aria-label="เปิดเมนู"><Menu/></button>
         <nav className="breadcrumb" aria-label="เส้นทางนำทาง"><Link href="/cpe"><Home/><span>หน้าแรก</span></Link><ChevronRight aria-hidden="true"/><span aria-current="page">{currentLabel}</span></nav>
         <button className="global-search-trigger" type="button" onClick={() => setCommandOpen(true)} aria-label="เปิดการค้นหาและเมนูคำสั่ง"><Search/><span>ค้นหาหรือไปที่…</span><kbd>Ctrl K</kbd></button>
@@ -75,9 +77,9 @@ export function AppShell({ children, user, notifications, version }: { children:
           <div className="user-chip"><span><strong>{user.name}</strong><small title={roleLabel}>{roleLabel}</small></span><form action={logout}><button type="submit" className="icon-button" aria-label="ออกจากระบบ"><LogOut/></button></form></div>
         </div>
       </header>
-      <nav className="cpe-mobile-nav" aria-label="เมนู CPE สำหรับจอเล็ก">{visibleGroups.flatMap(group=>group.items).map(item=><Link key={item.href} href={item.href} aria-current={isActive(pathname,item.href)?"page":undefined}>{item.label}</Link>)}</nav>
+      <nav className="cpe-mobile-nav" aria-label="เมนู CPE สำหรับจอเล็ก">{visibleGroups.flatMap(group=>group.items).map(item=><Link key={item.href} href={item.href} aria-current={isActive(pathname,item.href)?"page":undefined}>{item.label}</Link>)}<Link href="/company" aria-current={pathname === "/company" ? "page" : undefined}>เกี่ยวกับบริษัท</Link></nav>
       <main className="content" id="main-content" tabIndex={-1}>{children}</main>
     </div>
-    {!pathname.startsWith("/cpe") && <AiChatBalloon key={pathname} pageLabel={currentLabel}/>}
+    {!pathname.startsWith("/cpe") && pathname !== "/company" && <AiChatBalloon key={pathname} pageLabel={currentLabel}/>}
   </div>;
 }

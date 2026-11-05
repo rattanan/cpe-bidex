@@ -33,6 +33,7 @@ import {
   type Field,
 } from "./forms";
 import { BarList, LineChart, Scatter } from "./charts";
+import { CompanyIntro } from "../company-profile";
 const CPE_ACTION_LABELS: Record<string, string> = {
   "cpe.opportunity.create": "รับงานใหม่",
   "cpe.opportunity.stage": "เปลี่ยนขั้นตอนงาน",
@@ -232,6 +233,7 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
       )}
       {screen === "exec" && (
         <>
+          <CompanyIntro />
           <div className="cpe-grid five">
             <Kpi
               label="มูลค่างานที่กำลังเสนอ"

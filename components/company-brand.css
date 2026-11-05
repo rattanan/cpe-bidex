@@ -1,0 +1,269 @@
+@font-face { font-family:"Noto Sans Thai";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/noto-sans-thai/noto-sans-thai-400.ttf") format("truetype"); }
+@font-face { font-family:"Noto Sans Thai";font-style:normal;font-weight:500;font-display:swap;src:url("/fonts/noto-sans-thai/noto-sans-thai-500.ttf") format("truetype"); }
+@font-face { font-family:"Noto Sans Thai";font-style:normal;font-weight:600;font-display:swap;src:url("/fonts/noto-sans-thai/noto-sans-thai-600.ttf") format("truetype"); }
+@font-face { font-family:"Noto Sans Thai";font-style:normal;font-weight:700;font-display:swap;src:url("/fonts/noto-sans-thai/noto-sans-thai-700.ttf") format("truetype"); }
+
+/* Company identity: the official logo is unmodified; the UI palette follows the reference site. */
+.company-brand { display:flex;align-items:center;gap:18px;min-width:0;font-family:"Noto Sans Thai",Tahoma,sans-serif; }
+.company-logo-surface { display:flex;align-items:center;justify-content:center;flex:none;width:100px;height:84px;padding:8px;background:#fff;border:1px solid #e1e7f0;border-radius:14px; }
+.company-logo-surface img { display:block;width:100%;height:100%;object-fit:contain; }
+.company-brand-copy { display:grid;gap:5px;min-width:0; }
+.company-brand-copy strong { font-size:20px;line-height:1.3;letter-spacing:.035em;font-weight:700; }
+.company-brand-copy small { font-size:15px;line-height:1.5;opacity:.8; }
+.company-brand.compact { gap:10px; }
+.company-brand.compact .company-logo-surface { width:64px;height:60px;border-radius:10px;padding:4px; }
+.company-brand.compact .company-brand-copy strong { font-size:16px;letter-spacing:.01em; }
+.company-brand.compact .company-brand-copy small { font-size:13px; }
+.company-eyebrow { font-size:13px;font-weight:600;letter-spacing:.12em;line-height:1.7;margin:0 0 12px;color:var(--accent-blue,#006e9c); }
+
+.cpe-app .content { max-width:1720px; }
+.cpe-app .app-sidebar { width:306px;background:var(--card); }
+.cpe-app .app-workspace { margin-left:306px; }
+.cpe-app .sidebar-brand { min-height:98px;padding:16px;background:var(--card);border-bottom:1px solid var(--border); }
+.cpe-app .sidebar-brand a { color:var(--foreground); }
+.cpe-app .sidebar-brand .company-brand { display:flex; }
+.cpe-app .sidebar-brand .company-logo-surface { display:flex; }
+.cpe-app .sidebar-brand .company-brand-copy { display:grid; }
+.cpe-app .sidebar-brand .company-brand-copy strong { color:var(--foreground);font-size:16px; }
+.cpe-app .sidebar-brand .company-brand-copy small { color:var(--cpe-muted);font-size:13px;letter-spacing:0; }
+.cpe-app .sidebar-nav { padding:18px 14px; }
+.cpe-app .sidebar-link,.cpe-app .sidebar-group-button { min-height:48px;font-size:15px;gap:10px;line-height:1.6; }
+.cpe-app .sidebar-link span { white-space:normal;overflow:visible; }
+.cpe-app .sidebar-group-button { font-size:14px;font-weight:500;margin-top:8px; }
+.cpe-app .sidebar-link.active { background:#eaf1fc;color:#173b72;box-shadow:inset 3px 0 0 #008d52; }
+.cpe-app .sidebar-link.active:hover { background:#dfeafa;color:#173b72; }
+.cpe-app .sidebar-footer { background:var(--card);border-color:var(--border);padding:12px 14px; }
+.cpe-app .sidebar-footer button { font-size:14px;min-height:44px; }
+.cpe-app .sidebar-version { color:var(--cpe-muted);font-size:12px;text-align:center; }
+.cpe-app.sidebar-collapsed .app-sidebar { width:88px; }
+.cpe-app.sidebar-collapsed .app-workspace { margin-left:88px; }
+.cpe-app.sidebar-collapsed .sidebar-brand { padding:12px 6px; }
+.cpe-app.sidebar-collapsed .sidebar-brand .company-brand,.cpe-app.sidebar-collapsed .sidebar-brand .company-logo-surface { display:flex; }
+.cpe-app.sidebar-collapsed .sidebar-brand .company-brand-copy { display:none; }
+.cpe-app .workspace-header { min-height:78px;flex-wrap:wrap;row-gap:8px;padding-block:12px; }
+.workspace-company-logo { display:none; }
+.cpe-app .breadcrumb { font-size:14px;min-width:0; }
+.cpe-app .global-search-trigger { min-height:44px;font-size:14px;flex:1;min-width:44px; }
+.cpe-app .header-actions .icon-button { width:42px;height:42px;min-width:42px;background:#253c69;border-color:#425a81;color:#edf5ff; }
+.cpe-app .header-actions .icon-button:hover { background:#365586; }
+.cpe-app .header-help { color:#d4e6ff; }
+.cpe-app .header-actions>.quick-create summary { background:#087a9e;color:#fff;min-height:42px; }
+.cpe-app .user-chip strong { font-size:14px; }
+.cpe-app .user-chip small { font-size:12px; }
+.cpe-app .cpe-role-view { font-size:14px; }
+.cpe-app .cpe-role-view select { font-size:14px;min-height:42px; }
+.cpe-app .cpe-page-head h1 { font-size:30px;font-weight:700;line-height:1.4;letter-spacing:0; }
+.cpe-app .cpe-page-head p { font-size:16px; }
+.cpe-app .cpe-page-head .eyebrow { font:500 13px "Noto Sans Thai",sans-serif;letter-spacing:.06em; }
+.cpe-app .cpe-head-actions label { font-size:14px; }
+.cpe-app :is(input:not([type="checkbox"]):not([type="range"]),select,textarea) { min-height:44px;font-size:16px; }
+.cpe-app :is(.primary,.secondary) { min-height:44px;font-size:15px;padding:10px 16px;border-radius:10px; }
+.cpe-app .primary { box-shadow:0 3px 9px #006e9c19; }
+.cpe-app .secondary:hover { background:var(--muted); }
+.cpe-app .cpe-list .table { font-size:15px;line-height:1.7; }
+.cpe-app .cpe-list .table th { font-size:14px;letter-spacing:0;padding:15px 18px; }
+.cpe-app .cpe-list .table td { padding:17px 18px; }
+.cpe-app .cpe-list .table small { font-size:14px;line-height:1.6; }
+.cpe-app .cpe-boq-table input { font-size:16px !important; }
+.cpe-app .cpe-filter select { max-width:240px;font-size:15px; }
+.cpe-app .cpe-filter input { font-size:16px; }
+.cpe-app .table-pagination,.cpe-app .page-number { font-size:14px; }
+.cpe-app .page-number { min-width:40px;min-height:40px; }
+.cpe-app .cpe-card h2 { font-size:18px;font-weight:600; }
+.cpe-app .cpe-kpi { position:relative;min-height:164px;border-top:0;border-radius:14px;overflow:hidden; }
+.cpe-app .cpe-kpi::before { content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#006e9c,#52b5cf); }
+.cpe-app .cpe-kpi:nth-child(2)::before { background:#008d52; }
+.cpe-app .cpe-kpi:nth-child(3)::before { background:#b27a10; }
+.cpe-app .cpe-kpi>strong { font-family:"Noto Sans Thai",sans-serif;font-weight:700;font-size:30px;letter-spacing:-.03em; }
+.cpe-app .cpe-kpi>span { font-size:14px; }
+.cpe-app .cpe-kpi>small { font-size:14px; }
+.cpe-app .cpe-process { padding-block:16px;background:#1b315c; }
+.cpe-app .cpe-process>a,.cpe-app .cpe-process>.unavailable { min-width:200px;font-size:14px;line-height:1.7; }
+.cpe-app .cpe-process small { font-size:13px; }
+.cpe-app .cpe-chart { overflow-x:auto; }
+.cpe-app .cpe-chart svg { min-width:600px; }
+.cpe-app .cpe-chart figcaption { justify-content:flex-start;font-size:14px;margin-top:12px; }
+.cpe-app .cpe-bars>div { font-size:15px;padding-block:12px; }
+.cpe-app .cpe-bars>div>div { background:var(--muted); }
+.cpe-app .cpe-bars i { background:linear-gradient(90deg,#006e9c,#4aa8bc); }
+.cpe-app :focus-visible,.cpe-login :focus-visible { outline:3px solid #26a7d5;outline-offset:3px; }
+
+.company-welcome { display:flex;align-items:center;gap:18px;padding:23px 26px;margin-bottom:24px;border:1px solid #cbdcf1;border-radius:16px;background:linear-gradient(110deg,#e8f1ff,#f3fbfc); }
+.company-welcome-icon { display:grid;place-items:center;width:52px;height:52px;flex:none;border:1px solid #c3d8ed;border-radius:14px;color:#006e9c;background:#fff; }
+.company-welcome-icon svg { width:27px;height:27px; }
+.company-welcome .company-eyebrow { font-size:12px;margin:0 0 4px; }
+.company-welcome strong { font-size:18px;font-weight:600;color:#193966; }
+.company-welcome p:not(.company-eyebrow) { font-size:14px;color:#526780;margin:4px 0 0; }
+.company-welcome>a { display:flex;gap:7px;align-items:center;margin-left:auto;flex:none;font-size:14px;font-weight:600;color:#00668f; }
+.company-profile { padding-top:30px;line-height:1.8; }
+.company-hero { position:relative;display:grid;grid-template-columns:1.35fr 1fr;gap:40px;overflow:hidden;padding:48px;border-radius:24px;background:#172b57;color:#fff;isolation:isolate; }
+.company-hero::before { content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 100% 0,#178ab350,transparent 65%),linear-gradient(145deg,transparent 60%,#3b759723 60%,#3b759723 61%,transparent 61%); }
+.company-hero .company-eyebrow { color:#85d6ef; }
+.company-hero h1 { margin:0 0 22px;font-size:clamp(30px,3vw,44px);line-height:1.45;letter-spacing:-.02em;font-weight:600; }
+.company-hero h1 span { color:#8bdeed; }
+.company-hero-copy>p { margin:8px 0;color:#d2e0f2; }
+.company-hero-copy .company-legal-name { color:#fff;font-size:20px;font-weight:600; }
+.company-hero-copy .company-description { margin-top:20px;max-width:660px;font-size:16px;line-height:1.95; }
+.company-hero-identity { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;border:1px solid #ffffff26;border-radius:20px;background:#ffffff08; }
+.company-hero-identity .company-brand { flex-direction:column;text-align:center; }
+.company-hero-identity .company-logo-surface { width:144px;height:118px;padding:12px; }
+.company-founded { display:grid;text-align:center;color:#c4d9f2;font-size:14px; }
+.company-founded strong { font-size:48px;line-height:1.5;color:#fff;font-weight:600;letter-spacing:.06em; }
+.company-website-link { display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:10px 18px;border-radius:10px;background:#fff;color:#183c67;font-size:15px;font-weight:600; }
+.company-section { padding:38px 0 28px; }
+.company-section>h2 { font-size:25px;line-height:1.5;margin:0 0 24px;font-weight:600; }
+.company-business-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px; }
+.company-business { position:relative;padding:28px;border-radius:18px;border:1px solid var(--border);background:var(--card); }
+.company-service-icon { display:grid;place-items:center;width:56px;height:56px;color:#006e9c;background:#eaf4fc;border-radius:14px; }
+.company-service-icon svg { width:28px;height:28px; }
+.company-service-number { position:absolute;right:26px;top:28px;color:var(--cpe-muted);font-size:14px; }
+.company-business h3 { font-size:20px;font-weight:600;margin:24px 0 4px; }
+.company-business p { font-size:16px;color:var(--cpe-muted);margin:12px 0 0; }
+.company-business .company-business-english { color:var(--accent-blue);font-size:14px;margin:0; }
+.company-purpose-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px; }
+.company-purpose { padding:30px;border-radius:18px;background:var(--card);border:1px solid var(--border);border-left:4px solid #008d52; }
+.company-purpose h2 { margin:6px 0 12px;font-size:24px;font-weight:600; }
+.company-purpose>p:last-child { font-size:18px;margin:0;line-height:1.9; }
+.company-contact { display:grid;grid-template-columns:1fr 1.2fr;gap:32px;padding:32px;background:var(--card);border:1px solid var(--border);border-radius:18px; }
+.company-contact h2 { font-size:24px;font-weight:600;margin:0 0 12px; }
+.company-contact p { font-size:16px;color:var(--cpe-muted); }
+.company-contact address { display:grid;gap:16px;font-style:normal; }
+.company-contact address a { display:flex;gap:14px;align-items:flex-start;font-size:16px;overflow-wrap:anywhere; }
+.company-contact svg { width:20px;flex:none;margin-top:4px;color:var(--accent-blue); }
+.company-source { font-size:14px;color:var(--cpe-muted);margin-top:24px; }
+.company-source a { color:var(--accent-blue);text-decoration:underline;text-underline-offset:3px; }
+
+.cpe-login { display:flex;flex-direction:column;justify-content:center;font-family:"Noto Sans Thai",Tahoma,sans-serif;font-size:16px;line-height:1.7;color:#fff;background:#13264e;min-height:100dvh;padding:40px; }
+.cpe-login::before { background:radial-gradient(ellipse at 10% 10%,#126b9155,transparent 65%); }
+.cpe-login::after { display:none; }
+.cpe-login .login-layout { width:100%;max-width:1400px;min-height:700px;margin:auto;display:grid;grid-template-columns:1.3fr 1fr;gap:64px;align-items:center;position:relative;z-index:1; }
+.cpe-login .login-showcase { display:flex;flex-direction:column;gap:48px;align-items:stretch;justify-content:space-between;padding:20px 0;min-height:660px; }
+.cpe-login .login-showcase>p { color:#c8ddf5; }
+.cpe-login .login-intro { position:relative; }
+.cpe-login .company-eyebrow { color:#8dd9ec;font-size:14px; }
+.cpe-login .login-intro h2 { font-size:clamp(36px,4vw,58px);line-height:1.4;margin:12px 0 22px;font-weight:600;letter-spacing:-.03em; }
+.cpe-login .login-intro h2 span { color:#89dfed; }
+.cpe-login .login-description { font-size:18px;line-height:1.9;color:#c9d9ed; }
+.login-workflow { display:flex;gap:18px;flex-wrap:wrap;margin-top:28px; }
+.login-workflow>span { display:flex;gap:7px;align-items:center;color:#d2e4f2;font-size:14px; }
+.login-workflow svg { width:18px;height:18px;color:#85dbbc; }
+.login-company-info { border-top:1px solid #3a5175;padding-top:22px; }
+.login-company-info>strong { font-size:18px;font-weight:500; }
+.login-company-info>p { color:#bdd0e9;font-size:14px;margin:4px 0; }
+.login-company-facts { display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;color:#cee0ef;font-size:14px; }
+.login-company-facts span+span { border-left:1px solid #557095;padding-left:20px; }
+.login-company-info>a { display:inline-flex;align-items:center;gap:6px;color:#97dced;font-size:14px;margin-top:18px; }
+.cpe-login .login-card { width:100%;max-width:500px;justify-self:end;background:#fff;color:#1c2c46;border:1px solid #dce6f1;border-radius:24px;padding:42px;box-shadow:0 30px 80px #07152645;backdrop-filter:none; }
+.cpe-login .login-card::before { display:none; }
+.cpe-login .login-heading { margin-bottom:30px; }
+.cpe-login .login-heading .eyebrow { color:#007496;font-size:13px;font-weight:600;letter-spacing:.08em; }
+.cpe-login .login-heading h1 { color:#162e55;font-size:32px;line-height:1.5;margin:8px 0 12px;font-weight:600; }
+.cpe-login .login-heading>p:last-child { color:#5c6b80;font-size:16px;line-height:1.8; }
+.cpe-login .login-card .field>label { color:#253b56;font-size:16px;font-weight:500; }
+.cpe-login .login-card .control { min-height:54px;border:1px solid #c9d6e6;border-radius:10px;background:#f7f9fd;color:#193454;color-scheme:light;font-size:16px;padding:12px 14px; }
+.cpe-login .login-card .control:hover { border-color:#7e9fba;background:#f3f7fc; }
+.cpe-login .login-card .control:focus { border-color:#007eaa;box-shadow:0 0 0 3px #007eaa1a; }
+.cpe-login .login-card .primary { min-height:54px;background:#006e9c;color:#fff;border-radius:10px;font-size:16px;font-weight:600;box-shadow:0 8px 18px #006e9c26; }
+.cpe-login .login-card .primary:hover { background:#005a83;box-shadow:0 8px 18px #006e9c36; }
+.cpe-login .login-card .field+.field { margin-top:22px; }
+.cpe-login .login-card .error { color:#b42d3d;font-size:14px; }
+.cpe-login .login-support { display:flex;flex-direction:column;align-items:center;gap:5px;color:#5e7087;font-size:14px;line-height:1.7;margin-top:30px; }
+.login-support-line { width:40px;height:3px;background:#008d52;border-radius:3px;margin-bottom:14px; }
+.cpe-login .login-support p { margin:0;color:#304f70;font-size:16px;font-weight:600; }
+.cpe-login .login-support a { color:#006e9c;margin-top:6px;font-size:14px; }
+.login-company-footer { display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%;max-width:1400px;margin:32px auto 0;color:#a7bfdc;font-size:13px; }
+
+[data-theme="dark"] .cpe-app .sidebar-link.active { background:#284971;color:#edf6ff; }
+[data-theme="dark"] .cpe-app .sidebar-link:hover,[data-theme="dark"] .cpe-app .sidebar-group-button:hover { background:#253b5b;color:#eef5ff; }
+[data-theme="dark"] .company-welcome { background:#203853;border-color:#3b5f82; }
+[data-theme="dark"] .company-welcome strong { color:#eaf4ff; }
+[data-theme="dark"] .company-welcome p:not(.company-eyebrow) { color:#bed0e6; }
+[data-theme="dark"] .company-welcome>a { color:#8ad9f0; }
+[data-theme="dark"] .company-service-icon { background:#254562;color:#99e0f2; }
+[data-theme="dark"] .cpe-app .cpe-chip { background:#234c46;color:#c3f5dd;border-color:#487768; }
+
+@media (max-width:1600px) {
+  .cpe-app .workspace-header .global-search-trigger { flex:0 0 44px;width:44px; }
+  .cpe-app .global-search-trigger>span,.cpe-app .global-search-trigger>kbd { display:none; }
+  .cpe-app .breadcrumb { max-width:230px; }
+  .cpe-app .breadcrumb>span { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+}
+@media (max-width:1150px) {
+  .cpe-app .app-sidebar { width:276px; }
+  .cpe-app .app-workspace { margin-left:276px; }
+  .cpe-app .sidebar-brand .company-brand-copy strong { font-size:14px; }
+  .cpe-app .header-actions { margin-left:auto; }
+  .cpe-app .breadcrumb { flex:1;max-width:none; }
+  .cpe-app .user-chip>span { display:none; }
+  .cpe-app .cpe-role-view { display:none; }
+  .company-hero { padding:32px;gap:24px;grid-template-columns:1fr; }
+  .company-hero-identity { flex-direction:row;justify-content:space-between; }
+  .company-hero-identity .company-brand { flex-direction:row;text-align:left; }
+  .company-business-grid { grid-template-columns:1fr; }
+  .cpe-login { padding:32px; }
+  .cpe-login .login-layout { gap:36px; }
+  .cpe-login .login-card { padding:32px; }
+  .login-workflow { gap:12px; }
+  .company-welcome { flex-wrap:wrap;padding:22px; }
+  .company-welcome>a { margin-left:70px; }
+}
+@media (max-width:900px) {
+  .workspace-company-logo { display:flex;align-items:center;flex:none; }
+  .workspace-company-logo .company-brand-copy { display:none; }
+  .workspace-company-logo .company-brand.compact .company-logo-surface { width:48px;height:44px; }
+  .cpe-app .app-sidebar,.cpe-app.sidebar-collapsed .app-sidebar { display:none; }
+  .cpe-app .app-workspace,.cpe-app.sidebar-collapsed .app-workspace { margin-left:0; }
+  .cpe-app .cpe-mobile-nav { display:flex;overflow:auto;gap:6px;padding:12px 14px;background:var(--card);border-bottom:1px solid var(--border); }
+  .cpe-app .cpe-mobile-nav a { flex:none;white-space:nowrap;font-size:14px;padding:8px 12px; }
+  .cpe-app .mobile-menu { display:none; }
+  .cpe-app .workspace-header { min-height:68px; }
+  .cpe-login .login-layout { grid-template-columns:1fr;gap:32px;max-width:620px; }
+  .cpe-login .login-showcase { min-height:0;gap:26px;padding:0; }
+  .cpe-login .login-intro h2 { font-size:36px; }
+  .cpe-login .login-description { font-size:16px; }
+  .cpe-login .login-card { max-width:none; }
+  .login-company-info { display:none; }
+  .login-company-footer { max-width:620px;font-size:13px; }
+}
+@media (max-width:650px) {
+  .cpe-app .workspace-header { padding:10px 14px;gap:8px; }
+  .cpe-app .header-actions { gap:6px; }
+  .cpe-app .user-chip { display:flex;padding-left:6px; }
+  .cpe-app .header-help,.cpe-app .notification-wrap,.cpe-app .quick-create { display:none; }
+  .cpe-app .breadcrumb { font-size:14px; }
+  .cpe-app .breadcrumb a span { display:none; }
+  .cpe-app .cpe-head-actions { gap:12px; }
+  .cpe-app .cpe-head-actions label { width:100%; }
+  .cpe-app .cpe-head-actions select { width:100%; }
+  .cpe-app .cpe-page-head h1 { font-size:26px; }
+  .company-welcome { gap:12px;padding:18px; }
+  .company-welcome-icon { display:none; }
+  .company-welcome strong { font-size:17px; }
+  .company-welcome>a { margin-left:0; }
+  .company-welcome .company-eyebrow { font-size:12px;letter-spacing:.04em; }
+  .company-profile { padding-top:20px; }
+  .company-hero { padding:26px 22px;border-radius:16px; }
+  .company-hero h1 { font-size:30px; }
+  .company-hero-identity { align-items:flex-start;gap:24px;padding:22px 16px;flex-direction:column; }
+  .company-hero-identity .company-logo-surface { width:80px;height:72px; }
+  .company-hero-identity .company-brand-copy strong { font-size:16px; }
+  .company-hero-identity .company-brand-copy small { font-size:13px; }
+  .company-founded { text-align:left; }
+  .company-founded strong { font-size:36px; }
+  .company-section>h2 { font-size:23px; }
+  .company-purpose-grid,.company-contact { grid-template-columns:1fr; }
+  .company-contact,.company-purpose,.company-business { padding:24px; }
+  .cpe-login { padding:24px 20px; }
+  .cpe-login .company-brand { gap:12px; }
+  .cpe-login .company-logo-surface { width:80px;height:68px; }
+  .cpe-login .company-brand-copy strong { font-size:18px; }
+  .cpe-login .company-brand-copy small { font-size:14px; }
+  .cpe-login .login-intro h2 { font-size:34px; }
+  .cpe-login .login-card { padding:28px 22px;border-radius:18px; }
+  .cpe-login .login-heading h1 { font-size:28px; }
+  .cpe-login .login-heading .eyebrow { font-size:12px; }
+  .login-desktop-break { display:none; }
+  .login-workflow { margin-top:18px;gap:10px 18px; }
+  .login-workflow>span { font-size:14px; }
+  .login-company-footer { font-size:12px; }
+}

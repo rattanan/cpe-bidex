@@ -10,11 +10,11 @@ describe("login page branding", () => {
   it("renders the accessible CPE identity while preserving authentication", () => {
     const page = read("app/login/page.tsx");
 
-    expect(page).toContain('className="login-cpe-mark"');
+    expect(page).toContain("<CompanyBrand />");
     expect(page).toContain("CPE Project Bid Excellence");
     expect(page).toContain("Project Bid Excellence");
     expect(page).not.toContain("/ntop-logo.svg");
-    expect(page).toContain('className="login-network"');
+    expect(page).toContain('className="login cpe-login"');
     expect(page).toContain('className="login-showcase"');
     expect(page).toContain('aria-labelledby="login-title"');
     expect(page).toContain("<LoginForm />");
@@ -28,13 +28,12 @@ describe("login page branding", () => {
   });
 
   it("keeps the login identity responsive and theme-aware", () => {
-    const css = read("app/globals.css");
+    const css = read("components/company-brand.css");
 
-    expect(css).toContain(".login-showcase-lockup img { display:block;width:100%;height:auto;object-fit:contain;");
-    expect(css).toContain(".login-network-lines path");
-    expect(css).toContain("font-size:clamp(54px,6.3vw,92px)");
-    expect(css).toContain("min-height:48px");
-    expect(css).toContain("@media (max-width:1050px)");
-    expect(css).toContain("@media (max-width:560px) { .login");
+    expect(css).toContain("object-fit:contain");
+    expect(css).toContain('font-family:"Noto Sans Thai"');
+    expect(css).toContain("min-height:54px");
+    expect(css).toContain("@media (max-width:900px)");
+    expect(css).toContain("@media (max-width:650px)");
   });
 });

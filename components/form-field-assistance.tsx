@@ -98,7 +98,7 @@ function decorate(root: ParentNode) {
 export function FormFieldAssistance() {
   const pathname = usePathname();
   useEffect(() => {
-    if (pathname.startsWith("/cpe")) return;
+    if (pathname.startsWith("/cpe") || pathname === "/company") return;
     decorate(document);
     const observer = new MutationObserver((entries) => entries.forEach((entry) => entry.addedNodes.forEach((node) => {
       if (node instanceof HTMLElement) decorate(node);

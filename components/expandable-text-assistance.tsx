@@ -10,7 +10,7 @@ export function shouldCollapseText(value:string){return value.length>220||value.
 export function ExpandableTextAssistance(){
   const pathname=usePathname();
   useEffect(()=>{
-    if(pathname.startsWith("/cpe"))return;
+    if(pathname.startsWith("/cpe") || pathname === "/company")return;
     const enhance=(root:ParentNode)=>root.querySelectorAll<HTMLElement>(selector).forEach(element=>{
       if(element.dataset.expandableReady||!shouldCollapseText(element.textContent??""))return;
       if(element.querySelector("button,a,input,textarea,select"))return;

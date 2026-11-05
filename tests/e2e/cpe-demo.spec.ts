@@ -17,10 +17,21 @@ test.describe("CPE seeded prototype preview", () => {
       accounts: { key: string; email: string; password: string }[];
     };
     const tester = credentials.accounts.find((u) => u.key === "tester")!;
+    fs.mkdirSync("/tmp/cpe-demo-preview", { recursive: true });
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     async function login(user: typeof tester) {
       await page.goto("/login");
+      if (user.key === "tester") {
+        await page.setViewportSize({ width: 1440, height: 1050 });
+        await page.screenshot({ path: "/tmp/cpe-demo-preview/login.png", fullPage: true });
+        await page.setViewportSize({ width: 390, height: 844 });
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+        await page.screenshot({ path: "/tmp/cpe-demo-preview/login-mobile.png", fullPage: true });
+        await page.setViewportSize({ width: 1440, height: 1050 });
+      }
+      await expect(page.getByRole("img", { name: /ตราสัญลักษณ์/ })).toBeVisible();
+      expect(await page.getByLabel("อีเมล").evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(16);
       await page.getByLabel("อีเมล").fill(user.email);
       await page.getByLabel("รหัสผ่าน", { exact: true }).fill(user.password);
       await page
@@ -34,6 +45,8 @@ test.describe("CPE seeded prototype preview", () => {
       await expect(
         page.getByRole("heading", { name: screen.label, exact: true }),
       ).toBeVisible();
+      expect(await page.locator("h1").evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(26);
+      if (screen.id !== "exec") expect(await page.locator("table.table").first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(15);
       if (screen.id !== "exec")
         expect(
           await page.locator("table.table > tbody > tr").count(),
@@ -76,7 +89,19 @@ test.describe("CPE seeded prototype preview", () => {
       path: "/tmp/cpe-demo-preview/cash.png",
       fullPage: true,
     });
+    await page.goto("/company");
+    await expect(page.getByRole("heading", { level: 1, name: /วิศวกรรมที่สร้างคุณค่า/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: "02-780-2890" })).toHaveAttribute("href", "tel:+6627802890");
+    await expect(page.getByRole("link", { name: "info@cpe.co.th", exact: true })).toHaveAttribute("href", "mailto:info@cpe.co.th");
+    await page.screenshot({ path: "/tmp/cpe-demo-preview/company.png", fullPage: true });
+    await page.getByRole("button", { name: "ใช้โหมดมืด", exact: true }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await page.screenshot({ path: "/tmp/cpe-demo-preview/company-dark.png", fullPage: true });
+    await page.getByRole("button", { name: "ใช้โหมดสว่าง", exact: true }).click();
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/company");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.screenshot({ path: "/tmp/cpe-demo-preview/company-mobile.png", fullPage: true });
     await page.goto("/cpe/exec");
     expect(
       await page.evaluate(
