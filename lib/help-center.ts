@@ -1,194 +1,1200 @@
-export type HelpAudience = "SALES" | "PRESALES" | "APPROVER" | "ADMIN" | "ALL";
-export type HelpArticle = { slug: string; title: string; summary: string; audience: HelpAudience[]; category: string; tags: string[]; updatedAt: string; readingMinutes: number; sections: Array<{ title: string; body: string[] }>; faqs: Array<{ question: string; answer: string }>; relatedSlugs?: string[] };
+import { legacyHelpArticles } from "./help-center-legacy";
+import type { HelpArticle, HelpAudience } from "./help-center-types";
+export type { HelpArticle, HelpAudience } from "./help-center-types";
 
-export const helpAudienceLabels: Record<HelpAudience, string> = { ALL: "ทุกบทบาท", SALES: "ทีมขาย", PRESALES: "Presales / Coverage", APPROVER: "ผู้อนุมัติ", ADMIN: "ผู้ดูแลระบบ" };
-const UPDATED_AT = "2026-08-24";
+export const HELP_AUDIENCES = ["EXECUTIVE", "SALES", "ESTIMATOR", "PROCUREMENT", "PROJECT_MANAGER", "ADMIN"] as const;
+export const helpAudienceLabels: Record<HelpAudience, string> = {
+  ALL: "ทุกบทบาท", EXECUTIVE: "ผู้บริหาร", SALES: "ฝ่ายขาย", ESTIMATOR: "ผู้ประมาณราคา",
+  PROCUREMENT: "จัดซื้อ", PROJECT_MANAGER: "ผู้จัดการโครงการ (PM)", ADMIN: "ผู้ดูแลระบบ",
+  PRESALES: "Presales (คู่มือระบบเดิม)", APPROVER: "ผู้อนุมัติ (คู่มือระบบเดิม)",
+};
 
+// Active CPE Bidex guides. Legacy URLs remain available separately and never enter AI retrieval.
 export const helpArticles: HelpArticle[] = [
   {
-    slug: "ai-page-assistant", title: "ใช้ AI Assistant ช่วยอ่านและสรุปหน้าปัจจุบัน", summary: "วิธีใช้บอลลูน AI เพื่อสรุปข้อมูลที่มองเห็น ถามข้อมูลในหน้า และค้นคำแนะนำจาก Help Center อย่างปลอดภัย", audience: ["ALL"], category: "AI Assistance", tags: ["AI Assistant", "สรุปข้อมูล", "Help Center", "Read Only", "Visible Context"], updatedAt: UPDATED_AT, readingMinutes: 5,
-    sections: [
-      { title: "เริ่มต้นสนทนา", body: ["กดบอลลูน AI มุมขวาล่าง แล้วเลือกคำถามแนะนำหรือพิมพ์คำถามเกี่ยวกับหน้าปัจจุบัน กด Enter เพื่อส่งและ Shift+Enter เพื่อขึ้นบรรทัดใหม่", "Assistant อ่านเฉพาะข้อความใน #main-content ที่ผู้ใช้มองเห็นภายใต้ session และ authorization เดิม ไม่ค้น business table หรือเปิด URL เพิ่ม"] },
-      { title: "ตรวจคำตอบและแหล่งอ้างอิง", body: ["หากหลักฐานไม่พอ Assistant ต้องบอกว่าไม่พบข้อมูลแทนการเดา สำหรับคำถามวิธีใช้ ระบบเลือกบทความ Help ที่เกี่ยวข้องสูงสุดสามรายการและแสดงลิงก์อ่านเพิ่มเติม", "ตรวจคำตอบกับ record ต้นทางเสมอ โดยเฉพาะราคา Margin, Approval และ workflow state เพราะคำตอบ AI ไม่ใช่ decision evidence"] },
-      { title: "ขอบเขต Read-only และข้อมูลลับ", body: ["Assistant ไม่มี business mutation จึงสร้าง แก้ไข อนุมัติ หรือเปลี่ยนสถานะไม่ได้ การดำเนินงานจริงต้องใช้ command ของ module ตาม permission", "ห้ามพิมพ์ password, API key, token หรือ credential หากตรวจพบ secret-like input ระบบจะปฏิเสธก่อนเรียก provider และไม่เก็บคำถาม เนื้อหาหน้า หรือคำตอบดิบใน audit"] },
-      { title: "เมื่อ Assistant ไม่พร้อม", body: ["หาก session หมดอายุให้ login ใหม่ หาก provider หรือ feature flag ไม่พร้อม ระบบแจ้ง sanitized error โดยไม่เปิดเผย secret", "AI outage ไม่ block งานหลัก ผู้ใช้ยังเปิด Help Center และทำ workflow แบบ manual ได้ กด Escape เพื่อปิดและคืน focus ไปที่บอลลูน"] },
+    "slug": "cpe-getting-started",
+    "title": "เริ่มต้นใช้งาน CPE Bidex และรู้จักกระบวนการ 9 ขั้น",
+    "summary": "เลือกหน่วยงาน รู้จักบทบาทและ 12 เมนูหลัก ตั้งแต่รับงานจนปิดโครงการ",
+    "audience": [
+      "ALL"
     ],
-    faqs: [{ question: "AI เห็นข้อมูลทั้งระบบหรือไม่", answer: "ไม่เห็น รับเฉพาะข้อความที่แสดงในหน้าปัจจุบันแบบจำกัดขนาดภายใต้ authorization ของหน้านั้น" }, { question: "สั่ง AI ให้อนุมัติหรือแก้สถานะได้ไหม", answer: "ไม่ได้ Assistant เป็น read-only และไม่มี business mutation endpoint" }],
-    relatedSlugs: ["ai-assistance-and-safety", "notifications-and-tasks", "workflow-administration"],
+    "category": "เริ่มต้นใช้งาน",
+    "tags": [
+      "CPE Bidex",
+      "เริ่มต้น",
+      "workflow",
+      "9 ขั้น",
+      "เมนู",
+      "หน่วยงาน"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe",
+    "sections": [
+      {
+        "title": "เข้าสู่ระบบและเลือกหน่วยงาน",
+        "body": [
+          "เปิด CPE Bidex แล้วกรอกอีเมลและรหัสผ่านของบัญชีที่ได้รับ เลือกหน่วยงานที่ต้องการทำงานจากตัวเลือกบนหน้าจอ ข้อมูลและตัวเลขจะอ้างอิงหน่วยงานนั้น",
+          "เมนูที่เห็นขึ้นกับบทบาทและสิทธิ์ของบัญชี มุมมองตามบทบาทช่วยจัดเมนูที่มีอยู่ให้เหมาะกับงาน ไม่ได้เพิ่มสิทธิ์ให้บัญชี"
+        ]
+      },
+      {
+        "title": "กระบวนการทำงาน 9 ขั้น",
+        "body": [
+          "รับแบบและศึกษาความต้องการ → ออกแบบและทำ BOQ → ตรวจต้นทุนเทียบงานเดิม → วิเคราะห์ราคาก่อนเสนอ → เสนอราคาและติดตามผล → แยกรายการสรรหาผู้รับเหมา → ขอราคา เทียบราคา และออก PO → ส่งมอบให้ PM → ประเมินผู้รับเหมาและเก็บข้อมูลปิดงาน"
+        ]
+      },
+      {
+        "title": "ค้นหาและเปิดแบบฟอร์ม",
+        "body": [
+          "ใช้ช่องค้นหาและตัวกรองบนแต่ละหน้า คลิกหัวคอลัมน์เพื่อเรียงข้อมูล และเลือกเลขหน้าเพื่อดูรายการถัดไป",
+          "กดชื่อรายการหรือปุ่ม “เปิดรายละเอียด” เพื่อเปิดหน้าต่างกลางจอ เลื่อนเนื้อหาภายในเพื่อดูแบบฟอร์ม กด “สร้างใหม่” เพื่อเพิ่มรายการตามสิทธิ์"
+        ]
+      },
+      {
+        "title": "ตรวจผลหลังบันทึก",
+        "body": [
+          "อ่านผลการบันทึกก่อนปิดหน้าต่าง หากมีข้อความว่าข้อมูลเปลี่ยนแล้ว ให้รีเฟรชและตรวจค่าล่าสุดก่อนบันทึกอีกครั้ง",
+          "ดูข้อมูลบริษัทจากเมนูเกี่ยวกับบริษัท และใช้ Help Center ค้นหาคู่มือตามชื่อเมนูหรือคำอย่าง BOQ, RFQ, PO และ S-Curve"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ทำไมไม่เห็นเมนูบางหน้า",
+        "answer": "เมนูขึ้นกับบทบาทและหน่วยงานที่ได้รับมอบหมาย ให้ผู้ดูแลตรวจบัญชีและสิทธิ์ของคุณ"
+      },
+      {
+        "question": "ต้องเริ่มจากหน้าใด",
+        "answer": "ฝ่ายขายเริ่มที่โอกาสการขาย ผู้ประมาณราคาใช้ประมาณราคา / BOQ และ PM ใช้บริหารโครงการ"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-sales-opportunities",
+      "cpe-forms-troubleshooting",
+      "cpe-users-organizations"
+    ]
   },
   {
-    slug: "prospect-to-lead", title: "จัดการ Prospect ตั้งแต่รับข้อมูลจนสร้าง Lead", summary: "ค้นหา สร้าง มอบหมาย ติดตาม อัปโหลดเอกสาร ใช้ AI Insight และเปลี่ยน Prospect ที่ผ่านการคัดกรองเป็น Lead", audience: ["SALES", "ADMIN"], category: "Prospect & Lead", tags: ["Prospect", "Duplicate", "Contact", "Import", "AI Insight", "Convert"], updatedAt: UPDATED_AT, readingMinutes: 9,
-    sections: [
-      { title: "ค้นหาก่อนสร้าง", body: ["เปิด งานขาย > Prospect เพื่อค้นหาและกรองตามสถานะ แหล่งที่มา Owner หรือ Overdue หน้า Dashboard แสดง Conversion และ Hot Prospect ภายใน scope", "ตรวจรายการซ้ำจากชื่อไทย/อังกฤษ เลขผู้เสียภาษี เว็บไซต์ อีเมล และโทรศัพท์ก่อนสร้าง"] },
-      { title: "Contact, Activity และเอกสาร", body: ["หน้ารายละเอียดจัดการ Contact และ Primary Contact ได้ ใช้ Timeline บันทึก Call, Email, Meeting หรือ Follow-up เพื่ออัปเดต Last Contact/Next Follow-up", "Import รองรับ CSV/XLSX แบบ Preview เอกสารอยู่ private storage; S3 ต้องผ่าน malware scan ส่วน local development ไม่มีการสแกนและไม่ใช่ production certification"] },
-      { title: "Assignment และสถานะ", body: ["ผู้มีสิทธิ์เลือก Owner ในหน่วยงานได้ เดิน NEW, ASSIGNED, CONTACTED, INTERESTED, QUALIFYING ไป QUALIFIED ตาม workflow", "CONVERTED เปลี่ยนจาก conversion command เท่านั้น หาก version stale ให้รีเฟรชก่อนทำใหม่"] },
-      { title: "AI Insight และสร้าง Lead", body: ["Request AI Insight ใช้เฉพาะ Prospect, Contact, Activity และเอกสารที่ได้รับอนุญาตแบบจำกัดจำนวน Draft ไม่แก้ข้อมูลจนกดยืนยัน", "เมื่อ QUALIFIED ให้ตรวจ transfer summary และ Qualification Note แล้วสร้าง Lead ระบบเชื่อม Contact, Activity และ document metadata โดยไม่คัดลอกไฟล์และไม่สร้างซ้ำ"] },
+    "slug": "cpe-dashboard",
+    "title": "อ่านแดชบอร์ดผู้บริหารและตัวเลขภาพรวม",
+    "summary": "เข้าใจมูลค่างาน อัตราชนะ กำไร เงินสด และสัญญาณที่ต้องติดตาม",
+    "audience": [
+      "EXECUTIVE",
+      "ADMIN"
     ],
-    faqs: [{ question: "ทำไมไม่เห็นปุ่มสร้าง Lead", answer: "ต้องเป็น QUALIFIED และบัญชีมี permission/scope ที่ถูกต้อง ทุกคำสั่งตรวจฝั่ง server" }, { question: "AI Insight แก้ข้อมูลอัตโนมัติไหม", answer: "ไม่แก้จนผู้ใช้ตรวจและกดยืนยันใช้ AI Insight" }],
-    relatedSlugs: ["lead-qualification-and-conversion", "notifications-and-tasks", "ai-assistance-and-safety"],
+    "category": "ภาพรวมและงานขาย",
+    "tags": [
+      "dashboard",
+      "แดชบอร์ด",
+      "KPI",
+      "อัตราชนะ",
+      "ข้อมูลว่าง",
+      "ไม่มีข้อมูล",
+      "กระแสเงินสด"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/exec",
+    "sections": [
+      {
+        "title": "กำหนดขอบเขตก่อนอ่านตัวเลข",
+        "body": [
+          "เลือกหน่วยงานและตรวจชื่อหน่วยงานก่อนเปรียบเทียบรายงาน ตัวเลขมาจากงานที่บัญชีมีสิทธิ์ดูในขอบเขตนั้น"
+        ]
+      },
+      {
+        "title": "อ่าน KPI และกราฟ",
+        "body": [
+          "ติดตามมูลค่างานที่กำลังเสนอ มูลค่าถ่วงน้ำหนักโอกาส อัตราชนะ กำไรขั้นต้นงานที่ได้ และเงินสดคงเหลือ",
+          "มูลค่าถ่วงน้ำหนักใช้โอกาสชนะจากประวัติที่มี ระบบบอกจำนวนงานที่คำนวณได้ งานที่ไม่มีหลักฐานพอจะไม่ถูกสมมติให้มีความน่าจะเป็น"
+        ]
+      },
+      {
+        "title": "ใช้สัญญาณเพื่อติดตามงาน",
+        "body": [
+          "ดูสุขภาพโครงการ สาเหตุแพ้ประมูล วัสดุเสี่ยงราคา และรายการรอตัดสินใจ แล้วเปิดหน้ารายละเอียดที่เกี่ยวข้อง",
+          "กราฟรับจริง/จ่ายจริงแยกจากประมาณการเพิ่มเติม อ่านคำอธิบายชุดข้อมูลก่อนนำยอดมารวมกัน"
+        ]
+      },
+      {
+        "title": "เมื่อแดชบอร์ดว่าง",
+        "body": [
+          "ตรวจหน่วยงานที่เลือกและการมอบหมายของบัญชี หากไม่มีหน่วยงานให้ติดต่อผู้ดูแล",
+          "ข้อมูลตัวอย่างอยู่ในหน่วยงาน CPE — ข้อมูลตัวอย่างสำหรับทดสอบ บัญชีต้องได้รับมอบหมายให้หน่วยงานนี้จึงจะเห็นข้อมูล อย่าสร้างรายการซ้ำเพื่อแก้ปัญหาสิทธิ์"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ตัวเลขเป็นข้อมูลตัวอย่างเสมอหรือไม่",
+        "answer": "ตัวเลขคำนวณจากข้อมูลที่บันทึกจริงในหน่วยงานที่เลือก ชุดตัวอย่างระบุชื่อหน่วยงานและรหัส DEMO แยกไว้"
+      },
+      {
+        "question": "ความน่าจะเป็นชนะคือคำรับรองหรือไม่",
+        "answer": "เป็นค่าประกอบการวิเคราะห์จากประวัติและนโยบายที่ตั้งไว้ ไม่ใช่คำรับรองผลการประมูล"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-demo-data",
+      "cpe-cash-flow",
+      "cpe-bid-simulation"
+    ]
   },
   {
-    slug: "lead-qualification-and-conversion", title: "คัดกรอง Lead และ Convert เป็น Customer กับ Opportunity", summary: "จัดการ Assignment, SLA, Qualification, Duplicate Review และ Conversion โดยรักษาประวัติการทำงาน", audience: ["SALES", "ADMIN"], category: "Prospect & Lead", tags: ["Lead", "Qualification", "Round Robin", "SLA", "Customer", "Opportunity"], updatedAt: UPDATED_AT, readingMinutes: 8,
-    sections: [
-      { title: "Lead และรายการงาน", body: ["Lead คือผู้มุ่งหวังที่ Customer identity ยังไม่ยืนยัน อาจมาจาก Prospect, Campaign, Import หรือการสร้างโดยตรง", "รายการรองรับ search, filters, Overdue, Saved View, Import Preview และ permission-aware Export"] },
-      { title: "Assignment และ SLA", body: ["Lead ใหม่อาจใช้ Owner หรือ Round Robin rule ผู้จัดการ Reassign ได้เฉพาะผู้ใช้ active ใน scope และมี Assignment History", "บันทึก Activity เพื่ออัปเดต Last Contact, Next Follow-up และ First-contact SLA โดยเวลาแสดงตาม Asia/Bangkok"] },
-      { title: "Qualification และสถานะปิด", body: ["Qualification ใช้ completeness และคะแนนกติกาที่อธิบายได้ Manager Override ต้องมีเหตุผลและ Audit", "INVALID, DUPLICATE, NOT_INTERESTED หรือ NO_BUDGET ควรใช้ตามเหตุการณ์ ส่วน CONVERTED สงวนให้ Convert command"] },
-      { title: "Convert", body: ["เลือก Customer เดิมใน scope หรือสร้างใหม่หลัง Duplicate Review หาก override รายการซ้ำต้องระบุเหตุผล", "Customer, Contact, Opportunity, Lead, receipt และ audit อยู่ transaction เดียว และ idempotency ป้องกันผลซ้ำ"] },
+    "slug": "cpe-sales-opportunities",
+    "title": "รับงานใหม่ ติดตามการเสนอราคา และบันทึกได้งาน/ไม่ได้งาน",
+    "summary": "สร้างโอกาสการขาย ติดตามขั้นตอน บันทึกผล และส่งต่อโครงการ",
+    "audience": [
+      "SALES",
+      "EXECUTIVE",
+      "ADMIN"
     ],
-    faqs: [{ question: "Prospect Convert กับ Lead Convert ต่างกันอย่างไร", answer: "Prospect Convert สร้าง Lead ส่วน Lead Convert ยืนยัน Customer identity และสร้าง Opportunity" }, { question: "ทำไมเลือก Customer บางรายไม่ได้", answer: "ระบบยอมรับเฉพาะ Customer ใน authorization scope แม้ผู้ใช้ทราบ ID" }],
-    relatedSlugs: ["prospect-to-lead", "customer-to-opportunity", "notifications-and-tasks"],
+    "category": "ภาพรวมและงานขาย",
+    "tags": [
+      "opportunity",
+      "งานขาย",
+      "รับงานใหม่",
+      "ทำสัญญา",
+      "ได้งาน",
+      "ไม่ได้งาน",
+      "win loss"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/sales",
+    "sections": [
+      {
+        "title": "สร้างโอกาสการขาย",
+        "body": [
+          "กด “รับงานใหม่” แล้วระบุชื่องาน ลูกค้า ประเภทลูกค้า ประเภทงาน สถานที่ ขนาดและหน่วยของงาน ต้นทุนเบื้องต้น กำไรเป้าหมาย ผู้ประมาณราคา และกำหนดยื่นราคา",
+          "ตรวจหน่วยขนาดงานให้ถูกตั้งแต่เริ่ม เพราะการเทียบต้นทุนเดิมและการปรับปริมาณใช้ประเภทงานและหน่วยร่วมกัน"
+        ]
+      },
+      {
+        "title": "ติดตามขั้นตอนและข้อมูลประกอบ",
+        "body": [
+          "เปิดรายละเอียดเพื่อดูต้นทุน ราคาเสนอ ข้อมูลเทคนิค เงื่อนไขสัญญา และประวัติของรายการ",
+          "ขั้นตอนประกอบด้วยรับแบบ/ศึกษาความต้องการ ประมาณราคา ยื่นซองแล้ว เจรจาต่อรอง และทำสัญญา คำว่า “ทำสัญญา” ในตารางเป็นข้อมูลขั้นตอน ให้ใช้ปุ่มเปิดรายละเอียดเพื่อดำเนินงาน"
+        ]
+      },
+      {
+        "title": "บันทึกผลได้งานและเปิดโครงการ",
+        "body": [
+          "ในงานที่ยังเสนออยู่ ผู้มีสิทธิ์ใช้แบบฟอร์ม “บันทึกผล · ได้งาน” กรอกเลขที่สัญญา มูลค่าสัญญา งบต้นทุน วันเริ่ม ระยะเวลา และ PM",
+          "เมื่อยืนยัน ระบบเปิดโครงการและแผนรายเดือน เชื่อมกลับมายังงานต้นทาง และสร้างชุด RFQ ตามหมวด BOQ หากเลือกตัวเลือกนั้น"
+        ]
+      },
+      {
+        "title": "บันทึกไม่ได้งานและใช้ประวัติ",
+        "body": [
+          "บันทึกผู้ชนะ ราคา สาเหตุ และหมายเหตุที่ทราบ เพื่อให้ใช้วิเคราะห์และปรับปรุงรอบถัดไป",
+          "ตรวจต้นทุนและราคาเสนอก่อนบันทึกผล ระบบตรวจเงื่อนไขฝั่งเซิร์ฟเวอร์ งานที่บันทึกผลแล้วมีข้อจำกัดการแก้ไขตามสถานะ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "กดสถานะทำสัญญาแล้วทำไมไม่ใช่แบบฟอร์ม",
+        "answer": "สถานะเป็นข้อมูลขั้นตอน ปุ่มเปิดรายละเอียดจะเปิดหน้าต่างของรายการนั้น"
+      },
+      {
+        "question": "งานได้งานแล้วสร้างโครงการใหม่อีกครั้งได้ไหม",
+        "answer": "ให้เปิดโครงการที่เชื่อมอยู่กับงานเดิม ระบบป้องกันการเปิดโครงการซ้ำจากการยืนยันเดิม"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-boq-estimation",
+      "cpe-cost-review",
+      "cpe-project-management"
+    ]
   },
   {
-    slug: "customer-to-opportunity", title: "ดูแล Customer 360 และเริ่ม Opportunity", summary: "สร้าง Customer อย่างไม่ซ้ำ ดู Contacts, Hierarchy, Governance และ Sales History ก่อนเปิดโอกาสขาย", audience: ["SALES", "ADMIN"], category: "Customer & Opportunity", tags: ["Customer 360", "Contact", "Hierarchy", "Duplicate", "Merge", "Opportunity"], updatedAt: UPDATED_AT, readingMinutes: 8,
-    sections: [
-      { title: "ค้นหาและสร้าง Customer", body: ["ค้นหาด้วยชื่อขึ้นต้น เลขนิติบุคคล หรือจังหวัดก่อนสร้าง รายการใช้ cursor และ scope ไม่โหลดทั้งหมด", "กรอก Type, Segment, Tax ID, ที่อยู่ จังหวัด และ Owner; external identifier ไม่แทน internal ID"] },
-      { title: "แท็บ Customer 360", body: ["Overview แสดงข้อมูลหลัก, Contacts จัดการ Primary, Hierarchy & Duplicate แสดง governance และ Sales & Activity รวม record ที่เกี่ยวข้อง", "Contact mutation ตรวจ scope และ Customer version ฝั่ง serverพร้อม audit"] },
-      { title: "Hierarchy และ Merge", body: ["Parent/Child ปฏิเสธ self-link และ cycle ส่วน Merge เปลี่ยน source เป็น alias พร้อม immutable history ไม่ใช่การลบ", "ตรวจ Tax ID, Contact, Owner, hierarchy และงานขายก่อน Merge เพราะ module อื่นไม่ถูกย้ายแบบเงียบ ๆ"] },
-      { title: "สร้าง Opportunity", body: ["เลือก Customer ใน scope แล้วกรอก Flow, Estimated Value, Probability, Forecast Category, Expected Close และ Next Action", "Opportunity เริ่ม QUALIFY และใช้ Transition พร้อมเหตุผลเมื่อเปลี่ยน Stage โดยเลือก target stage อื่นได้อิสระ"] },
+    "slug": "cpe-boq-estimation",
+    "title": "ทำ BOQ และคำนวณต้นทุนประมาณราคา",
+    "summary": "เพิ่มวัสดุและแรงงานรายหมวด คัดลอกจากงานเดิม และบันทึกต้นทุนใหม่",
+    "audience": [
+      "ESTIMATOR",
+      "SALES",
+      "ADMIN"
     ],
-    faqs: [{ question: "Merge แล้ว source หายไหม", answer: "ไม่หาย Source เป็น alias พร้อมประวัติ Merge" }, { question: "แก้ Stage จากหน้าแก้ไขได้ไหม", answer: "ไม่ได้ ต้องใช้ Transition เพื่อให้ตรวจสิทธิ์, scope, version และบันทึก audit" }],
-    relatedSlugs: ["lead-qualification-and-conversion", "opportunity-transition-policy", "sales-pipeline-and-forecast", "presales-solution-survey-boq"],
+    "category": "ประมาณราคาและเสนอราคา",
+    "tags": [
+      "BOQ",
+      "estimate",
+      "ปริมาณ",
+      "วัสดุ",
+      "ค่าแรง",
+      "คัดลอก",
+      "ต้นทุนประมาณ"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/estimate",
+    "sections": [
+      {
+        "title": "เปิดงานที่ต้องประมาณราคา",
+        "body": [
+          "ค้นหาชื่องานหรือรหัส แล้วกดเปิดรายละเอียด หน้าต่างจะแสดงงานที่เลือกและแบบฟอร์มที่ใช้ได้ตามสถานะ",
+          "งานประวัติที่บันทึกได้งาน/ไม่ได้งานแล้วจะแสดงข้อมูลอ้างอิง การแก้ BOQ ใช้กับงานที่ยังอยู่ระหว่างเสนอราคา"
+        ]
+      },
+      {
+        "title": "กรอกรายการ BOQ",
+        "body": [
+          "ระบุหมวดงาน รหัส รายละเอียด หน่วย ปริมาณ ราคาวัสดุต่อหน่วย และค่าแรงต่อหน่วย เลือกรายการจากฐานต้นทุนกลางได้",
+          "ตรวจผลรวมรายหมวดและต้นทุนรวม รวมถึงค่าใช้จ่ายทางอ้อมและความเสี่ยงตาม Data Master ของหน่วยงาน"
+        ]
+      },
+      {
+        "title": "คัดลอกจากงานอ้างอิง",
+        "body": [
+          "เลือกงานเดิมที่เหมาะสม แล้วตรวจรายการที่คัดลอกก่อนใช้ หากปรับปริมาณตามสัดส่วนต้องใช้หน่วยเดียวกัน",
+          "อย่านำราคาของงานขนาดหรือเงื่อนไขต่างกันมาใช้โดยไม่ทบทวน ตรวจคำเตือนหมวดที่ยังไม่ครบและรายการที่ราคาต้องปรับปรุง"
+        ]
+      },
+      {
+        "title": "บันทึกและส่งต่อ",
+        "body": [
+          "กด “บันทึก BOQ และคำนวณต้นทุนใหม่” แล้วตรวจยอดและรุ่นข้อมูลล่าสุด",
+          "เมื่อแก้ BOQ ให้ตรวจผลทบทวนต้นทุนและราคาเสนออีกครั้งก่อนยืนยันได้งาน ติดตามต่อในหน้าตรวจต้นทุนก่อนส่งฝ่ายขาย"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ทำไมไม่มีช่องแก้ BOQ ในงานประวัติ",
+        "answer": "งานที่บันทึกผลแล้วมีข้อจำกัดการแก้ไข ให้เลือกงานที่กำลังเสนอเพื่อประมาณราคา"
+      },
+      {
+        "question": "ใช้ปริมาณเป็นศูนย์หรือค่าติดลบได้ไหม",
+        "answer": "ตรวจข้อกำหนดของช่องกรอก ระบบปฏิเสธค่าที่ไม่ถูกต้องและไม่บันทึกเป็นต้นทุนทางการ"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-cost-catalog",
+      "cpe-cost-review",
+      "cpe-bid-simulation"
+    ]
   },
   {
-    slug: "opportunity-transition-policy", title: "Transition ขั้นตอนขายของ Opportunity แบบอิสระ", summary: "เลือกเปลี่ยนไปยัง Stage อื่นได้ทุกขั้น พร้อมกติกาด้านสิทธิ์ ความถูกต้องของข้อมูล และ Audit ที่ระบบยังบังคับใช้", audience: ["SALES", "APPROVER", "ADMIN"], category: "Customer & Opportunity", tags: ["Transition Policy", "Opportunity Stage", "ไม่จำกัดเส้นทาง", "ขั้นตอนใดก็ได้", "WON", "LOST", "CANCELLED", "EXPIRED", "Reopen"], updatedAt: "2026-08-26", readingMinutes: 5,
-    sections: [
-      { title: "เลือก Stage ปลายทางได้ทุกขั้น", body: ["Opportunity มีขั้น QUALIFY, DISCOVER, SOLUTION, PROPOSAL, NEGOTIATION, WON, LOST, CANCELLED และ EXPIRED", "หน้า Transition แสดง Stage อื่นทุกค่าให้เลือก ไม่บังคับเดินตามลำดับและไม่อ่าน configured route หรือ Stage Gate"] },
-      { title: "ข้อมูลที่ต้องระบุ", body: ["ทุก Transition ต้องระบุเหตุผลเพื่อเก็บใน History และ Audit", "ถ้าเลือก LOST ต้องระบุ Lost Reason และ Lost Category ถ้าเลือก CANCELLED ต้องระบุ Cancelled Reason ส่วน Requirements, Coverage, Solution และ Quote ไม่ block การเปลี่ยน Stage"] },
-      { title: "คำสั่งที่ระบบสร้างอัตโนมัติ", body: ["ระบบ derive FORWARD หรือ RETURN ตามลำดับของ active stage และใช้ REOPEN เมื่อลงจากสถานะปลายทางกลับ active stage", "เมื่อ target เป็น WON, LOST, CANCELLED หรือ EXPIRED ระบบบันทึก command เป็น WON, LOST, CANCEL หรือ EXPIRE ตามลำดับ ผู้ใช้ไม่ต้องเลือก command เอง"] },
-      { title: "สิ่งที่ระบบยังตรวจทุกครั้ง", body: ["ระบบยังตรวจ permission opportunity.transition, Organization/ownership scope และการเข้าถึง Opportunity ฝั่ง server", "Expected Version ป้องกันการเขียนทับข้อมูลใหม่ Idempotency Key ป้องกันรายการซ้ำ และทุกผลสำเร็จเก็บ Stage History, Audit, correlation และ receipt ใน transaction เดียวกัน"] },
-      { title: "เมื่อ Transition ไม่ผ่าน", body: ["ตรวจว่าได้กรอกเหตุผลและข้อมูลพิเศษของ LOST/CANCELLED ครบหรือไม่", "ถ้าข้อมูลถูกแก้จากหน้าหรือผู้ใช้อื่นก่อนหน้า ให้รีเฟรชเพื่อใช้ Version ล่าสุด หากยังไม่ผ่านให้ตรวจ permission และ scope ของผู้ใช้"] },
+    "slug": "cpe-cost-review",
+    "title": "ตรวจต้นทุนเทียบโครงการเดิมก่อนส่งฝ่ายขาย",
+    "summary": "เลือกหลักฐานต้นทุนจริง ทบทวนความคลาดเคลื่อน และยืนยันผลตรวจ",
+    "audience": [
+      "ESTIMATOR",
+      "ADMIN"
     ],
-    faqs: [{ question: "ข้ามจาก QUALIFY ไป PROPOSAL ได้ไหม?", answer: "ได้ หากผู้ใช้มีสิทธิ์และเข้าถึง Opportunity รายการนั้น ระบบไม่จำกัด from/to route" }, { question: "ทำไมยัง Transition ไม่ได้?", answer: "ตรวจเหตุผล, ข้อมูล LOST/CANCELLED, Expected Version, permission และ scope เพราะระบบยังบังคับความถูกต้องและความปลอดภัยส่วนเหล่านี้" }, { question: "แก้ Stage จากหน้า Edit โดยตรงได้ไหม?", answer: "ไม่ได้ ต้องใช้ Transition เพื่อสร้าง history/audit และป้องกันการเขียนทับด้วย optimistic version" }],
-    relatedSlugs: ["customer-to-opportunity", "sales-pipeline-and-forecast", "quotation-and-approval", "workflow-administration"],
+    "category": "ประมาณราคาและเสนอราคา",
+    "tags": [
+      "costcheck",
+      "cost review",
+      "ตรวจต้นทุน",
+      "อ้างอิง",
+      "ความคลาดเคลื่อน",
+      "ส่งฝ่ายขาย"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/costcheck",
+    "sections": [
+      {
+        "title": "เปิดงานและตรวจฐานต้นทุน",
+        "body": [
+          "เปิดรายละเอียดรายการที่ต้องตรวจจากตาราง ดูต้นทุนประมาณ หมวดงาน และสถานะผลตรวจล่าสุด"
+        ]
+      },
+      {
+        "title": "เปรียบเทียบงานอ้างอิง",
+        "body": [
+          "ระบบใช้งานปิดแล้วที่มีต้นทุนจริง ประเภทงานและหน่วยที่ตรงกัน เพื่อช่วยเทียบรายหมวด",
+          "อ่านขนาดงานและเงื่อนไขประกอบ หากปรับต้นทุนตามสัดส่วนให้ทบทวนความเหมาะสมก่อนยืนยัน"
+        ]
+      },
+      {
+        "title": "แก้จุดที่คลาดเคลื่อน",
+        "body": [
+          "ตรวจหมวดที่เกินช่วงยอมรับตาม Data Master และรายการที่ยังไม่มีหลักฐานอ้างอิง",
+          "กลับไปแก้ BOQ เมื่อจำเป็น แล้วเปิดผลตรวจอีกครั้งให้ตรงกับข้อมูลรุ่นล่าสุด"
+        ]
+      },
+      {
+        "title": "ยืนยันส่งต่อ",
+        "body": [
+          "ผู้รับผิดชอบกด “ยืนยันผลตรวจและส่งให้ฝ่ายขาย” เมื่อทบทวนครบ ระบบบันทึกผู้ตรวจและเวลา",
+          "ฝ่ายขายใช้ผลตรวจร่วมกับหน้าวิเคราะห์ราคาก่อนเสนอ หากข้อมูลต้นทุนเปลี่ยน ให้ตรวจใหม่ตามสถานะที่ระบบแสดง"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ทำไมไม่มีโครงการอ้างอิง",
+        "answer": "อาจยังไม่มีงานปิดที่บันทึกต้นทุนจริงและตรงประเภทงาน/หน่วยในขอบเขตที่คุณดูได้"
+      },
+      {
+        "question": "ช่วงยอมรับความคลาดเคลื่อนมาจากไหน",
+        "answer": "มาจากนโยบายของหน่วยงานใน Data Master ให้ตรวจค่าที่ใช้อยู่ก่อนตัดสินใจ"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-boq-estimation",
+      "cpe-bid-simulation",
+      "cpe-knowledge-master"
+    ]
   },
   {
-    slug: "notifications-and-tasks", title: "จัดการ Activity, Meeting และ Notification ประจำวัน", summary: "บันทึกงาน เชื่อมบริบทธุรกิจ มอบหมาย เปลี่ยนสถานะ และไม่พลาด Follow-up หรือ Approval", audience: ["ALL"], category: "การทำงานประจำวัน", tags: ["Activity", "Meeting", "Task", "Notification", "Overdue", "AI Summary"], updatedAt: UPDATED_AT, readingMinutes: 6,
-    sections: [
-      { title: "บันทึก Activity", body: ["เปิด งานขาย > กิจกรรม หรือ Quick Create เลือก Call, Email, Meeting, Site Visit, Follow-up หรือ Task พร้อม due date และ Owner", "เชื่อม Prospect, Lead, Customer หรือ Opportunity เพื่อให้ปรากฏใน timeline ของ record"] },
-      { title: "Assignment และ Completion", body: ["ผู้มี activity.assign มอบหมายใน scope ได้ Owner ปัจจุบันที่มี activity.complete จึงเปลี่ยน In Progress/Completed ได้", "Reason, Outcome, actor และเวลาอยู่ใน Status History พร้อม optimistic version"] },
-      { title: "Upcoming, Overdue และกระดิ่ง", body: ["หน้ารายการแสดง due date ตาม Asia/Bangkok และป้าย Upcoming/Overdue สำหรับงานไม่ terminal", "กระดิ่งแสดง Activity ของ Owner และ Quote ของ Maker ที่รอหรือถูกส่งกลับ ไม่แสดงข้อมูลข้าม scope"] },
-      { title: "Meeting Draft", body: ["Meeting Draft ใช้ typed/pasted text ไม่ใช่ audio/transcription ผู้ใช้ตรวจ Summary, Requirements, Decisions, Action Items, Risks และ Next Action ก่อนยืนยัน", "AI outage ไม่ block การบันทึก Activity หรือ Meeting Note แบบ manual"] },
+    "slug": "cpe-bid-simulation",
+    "title": "วิเคราะห์ราคาเสนอ กำไร และโอกาสชนะ",
+    "summary": "ทดลองกำไรหลายระดับ อ่านประวัติ และบันทึกราคาเสนอที่ผ่านเงื่อนไข",
+    "audience": [
+      "SALES",
+      "ESTIMATOR",
+      "EXECUTIVE",
+      "ADMIN"
     ],
-    faqs: [{ question: "ทำไมเปลี่ยนสถานะ Activity ไม่ได้", answer: "ต้องเป็น Owner ปัจจุบันและมี activity.complete" }, { question: "ทำไมไม่เห็น Notification ของคนอื่น", answer: "จำกัดตาม Owner/Maker เพื่อป้องกันข้อมูลข้าม scope" }],
-    relatedSlugs: ["prospect-to-lead", "lead-qualification-and-conversion", "ai-assistance-and-safety"],
+    "category": "ประมาณราคาและเสนอราคา",
+    "tags": [
+      "bid simulation",
+      "margin",
+      "กำไรขั้นต่ำ",
+      "ราคาเสนอ",
+      "ความน่าจะเป็น",
+      "expected profit"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/bidsim",
+    "sections": [
+      {
+        "title": "เตรียมต้นทุนก่อนวิเคราะห์",
+        "body": [
+          "ตรวจ BOQ และผลตรวจต้นทุนก่อนเปิดรายละเอียดในหน้าวิเคราะห์ราคาก่อนเสนอ ตัวเลขราคาอ้างอิงต้นทุนของงานที่เลือก"
+        ]
+      },
+      {
+        "title": "ทดลองระดับกำไร",
+        "body": [
+          "เลื่อนระดับกำไรหรือใช้ค่าลัดที่ระบบแสดง เปรียบเทียบราคา กำไร โอกาสชนะ และกำไรคาดหวัง",
+          "อัตรากำไรขั้นต้นคำนวณเทียบราคาเสนอ ราคาเสนอจึงเท่ากับต้นทุนหารด้วยหนึ่งลบอัตรากำไร ไม่ใช่นำกำไรไปบวกต้นทุนโดยตรง"
+        ]
+      },
+      {
+        "title": "อ่านโมเดลอย่างมีบริบท",
+        "body": [
+          "กราฟใช้ประวัติชนะ/แพ้ ประเภทงาน ประเภทลูกค้า และนโยบายที่ตั้งไว้ หากข้อมูลไม่พอระบบจะแจ้งว่าคำนวณไม่ได้",
+          "ค่าดังกล่าวเป็นแบบจำลองประกอบการตัดสินใจ ไม่ใช่การรับรองผลประมูลหรือบริการ AI ทำนายตลาด"
+        ]
+      },
+      {
+        "title": "บันทึกราคาเสนอ",
+        "body": [
+          "กด “ใช้ราคานี้เป็นราคาเสนอ” เมื่อเลือกแล้ว ระบบตรวจผลตรวจต้นทุนและกำไรขั้นต่ำฝั่งเซิร์ฟเวอร์",
+          "หากถูกปฏิเสธ ให้ตรวจต้นทุน ผลทบทวน และนโยบายของหน่วยงาน อย่าใช้ค่าทดลองที่ยังไม่บันทึกเป็นราคาอย่างเป็นทางการ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ทำไมไม่เห็นโอกาสชนะ",
+        "answer": "ยังไม่มีข้อมูลประวัติที่เพียงพอในขอบเขตของงาน ระบบไม่สร้างความน่าจะเป็นขึ้นมาแทน"
+      },
+      {
+        "question": "เลื่อนกำไรต่ำกว่าขั้นต่ำแล้วบันทึกได้ไหม",
+        "answer": "ระบบตรวจเงื่อนไขการบันทึกอีกครั้ง แม้จะทดลองดูค่าบนหน้าจอได้ก็ไม่ได้ข้ามข้อกำหนด"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-cost-review",
+      "cpe-sales-opportunities",
+      "cpe-knowledge-master"
+    ]
   },
   {
-    slug: "sales-pipeline-and-forecast", title: "อ่าน Opportunity, Sales Pipeline และ Forecast", summary: "ทำความเข้าใจ Stage, Forecast Amount, Weighted Amount, Data Quality, Risk และ immutable snapshot", audience: ["SALES", "APPROVER", "ADMIN"], category: "Pipeline & Forecast", tags: ["Opportunity", "Pipeline", "Forecast", "Probability", "Snapshot", "Deal Risk"], updatedAt: UPDATED_AT, readingMinutes: 8,
-    sections: [
-      { title: "Stage และ Transition", body: ["Stage หลักคือ QUALIFY, DISCOVER, SOLUTION, PROPOSAL, NEGOTIATION และปลายทาง WON/LOST/CANCELLED/EXPIRED", "Lost ต้องมี Category/Reason และ Probability Override ต้องมีเหตุผล ระบบตรวจ scope, gate และ expected version"] },
-      { title: "Forecast Amount", body: ["ก่อนมี governed Quote ใช้ Opportunity Estimated Value จากนั้นใช้ Primary Quote Version ตามสถานะที่กำหนด ไม่รวม Quote ทางเลือกทั้งหมด", "Weighted Amount = Forecast Amount × Probability และคำนวณด้วย Decimal ฝั่ง server"] },
-      { title: "Filters และ Quality", body: ["ใช้ Fiscal Period, Owner, Organization, Stage และ Forecast Category เพื่อ drill down ภายในผลลัพธ์ bounded", "Quality ชี้ Expected Close, Next Action หรือ freshness ที่ขาด ให้แก้ record ต้นทางแทนการปรับรายงาน"] },
-      { title: "Snapshot และ Risk", body: ["Snapshot เก็บ cutoff, scope, formula/source version และ item facts แบบ immutable พร้อม idempotent key", "Deal Risk trigger มาจาก deterministic rule; AI อธิบายได้แต่ไม่เป็น trigger authority"] },
+    "slug": "cpe-cost-catalog",
+    "title": "จัดการฐานข้อมูลต้นทุนกลางและประวัติราคา",
+    "summary": "เพิ่มรายการต้นทุน อัปเดตราคาพร้อมแหล่งอ้างอิง และดู BOQ ที่ได้รับผลกระทบ",
+    "audience": [
+      "ESTIMATOR",
+      "PROCUREMENT",
+      "ADMIN"
     ],
-    faqs: [{ question: "ทำไม Pipeline Amount ไม่เท่า Estimated Value", answer: "เมื่อ Primary Quote เข้าเกณฑ์ Forecast จะใช้ยอด Quote" }, { question: "ปิด AI แล้วยังเห็น Risk ไหม", answer: "เห็น deterministic signal ได้ AI เป็นชั้นอธิบายเท่านั้น" }],
-    relatedSlugs: ["customer-to-opportunity", "opportunity-transition-policy", "notifications-and-tasks", "quotation-and-approval"],
+    "category": "ต้นทุนและจัดซื้อ",
+    "tags": [
+      "catalog",
+      "วัสดุ",
+      "ฐานต้นทุน",
+      "แหล่งอ้างอิง",
+      "ประวัติราคา",
+      "ผลกระทบ BOQ"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/catalog",
+    "sections": [
+      {
+        "title": "ค้นหาและเพิ่มรายการ",
+        "body": [
+          "ค้นหาด้วยรหัสหรือชื่อ กรองหมวดและความผันผวน กดเพิ่มรายการต้นทุนเมื่อมีสิทธิ์",
+          "ระบุหน่วยและหมวดให้สอดคล้องกับ BOQ เพื่อให้ผู้ประมาณราคาเลือกใช้รายการได้ถูกต้อง"
+        ]
+      },
+      {
+        "title": "บันทึกราคาที่ตรวจสอบได้",
+        "body": [
+          "เปิดรายละเอียดแล้วกรอกราคา แหล่งอ้างอิงและข้อมูลที่เกี่ยวข้อง กด “บันทึกราคาและแหล่งอ้างอิง”",
+          "ตรวจหน่วยราคาและวันที่อ้างอิงก่อนใช้ ตัวเลขในฐานต้นทุนมาจากข้อมูลที่คนบันทึก ไม่ใช่ราคาตลาดสดที่ระบบดึงให้อัตโนมัติ"
+        ]
+      },
+      {
+        "title": "อ่านประวัติและช่วงราคา",
+        "body": [
+          "ดูแนวโน้มย้อนหลัง ตัวอย่างราคาจากผู้ขาย และประมาณการที่ระบบแสดง ใช้เป็นข้อมูลประกอบการทบทวนราคา",
+          "เมื่อฐานราคาเปลี่ยน ให้เปิดดู BOQ ที่ได้รับผลกระทบและประสานผู้ประมาณราคา"
+        ]
+      },
+      {
+        "title": "ส่งต่อไปประมาณราคา",
+        "body": [
+          "เลือกฐานต้นทุนใน BOQ แล้วตรวจราคาและเงื่อนไขของงานนั้นก่อนบันทึก",
+          "การอัปเดตฐานราคาไม่ได้ยืนยันราคาเสนอหรืออนุมัติปรับ BOQ ของทุกงานโดยอัตโนมัติ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "แก้ฐานราคาแล้ว BOQ ทุกงานเปลี่ยนทันทีไหม",
+        "answer": "ให้ตรวจรายการที่ได้รับผลกระทบและทบทวน BOQ ของงาน ระบบแยกฐานต้นทุนกับรายการของแต่ละงาน"
+      },
+      {
+        "question": "ข้อมูลราคามาจากไหน",
+        "answer": "จากแหล่งอ้างอิงที่ผู้ใช้บันทึกไว้ ตรวจที่รายละเอียดและประวัติราคา"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-material-forecast",
+      "cpe-boq-estimation",
+      "cpe-vendor-management"
+    ]
   },
   {
-    slug: "presales-solution-survey-boq", title: "ทำ Presales ตั้งแต่ Coverage ถึง Solution Design, Site Survey และ BOQ", summary: "ลำดับงานเทคนิค หลักฐาน Requirement การสำรวจแบบ Manual และการทบทวน BOQ", audience: ["SALES", "PRESALES", "APPROVER"], category: "Presales", tags: ["Coverage", "Solution Design", "Site Survey", "BOQ", "Requirement Mapping", "NTSP"], updatedAt: UPDATED_AT, readingMinutes: 10,
-    sections: [
-      { title: "Coverage และ Solution", body: ["Solution Design อ้าง Opportunity ใน scope เพิ่ม Service, Site/GPS/Contact, Component, Network, Risk และ Requirement Mapping", "Service Category configuration กำหนด Survey, BOQ และ physical installation gate"] },
-      { title: "Solution Workflow", body: ["เดิน DRAFT ไป Requirements Review และเส้นทาง Survey/Solution ตาม gate พร้อมเหตุผล", "Technical กับ Commercial Review แยกกันและตรวจ permission, scope, maker-checker"] },
-      { title: "Site Survey แบบ Manual", body: ["Submit สร้าง normalized NTSP request snapshot จากนั้น Coordinator เลือก Team, Engineer, Priority และวันสำรวจ", "Reviewer Approve/Return/Reject ผลได้ ปัจจุบันไม่มี Production NTSP API และไม่ถือ Integration Success จนมี acknowledgement"] },
-      { title: "BOQ", body: ["ระบุ Section, Quantity, Unit, Wastage, Cost, Selling Price, Discount, Charge Type และ Contract Months ด้วย Decimal", "ส่ง Technical Review ก่อน Commercial Review การ Revision รักษา version เดิมและ Survey ไม่ approve BOQ อัตโนมัติ"] },
+    "slug": "cpe-material-forecast",
+    "title": "อ่านพยากรณ์ราคาวัสดุและผลกระทบต่องาน",
+    "summary": "เปรียบเทียบราคาฐาน แนวโน้ม 90 วัน และ BOQ ที่อาจได้รับผลกระทบ",
+    "audience": [
+      "ESTIMATOR",
+      "PROCUREMENT",
+      "EXECUTIVE",
+      "ADMIN"
     ],
-    faqs: [{ question: "ส่ง Survey แล้วไป NTSP หรือยัง", answer: "ยัง ปัจจุบันเป็น Manual mode" }, { question: "ใครเห็น Unit Cost", answer: "เฉพาะผู้มี cost-view permission" }],
-    relatedSlugs: ["customer-to-opportunity", "proposal-and-ai-draft", "quotation-and-approval"],
+    "category": "ต้นทุนและจัดซื้อ",
+    "tags": [
+      "forecast",
+      "90 วัน",
+      "ราคาวัสดุ",
+      "ซื้อ",
+      "รอ",
+      "ผลกระทบกำไร"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/forecast",
+    "sections": [
+      {
+        "title": "เลือกวัสดุที่จะติดตาม",
+        "body": [
+          "ค้นหารายการและเปิดรายละเอียด ดูราคาฐาน หน่วย และวันที่หรือข้อมูลอ้างอิงที่มี"
+        ]
+      },
+      {
+        "title": "แยกราคาปัจจุบันกับประมาณการ",
+        "body": [
+          "อ่านค่าคาดการณ์ 90 วันและแนวโน้มคู่กับประวัติราคา ตัวเลขเป็นประมาณการจากข้อมูล/ค่าที่บันทึกในระบบ",
+          "ไม่มีการรับรองราคาซื้อจริง และไม่มีการดึงราคาตลาดหรือส่งคำสั่งซื้ออัตโนมัติ"
+        ]
+      },
+      {
+        "title": "ประเมินผลกระทบต่องาน",
+        "body": [
+          "ดู BOQ ที่เชื่อมกับวัสดุและผลกระทบต่อกำไร ก่อนตัดสินใจทบทวนราคาเสนอหรือแผนจัดซื้อ"
+        ]
+      },
+      {
+        "title": "นำไปใช้ร่วมกับฝ่ายจัดซื้อ",
+        "body": [
+          "ใช้คำแนะนำซื้อ/รอเป็นข้อมูลประกอบการพิจารณา แล้วดำเนินการผ่าน RFQ และเปรียบเทียบราคาตามปกติ",
+          "หากฐานราคาเก่าหรือผิดหน่วย ให้แก้ที่ฐานข้อมูลต้นทุนกลางพร้อมแหล่งอ้างอิงก่อน"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ระบบสั่งซื้อให้เมื่อเห็นสัญญาณซื้อหรือไม่",
+        "answer": "ไม่สั่งซื้อ ต้องให้ผู้มีสิทธิ์ดำเนินการและออก PO ผ่านหน้าจัดซื้อ"
+      },
+      {
+        "question": "พยากรณ์ใช้แทนใบเสนอราคาผู้ขายได้ไหม",
+        "answer": "ไม่ได้ ใบเสนอราคาจริงยังต้องตรวจราคา อายุและเงื่อนไขก่อนออก PO"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-cost-catalog",
+      "cpe-rfq-po",
+      "cpe-bid-simulation"
+    ]
   },
   {
-    slug: "proposal-and-ai-draft", title: "สร้าง Proposal แบบ Versioned และใช้ AI Draft อย่างปลอดภัย", summary: "สร้างจาก Opportunity แก้เป็น immutable version Review ตามลำดับ และใช้ AI เป็นร่าง", audience: ["SALES", "PRESALES", "APPROVER"], category: "Proposal & Quotation", tags: ["Proposal", "Template", "Version", "AI Draft", "Manager Review", "Print"], updatedAt: UPDATED_AT, readingMinutes: 7,
-    sections: [
-      { title: "สร้างจาก Opportunity", body: ["เลือก Opportunity ใน scope ระบบสืบทอด Customer/Owner และคัดลอก active Template sections เข้า Version แรก", "การแก้ Template ภายหลังไม่เปลี่ยน Proposal เดิม"] },
-      { title: "Version และ Restore", body: ["ทุกการแก้สร้าง immutable version ใหม่และมี Version Compare", "Restore สร้าง version ใหม่จาก source พร้อมที่มา; terminal Proposal แก้ไม่ได้"] },
-      { title: "AI Generator", body: ["AI ใช้ Opportunity, Customer, Meeting Notes, Template และ Product ที่เลือกภายใน scope แล้วสร้าง editable Draft ภาษาไทย โดยคงชื่อเฉพาะ รหัสและตัวเลขตามต้นฉบับ", "ต้องตรวจข้อเท็จจริง ราคา ขอบเขตและเงื่อนไข; provider outage ยังแก้ manual ได้"] },
-      { title: "Review และ Quotation", body: ["Workflow เป็น Manager review แล้ว Director approval พร้อม maker-checker", "Print เป็น browser view ไม่ใช่ PDF/Word delivery หรือ signature เมื่อพร้อมจึงสร้าง Quotation ที่ผูก Opportunity เดียวกัน"] },
+    "slug": "cpe-rfq-po",
+    "title": "สร้าง RFQ เปรียบเทียบใบเสนอราคา และออก PO",
+    "summary": "เตรียมเอกสารตามหมวด BOQ รับราคาผู้ขาย และเลือกผู้รับงาน",
+    "audience": [
+      "PROCUREMENT",
+      "ADMIN"
     ],
-    faqs: [{ question: "AI Draft ถือว่าอนุมัติไหม", answer: "ไม่ ยังต้องผ่าน review workflow" }, { question: "Print คือเอกสารส่งลูกค้าอัตโนมัติไหม", answer: "ไม่ เป็น authenticated browser print view" }],
-    relatedSlugs: ["presales-solution-survey-boq", "quotation-and-approval", "ai-assistance-and-safety"],
+    "category": "ต้นทุนและจัดซื้อ",
+    "tags": [
+      "RFQ",
+      "PO",
+      "จัดซื้อ",
+      "ใบเสนอราคา",
+      "TOR",
+      "Specification",
+      "เลือกและออก PO"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/procurement",
+    "sections": [
+      {
+        "title": "สร้างชุด RFQ",
+        "body": [
+          "สร้างจากงานที่ได้งานแล้วโดยเลือกงานต้นทางและแบ่งตามหมวด BOQ หรือเลือกสร้างอัตโนมัติเมื่อยืนยันได้งาน",
+          "ตรวจงบของแต่ละชุดกับงานต้นทาง ระบบป้องกันชุดซ้ำในงานและหมวดเดียวกัน"
+        ]
+      },
+      {
+        "title": "ตรวจความพร้อมเอกสาร",
+        "body": [
+          "เปิดรายละเอียด RFQ แล้วตรวจรายการ BOQ, TOR, แบบก่อสร้าง, Specification และความปลอดภัย ให้ครบตามที่แสดง",
+          "เครื่องหมายพร้อมเป็นการบันทึกสถานะการเตรียมเอกสาร ไม่ใช่การอัปโหลดหรือการสแกนไฟล์ในหน้านี้"
+        ]
+      },
+      {
+        "title": "รับและเทียบราคา",
+        "body": [
+          "เพิ่มใบเสนอราคาจากผู้รับเหมาที่อยู่ในทะเบียน ตรวจราคา วันหมดอายุ คะแนนและสถานะผู้ขาย",
+          "ระบบแสดงจำนวนผู้เสนอ ราคาต่ำสุดและส่วนต่างจากงบ ตรวจเงื่อนไขอื่นร่วมด้วย ไม่เลือกผู้ขายจากราคาต่ำสุดอย่างเดียว"
+        ]
+      },
+      {
+        "title": "เลือกและออก PO",
+        "body": [
+          "ผู้มีสิทธิ์กด “เลือกและออก PO” เมื่อเอกสารครบ ผู้ขายใช้งานได้ ใบเสนอราคายังไม่หมดอายุ และมีโครงการรองรับ",
+          "ยอดที่ออก PO เชื่อมเป็นภาระผูกพันของโครงการ รายการที่ออกแล้วไม่เปลี่ยนผู้ชนะซ้ำผ่านการกดยืนยันเดิม"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ทำไมออก PO ไม่ได้",
+        "answer": "ตรวจความครบของเอกสาร สถานะผู้ขาย อายุใบเสนอราคา โครงการ และสิทธิ์ของผู้ดำเนินการ"
+      },
+      {
+        "question": "ผู้ขายเสนอราคา RFQ เดิมซ้ำได้ไหม",
+        "answer": "ระบบตรวจรายการซ้ำต่อ RFQ และผู้ขาย ให้ทบทวนรายการเดิมก่อนเพิ่ม"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-vendor-management",
+      "cpe-project-management",
+      "cpe-material-forecast"
+    ]
   },
   {
-    slug: "quotation-and-approval", title: "สร้าง Quotation, ส่ง Approval และบันทึกลูกค้ายอมรับ", summary: "กรอกหลาย Product ตรวจ Floor Price/Commercial Gate จัดการ Revision และ Authority", audience: ["SALES", "PRESALES", "APPROVER"], category: "Proposal & Quotation", tags: ["Quotation", "Quote Version", "Floor Price", "Discount", "Approval", "Maker Checker"], updatedAt: UPDATED_AT, readingMinutes: 10,
-    sections: [
-      { title: "Draft Version", body: ["Quote อยู่ใต้ Opportunity และสืบทอด Customer; Proposal link ต้องตรง Opportunity", "เพิ่ม Product 1–100 รายการ ระบุ Quantity, Unit Price, Discount ระบบคำนวณ Total/Cost/Margin ด้วย Decimal"] },
-      { title: "Floor Price และ Gate", body: ["ราคาสุทธิต่อหน่วยต้องไม่ต่ำกว่า confirmed Floor Price และอาจต้องมี confirmed cost, Coverage หรือ Solution", "UI เป็นคำเตือนเบื้องต้น กติกาจริงตรวจฝั่ง server"] },
-      { title: "Approval", body: ["Submit สร้าง request ที่อ้าง Quote Version/policy snapshot ผู้อนุมัติเลือก Approve, Reject, Return, Delegate หรือ Escalate พร้อมเหตุผล", "ตรวจ policy role, Organization, Segment, Maximum Amount, Effective Period และ maker-checker"] },
-      { title: "Revision ถึง Accepted", body: ["Return/Reject ต้องสร้าง Revision และ Submit ใหม่ โดยเก็บ evidence เดิม", "APPROVED เปลี่ยนเป็น SENT แล้ว ACCEPTED เมื่อลูกค้ายอมรับ เฉพาะ ACCEPTED Version จึงสร้าง Contract"] },
+    "slug": "cpe-vendor-management",
+    "title": "ขึ้นทะเบียนและประเมินผู้รับเหมา",
+    "summary": "ดูประวัติผลงาน คะแนนถ่วงน้ำหนัก เกรด และสถานะพักใช้งาน",
+    "audience": [
+      "PROCUREMENT",
+      "PROJECT_MANAGER",
+      "ADMIN"
     ],
-    faqs: [{ question: "ทำไมยังไม่กำหนด Floor Price", answer: "Product ยังไม่มีราคา/ต้นทุนที่ยืนยัน ผู้ดูแลต้องบันทึกข้อมูลจริง" }, { question: "Maker อนุมัติเองได้ไหม", answer: "ไม่ได้เมื่อ policy กำหนด maker-checker" }],
-    relatedSlugs: ["proposal-and-ai-draft", "sales-pipeline-and-forecast", "contract-to-service-order", "workflow-administration"],
+    "category": "ต้นทุนและจัดซื้อ",
+    "tags": [
+      "vendor",
+      "ผู้รับเหมา",
+      "คะแนน",
+      "เกรด",
+      "พักใช้งาน",
+      "ประเมิน"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/vendors",
+    "sections": [
+      {
+        "title": "สร้างและค้นหาทะเบียน",
+        "body": [
+          "ใช้รหัสหรือชื่อค้นหาก่อนเพิ่ม ตรวจประเภทงานและเกรดเพื่อหาผู้ขายที่เหมาะสม",
+          "กดเพิ่มผู้รับเหมาและกรอกข้อมูลทะเบียนตามแบบฟอร์ม"
+        ]
+      },
+      {
+        "title": "ประเมินตามมิติที่กำหนด",
+        "body": [
+          "เปิดรายละเอียดเพื่อกรอกคะแนนในแต่ละมิติ ระบบคำนวณคะแนนถ่วงน้ำหนักและเกรดจาก Data Master ของหน่วยงาน",
+          "ให้ใช้หลักฐานจากงานจริงประกอบและตรวจว่ากำลังประเมินผู้รับเหมารายที่ถูกต้อง"
+        ]
+      },
+      {
+        "title": "พักใช้งานและตรวจคำเตือน",
+        "body": [
+          "บันทึกสถานะพักใช้งานเมื่อมีเหตุให้หยุดการใช้งานรายนั้น แล้วประสานผู้เกี่ยวข้อง",
+          "ผู้รับเหมาที่พักใช้งานจะมีข้อจำกัดในการเสนอราคา/ออก PO ตามการตรวจของระบบ"
+        ]
+      },
+      {
+        "title": "อ่านประวัติผลงาน",
+        "body": [
+          "ดูงานและ PO ที่ได้รับจริงจากระบบประกอบการพิจารณา ไม่ใช้จำนวนงานในคำอธิบายแทนรายการที่เชื่อมอยู่",
+          "คะแนนและเกณฑ์เตือนอาจเปลี่ยนตาม Data Master ให้ตรวจค่าปัจจุบันก่อนเปรียบเทียบ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "เกรดเป็นตัวเลขที่กรอกเองหรือไม่",
+        "answer": "ระบบคำนวณจากคะแนนและเกณฑ์ที่ตั้งไว้ ตรวจผลหลังบันทึก"
+      },
+      {
+        "question": "พักใช้งานแล้วข้อมูลเดิมหายไหม",
+        "answer": "สถานะพักใช้งานแยกจากประวัติเดิม ข้อมูลผลงานและรายการที่เชื่อมยังใช้ตรวจสอบได้"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-rfq-po",
+      "cpe-project-management",
+      "cpe-knowledge-master"
+    ]
   },
   {
-    slug: "contract-to-service-order", title: "สร้าง Contract จาก Accepted Quote และส่งต่อ Service Order", summary: "ควบคุม Contract Version, Review, เอกสาร ลายเซ็น และ manual handoff", audience: ["SALES", "APPROVER", "ADMIN"], category: "Contract", tags: ["Contract", "Accepted Quote", "Signature", "malware scan", "Renewal", "Service Order"], updatedAt: UPDATED_AT, readingMinutes: 9,
-    sections: [
-      { title: "สร้าง Contract", body: ["สร้างได้จาก ACCEPTED Quote Version ใน scope ระบบคัดลอก Customer, Opportunity, Proposal, Quote และรายการ server-side", "TCV, MRR และ One-time ใช้ Decimal จาก immutable Contract Version"] },
-      { title: "Lifecycle", body: ["ครอบคลุม Internal/Legal/Customer Review, Approval, Signature Pending, Effective, Service Order และ Completed พร้อม Revision/Cancelled/Expired", "ทุก transition ตรวจ edge, permission, maker-checker, scope และ version"] },
-      { title: "Document และ Signature", body: ["เอกสารอยู่ private storage และใช้เฉพาะ version ที่ malware scan CLEAN เป็นหลักฐาน", "ต้องบันทึก Customer/NT Signer อ้าง current version และ document ก่อน Effective"] },
-      { title: "Renewal และ Service Order", body: ["หน้า Contract แสดง Amendment, Renewal/Reminder, PO และ execution evidence", "Service Order เป็น DRAFT manual handoff ไม่ใช่ NTSP Integration Success จนมี acknowledgement"] },
+    "slug": "cpe-project-management",
+    "title": "บริหารโครงการ S-Curve และปิดงาน",
+    "summary": "บันทึกความคืบหน้า รับจ่ายรายเดือน PO และต้นทุนจริงเพื่อใช้เป็นงานอ้างอิง",
+    "audience": [
+      "PROJECT_MANAGER",
+      "EXECUTIVE",
+      "ADMIN"
     ],
-    faqs: [{ question: "อัปโหลดสัญญาแล้ว Effective ไหม", answer: "ยัง ต้องบันทึก signature evidence ที่อ้าง CLEAN document/current version" }, { question: "Service Order ไป NTSP แล้วหรือยัง", answer: "ยัง เป็น manual handoff จนมี acknowledgement" }],
-    relatedSlugs: ["quotation-and-approval", "workflow-administration"],
+    "category": "โครงการและการเงิน",
+    "tags": [
+      "PM",
+      "project",
+      "S-Curve",
+      "ความคืบหน้า",
+      "ปิดโครงการ",
+      "ต้นทุนจริง",
+      "PO payments"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/projects",
+    "sections": [
+      {
+        "title": "เปิดโครงการจากงานที่ได้",
+        "body": [
+          "โครงการเชื่อมกับงานขายที่ยืนยันได้งาน เปิดรายละเอียดเพื่อตรวจเลขที่สัญญา มูลค่า งบ PM วันเริ่มและระยะเวลา"
+        ]
+      },
+      {
+        "title": "บันทึกผลรายเดือน",
+        "body": [
+          "PM ที่รับผิดชอบบันทึกความคืบหน้าจริง เงินรับ/จ่ายจริง และประมาณการเพิ่มเติมของเดือนนั้น",
+          "ความคืบหน้าจริงต้องไม่ถอยหลัง ตรวจเดือนและยอดสะสมก่อนยืนยัน และติดตามกราฟ S-Curve เทียบแผน"
+        ]
+      },
+      {
+        "title": "ติดตามต้นทุนและภาระผูกพัน",
+        "body": [
+          "ตรวจเงินจ่ายจริงร่วมกับ PO คงเหลือ เพื่อไม่บวกยอดที่ชำระ PO แล้วซ้ำอีกครั้ง",
+          "การจัดสรรจ่าย PO ต้องไม่เกินยอดเงินจ่ายของเดือนและยอด PO สะสมที่เกี่ยวข้อง ดูผู้รับเหมาที่ได้รับงานและความเสี่ยงประกอบ"
+        ]
+      },
+      {
+        "title": "ปิดโครงการเป็นข้อมูลอ้างอิง",
+        "body": [
+          "ก่อนปิด ต้องบันทึกความคืบหน้าเดือนสุดท้ายครบ 100% และต้นทุนจริงรายหมวดรวมตรงกับยอดจ่ายจริงที่เป็นบวก",
+          "กด “ยืนยันปิดงานและส่งเข้าคลังอ้างอิง” เมื่อข้อมูลครบ งานปิดแล้วไม่รับการแก้ไขตามปกติและใช้เป็นฐานเทียบต้นทุนงานใหม่"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ทำไมเพิ่มความคืบหน้าหรือเงินจ่ายไม่ได้",
+        "answer": "ตรวจสิทธิ์ PM สถานะโครงการ รุ่นข้อมูล และข้อจำกัดยอดรายเดือน/PO ที่ระบบแจ้ง"
+      },
+      {
+        "question": "ปิดงานแล้วกลับมาแก้ต้นทุนได้ไหม",
+        "answer": "งานปิดแล้วเก็บเป็นข้อมูลอ้างอิงและป้องกันการแก้ไข ให้ตรวจให้ครบก่อนยืนยันปิด"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-cash-flow",
+      "cpe-rfq-po",
+      "cpe-knowledge-master"
+    ]
   },
   {
-    slug: "ai-assistance-and-safety", title: "ใช้ AI Assistance โดยยังควบคุมข้อมูลและการตัดสินใจ", summary: "Human Confirmation, Provenance, Draft, Deal Risk และ Manual Fallback", audience: ["ALL"], category: "AI Assistance", tags: ["AI", "Human Confirmation", "Provenance", "Deal Risk", "Fallback", "training consent"], updatedAt: UPDATED_AT, readingMinutes: 8,
-    sections: [
-      { title: "AI ไม่ใช่ผู้อนุมัติ", body: ["AI Suggestion/Draft ไม่เปลี่ยน record เอง ผู้มี permission ต้องตรวจ แก้ และยืนยัน", "AI ข้าม authorization, approval, maker-checker, floor price หรือ gate ไม่ได้"] },
-      { title: "Data Boundary", body: ["ส่งเฉพาะข้อมูลขั้นต่ำใน scope ห้ามใส่ password, API key, token หรือ secret", "เก็บ provider/model, template, source, เวลา และ provenance ที่จำเป็น ไม่เก็บ raw prompt/full response โดย default"] },
-      { title: "Capabilities", body: ["Prospect Insight, Meeting Draft, Proposal Draft และ Deal Risk Explanation ล้วนต้องแยก draft/rule จากข้อมูลทางการ", "Confirmed Next Action สร้าง Activity หลังตรวจ Owner, context และ due date พร้อม idempotency"] },
-      { title: "Fallback และ Feedback", body: ["Timeout, quota หรือ schema error ต้อง sanitized และไม่ block core workflow", "Helpful, Incorrect, Unsafe ใช้ quality monitoring และไม่ใช่ training consent"] },
+    "slug": "cpe-cash-flow",
+    "title": "ดูเงินสด ลูกหนี้ เจ้าหนี้ และความต้องการเงินทุน",
+    "summary": "อ่านยอดจริง/ประมาณการ ติดตามอายุหนี้ และบันทึกสถานะชำระ",
+    "audience": [
+      "EXECUTIVE",
+      "PROJECT_MANAGER",
+      "ADMIN"
     ],
-    faqs: [{ question: "ยืนยัน AI Draft เท่ากับอนุมัติไหม", answer: "ไม่ งานยังผ่าน workflow ปกติ" }, { question: "Helpful คือ consent ให้ train ไหม", answer: "ไม่ Feedback ไม่ใช่ training consent" }],
-    relatedSlugs: ["ai-page-assistant", "prospect-to-lead", "notifications-and-tasks", "proposal-and-ai-draft"],
+    "category": "โครงการและการเงิน",
+    "tags": [
+      "cash flow",
+      "เงินสด",
+      "ลูกหนี้",
+      "เจ้าหนี้",
+      "aging",
+      "ชำระแล้ว",
+      "วงเงิน"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/cash",
+    "sections": [
+      {
+        "title": "อ่านยอดเงินจริงและประมาณการ",
+        "body": [
+          "ตรวจเงินสดคงเหลือ จุดต่ำสุดที่คาดการณ์ ลูกหนี้ค้างรับ เจ้าหนี้ค้างจ่ายและวงเงินสินเชื่อ",
+          "เงินสดอ้างอิงยอดตั้งต้นร่วมกับเงินรับ/จ่ายจริงของโครงการ ส่วนประมาณการในแบบฟอร์มเป็นยอดเพิ่มเติม ไม่ใช่กรอกยอดจริงซ้ำ"
+        ]
+      },
+      {
+        "title": "เพิ่มลูกหนี้หรือเจ้าหนี้",
+        "body": [
+          "ผู้มีสิทธิ์กดเพิ่มลูกหนี้ / เจ้าหนี้ แล้วเลือกประเภท กรอกรายละเอียด/คู่ค้า จำนวนเงินและวันครบกำหนด",
+          "ตรวจยอดและวันครบกำหนดให้ตรงเอกสาร รายการนี้เป็นทะเบียนติดตามและไม่ใช่การสั่งโอนเงิน"
+        ]
+      },
+      {
+        "title": "ติดตามอายุหนี้และสถานะชำระ",
+        "body": [
+          "ดูรายการยังไม่ถึงกำหนดและเกินกำหนดตามช่วงวันที่บนหน้าจอ ใช้ตัวกรองค้นหารายการที่ต้องติดตาม",
+          "กด “บันทึกชำระแล้ว” เมื่อยืนยันกับหลักฐาน การเปลี่ยนสถานะทะเบียนไม่บันทึกเงินรับจ่ายจริงซ้ำให้อัตโนมัติ"
+        ]
+      },
+      {
+        "title": "ประสาน PM และผู้บริหาร",
+        "body": [
+          "ตรวจความต้องการเงินทุนของแต่ละโครงการร่วมกับแผนรับ/จ่ายและภาระผูกพัน",
+          "กำหนดเงินสดตั้งต้นและวงเงินผ่าน Data Master ตามสิทธิ์ ไม่แก้ยอดในกราฟเพื่อให้รายงานตรงความคาดหวัง"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "กดชำระแล้วหมายถึงโอนเงินจริงหรือไม่",
+        "answer": "เป็นการเปลี่ยนสถานะทะเบียนติดตาม ระบบไม่ได้เชื่อมการโอนเงินหรือธนาคาร"
+      },
+      {
+        "question": "เงินสดต่างจากยอดรวมลูกหนี้ลบเจ้าหนี้เพราะอะไร",
+        "answer": "เงินสดใช้ยอดตั้งต้นและเงินรับจ่ายจริง ส่วนทะเบียนหนี้ใช้ติดตามกำหนดชำระ ต้องอ่านแยกกัน"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-project-management",
+      "cpe-dashboard",
+      "cpe-knowledge-master"
+    ]
   },
   {
-    slug: "workflow-administration", title: "ดูแล Users, Organization, Workflow, Authority และ Audit", summary: "คู่มือบัญชี บทบาท หน่วยงาน ผู้อนุมัติ Policy, Product Cost, AI Settings และ Risk Rules", audience: ["ADMIN"], category: "Administration", tags: ["Users", "Roles", "Organization", "Workflow", "Authority", "Audit", "Round Robin"], updatedAt: UPDATED_AT, readingMinutes: 12,
-    sections: [
-      { title: "Users & Roles", body: ["ดูบัญชี สถานะ assignments, Organization และ InsightKM จาก Users & Roles แล้วใช้หน้า edit จัดการ role/API key", "Admin เปลี่ยน role ปิดบัญชี หรือ self-grant ของตัวเองไม่ได้ บัญชี Disabled ใช้ session ต่อไม่ได้"] },
-      { title: "Organization & Approvers", body: ["Unit code ต้อง unique, parent active และห้าม cycle การปิดต้องไม่มี active child/assignment/Lead rule", "Approver ต้องมี scoped role และ Authority ตรง Role, Segment, Maximum Amount และ Effective Period"] },
-      { title: "Workflow และ Assignment", body: ["Transition/Approval Policy เปลี่ยนด้วย version ใหม่และ effective dates; cost/floor price ต้องยืนยันจากข้อมูลจริง", "Lead Assignment ใช้ priority กับ Owner/Round Robin ห้าม hard-code role, status หรือ approval level"] },
-      { title: "Audit, Deleted Records และ AI", body: ["Deleted Records กู้เฉพาะ soft delete ไม่ย้อน Merge/immutable version; Audit แสดง Actor, Action, Target, Outcome, Correlation ID", "AI Settings เก็บ credential เข้ารหัสและ Test Connection แบบ sanitize; Risk Rules เป็น deterministic versioned configuration"] },
+    "slug": "cpe-knowledge-master",
+    "title": "ใช้คลังงานและปรับปรุง Data Master",
+    "summary": "วิเคราะห์ชนะ/แพ้ ค้นประวัติต้นทุนจริง และเสนอปรับนโยบายโดยมีผู้ตรวจอีกคน",
+    "audience": [
+      "EXECUTIVE",
+      "ESTIMATOR",
+      "PROCUREMENT",
+      "ADMIN"
     ],
-    faqs: [{ question: "ซ่อนปุ่มพอสำหรับ security ไหม", answer: "ไม่ ทุก mutation ตรวจ authorization ฝั่ง serverและมี audit" }, { question: "ทำไม Approver ใหม่ยังอนุมัติไม่ได้", answer: "ตรวจ assignment, scope, policy role, segment, amount, dates และ maker-checker" }],
-    relatedSlugs: ["opportunity-transition-policy", "quotation-and-approval", "contract-to-service-order", "ai-assistance-and-safety"],
+    "category": "คลังความรู้และผู้ดูแล",
+    "tags": [
+      "knowledge",
+      "Data Master",
+      "คลังงาน",
+      "ข้อเสนอปรับปรุง",
+      "maker checker",
+      "อนุมัติ",
+      "นโยบาย"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/knowledge",
+    "sections": [
+      {
+        "title": "อ่านผลและค้นคลังงาน",
+        "body": [
+          "ดูการวิเคราะห์ชนะ/แพ้และสาเหตุ แยกประเภทงาน ประเภทลูกค้า และต้นทุนประมาณเทียบต้นทุนจริง",
+          "ในแท็บประวัติ ให้ค้นหาและเปิดรายละเอียดของงานจากตารางเพื่อดูข้อมูลอ้างอิง"
+        ]
+      },
+      {
+        "title": "ตรวจ Data Master ปัจจุบัน",
+        "body": [
+          "ตรวจกลุ่มข้อมูลหลักและค่าที่ใช้กับกำไร ความเสี่ยง คะแนนผู้ขาย การเงิน การจัดซื้อและแบบจำลอง",
+          "อย่านำค่าตัวอย่างไปถือเป็นนโยบายบริษัทโดยไม่ทบทวน ตรวจค่าของหน่วยงานที่กำลังใช้งาน"
+        ]
+      },
+      {
+        "title": "ส่งข้อเสนอปรับปรุง",
+        "body": [
+          "ผู้มีสิทธิ์ระบุเหตุผลและค่าที่เสนอ แล้วกดส่งข้อเสนอพร้อมค่ามาตรฐานที่แก้ไข",
+          "ข้อเสนอที่รอตัดสินใจยังไม่เปลี่ยนค่าทางการ ใช้รุ่นปัจจุบันต่อจนมีการตัดสินใจตามสิทธิ์"
+        ]
+      },
+      {
+        "title": "อนุมัติหรือไม่อนุมัติ",
+        "body": [
+          "ผู้มีสิทธิ์อีกคนตรวจเหตุผลและผลกระทบก่อนอนุมัติ ระบบไม่อนุญาตให้ผู้เสนออนุมัติข้อเสนอของตนเอง",
+          "หากนโยบายมีรุ่นใหม่ระหว่างตรวจ ให้ทบทวนข้อมูลล่าสุดก่อนส่งหรืออนุมัติอีกครั้ง ระบบเก็บประวัติการตัดสินใจ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ส่งข้อเสนอแล้วค่ากลางเปลี่ยนทันทีไหม",
+        "answer": "ไม่เปลี่ยนจนกว่าข้อเสนอจะผ่านการตัดสินใจและบันทึกสำเร็จ"
+      },
+      {
+        "question": "ทำไมอนุมัติข้อเสนอของตัวเองไม่ได้",
+        "answer": "ระบบแยกผู้เสนอและผู้อนุมัติเพื่อให้มีการตรวจสอบจากอีกคน"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-cost-review",
+      "cpe-bid-simulation",
+      "cpe-users-organizations"
+    ]
   },
+  {
+    "slug": "cpe-users-organizations",
+    "title": "ตั้งค่าบัญชี บทบาท หน่วยงาน และตรวจ Audit",
+    "summary": "มอบหมายขอบเขตที่ถูกต้องและแก้กรณีไม่เห็นข้อมูลหรือปุ่มทำงาน",
+    "audience": [
+      "ADMIN"
+    ],
+    "category": "คลังความรู้และผู้ดูแล",
+    "tags": [
+      "admin",
+      "users",
+      "roles",
+      "organization",
+      "audit",
+      "สิทธิ์",
+      "ไม่มีข้อมูล",
+      "หน่วยงาน"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/admin/users",
+    "sections": [
+      {
+        "title": "จัดการบัญชี",
+        "body": [
+          "เปิดผู้ดูแลระบบ > Users & Roles เพื่อตรวจสถานะบัญชีและรายการมอบหมาย ใช้รหัสผ่านตามนโยบายและไม่ส่งข้อมูลลับในแชต",
+          "การแก้สิทธิ์และการปิดบัญชีต้องดำเนินการด้วยผู้มีสิทธิ์ ระบบจำกัดการเปลี่ยนสิทธิ์หรือปิดบัญชีของตนเอง"
+        ]
+      },
+      {
+        "title": "มอบหมายบทบาทพร้อมหน่วยงาน",
+        "body": [
+          "เลือกบทบาทให้ตรงหน้าที่ เช่น ฝ่ายขาย ผู้ประมาณราคา จัดซื้อ PM หรือผู้บริหาร พร้อมหน่วยงานและช่วงเวลาที่มีผล",
+          "บัญชี ADMIN ที่ยังไม่มีหน่วยงานอาจเห็นเมนูแต่ไม่มีข้อมูล CPE ต้องตรวจรายการมอบหมาย ไม่ใช้การแสดงเมนูเป็นหลักฐานว่าสามารถเห็นทุกหน่วยงาน"
+        ]
+      },
+      {
+        "title": "ตรวจโครงสร้างและข้อมูลที่เห็น",
+        "body": [
+          "จัดการหน่วยงานจากเมนู Organization ตรวจรหัส โครงสร้างและสถานะก่อนมอบหมาย",
+          "ผู้ใช้ดูข้อมูลได้ตามหน่วยงาน เจ้าของงานและผู้รับผิดชอบตามสิทธิ์ มุมมองตามบทบาทบนแถบหัวไม่สร้างสิทธิ์ใหม่"
+        ]
+      },
+      {
+        "title": "ติดตามประวัติและแก้สิทธิ์ผิดขอบเขต",
+        "body": [
+          "ใช้หน้า Audit ตรวจผู้ดำเนินการ เป้าหมาย เวลาและผลของรายการสำคัญ แล้วประสานผู้เกี่ยวข้องเมื่อพบข้อผิดพลาด",
+          "เมื่อเปลี่ยนสิทธิ์ให้ผู้ใช้รีเฟรชหรือล็อกอินใหม่เพื่อตรวจเมนูและข้อมูล อย่าแก้ค่าหรือสถานะงานเพื่อชดเชยสิทธิ์ที่ขาด"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Admin เห็นเมนูแต่ dashboard ว่างต้องทำอย่างไร",
+        "answer": "ตรวจว่าบัญชีได้รับมอบหมายหน่วยงานที่มีข้อมูลแล้ว รวมถึงช่วงวันที่มีผลและสถานะบัญชี"
+      },
+      {
+        "question": "กรองบทความตามบทบาทคือการจำกัดสิทธิ์ระบบหรือไม่",
+        "answer": "เป็นตัวช่วยเลือกคู่มือเท่านั้น การเข้าถึงหน้าและการบันทึกยังตรวจสิทธิ์จริงของบัญชี"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-demo-data",
+      "cpe-getting-started",
+      "cpe-forms-troubleshooting"
+    ]
+  },
+  {
+    "slug": "cpe-forms-troubleshooting",
+    "title": "เปิดฟอร์ม บันทึกข้อมูล และแก้ปัญหาที่พบบ่อย",
+    "summary": "วิธีใช้หน้าต่างรายละเอียด สร้างใหม่ ค้นหา และรับมือข้อความบันทึกไม่สำเร็จ",
+    "audience": [
+      "ALL"
+    ],
+    "category": "คำแนะนำและแก้ปัญหา",
+    "tags": [
+      "เปิดฟอร์ม",
+      "modal",
+      "สร้างใหม่",
+      "ทำสัญญา",
+      "บันทึกไม่สำเร็จ",
+      "ข้อมูลเปลี่ยนแล้ว",
+      "มือถือ"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/sales",
+    "sections": [
+      {
+        "title": "เปิดรายละเอียดให้ถูกจุด",
+        "body": [
+          "คลิกชื่อรายการหรือปุ่ม “เปิดรายละเอียด” หน้าต่างจะเปิดกลางจอพร้อมรหัสงาน ใช้ปุ่มปิดหัว/ท้ายหรือกด Escape เพื่อกลับรายการ",
+          "ข้อความอย่าง “ทำสัญญา” เป็นข้อมูลขั้นตอนงาน ไม่ใช่ปุ่มยืนยันสัญญา การบันทึกผลได้งานทำในรายละเอียดหน้าขาย"
+        ]
+      },
+      {
+        "title": "สร้างใหม่และใช้งานบนมือถือ",
+        "body": [
+          "ใช้ปุ่มเพิ่มรายการบนหน้า หรือเมนูสร้างใหม่บนแถบหัว หน้าต่างจะเปิดตามสิทธิ์ของบัญชี",
+          "บนมือถือให้เลื่อนภายในหน้าต่างเพื่อดูช่องที่เหลือ ตาราง BOQ อาจต้องเลื่อนแนวนอนเพื่อดูทุกคอลัมน์"
+        ]
+      },
+      {
+        "title": "เมื่อบันทึกไม่สำเร็จ",
+        "body": [
+          "อ่านข้อความใต้ฟอร์ม ตรวจช่องจำเป็น ชนิดข้อมูล วันที่และหน่วย กรณีข้อมูลถูกคนอื่นแก้ให้รีเฟรชแล้วทบทวนค่าล่าสุด",
+          "งานประวัติและโครงการปิดแล้วมีข้อจำกัดการแก้ไข อย่าเพิ่มรายการใหม่ซ้ำเพื่อหลบข้อจำกัดเดิม"
+        ]
+      },
+      {
+        "title": "เมื่อไม่เห็นฟอร์มหรือข้อมูล",
+        "body": [
+          "รอข้อความกำลังโหลดข้อมูลให้เสร็จและตรวจรหัสในหัวหน้าต่าง หากหลังอัปเดตระบบยังเห็นหน้าตาเก่าให้รีเฟรชหน้า",
+          "ตรวจหน่วยงาน สถานะงานและบทบาท หากเซสชันหมดอายุให้เข้าสู่ระบบใหม่ เก็บข้อความผิดพลาดและชื่อหน้าส่งให้ผู้ดูแล โดยไม่ส่งรหัสผ่านหรือข้อมูลลับ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "กดเปิดรายละเอียดของงานเดิมซ้ำได้ไหม",
+        "answer": "ได้ ปิดหน้าต่างก่อนแล้วเปิดรายการเดิมอีกครั้ง หรือใช้ลิงก์ตรงของรายการ"
+      },
+      {
+        "question": "ฟอร์มงานประวัติไม่มีปุ่มบันทึกเป็นข้อผิดพลาดหรือไม่",
+        "answer": "ตรวจสถานะก่อน งานที่บันทึกผลแล้วอาจเปิดได้เฉพาะข้อมูลอ้างอิงตามกติกา"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-getting-started",
+      "cpe-users-organizations",
+      "cpe-boq-estimation"
+    ]
+  },
+  {
+    "slug": "cpe-demo-data",
+    "title": "ทดลองใช้ข้อมูลตัวอย่างและเลือกบัญชีให้ตรงงาน",
+    "summary": "รู้จักหน่วยงานตัวอย่าง บัญชีแต่ละบทบาท และสาเหตุที่ไม่เห็นข้อมูล",
+    "audience": [
+      "ALL"
+    ],
+    "category": "เริ่มต้นใช้งาน",
+    "tags": [
+      "demo",
+      "seed",
+      "ข้อมูลตัวอย่าง",
+      "บัญชีทดสอบ",
+      "dashboard ว่าง",
+      "DEMO"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/cpe/exec",
+    "sections": [
+      {
+        "title": "เลือกชุดข้อมูลตัวอย่าง",
+        "body": [
+          "ข้อมูลตัวอย่างอยู่ในหน่วยงาน “CPE — ข้อมูลตัวอย่างสำหรับทดสอบ” ใช้รหัส DEMO เพื่อช่วยแยกจากข้อมูลใช้งานจริง",
+          "ชุดนี้มีโอกาสขาย งานอ้างอิง BOQ ราคาวัสดุ ผู้รับเหมา RFQ ใบเสนอราคา โครงการ แผนรายเดือนและทะเบียนหนี้ที่เชื่อมกัน"
+        ]
+      },
+      {
+        "title": "ใช้บัญชีให้ตรงหน้าที่",
+        "body": [
+          "บัญชี cpe.demo.tester@ntop.test ใช้สำรวจทั้ง 12 เมนู ส่วนบัญชีตัวอย่างฝ่ายขาย ผู้ประมาณราคา จัดซื้อ PM และผู้บริหารใช้ทดสอบหน้าที่เฉพาะ",
+          "ขอข้อมูลบัญชีและรหัสผ่านจากผู้ดูแลผ่านช่องทางที่กำหนด Help Center ไม่แสดงรหัสผ่าน"
+        ]
+      },
+      {
+        "title": "ทำไมบางรายการแก้ไม่ได้",
+        "body": [
+          "งานที่เตรียมไว้มีทั้งกำลังเสนอ ได้งาน ไม่ได้งาน และโครงการปิดแล้ว เพื่อให้เห็นทุกกรณี",
+          "ผู้รับผิดชอบของงานตัวอย่างอาจเป็นบัญชีเฉพาะบทบาท ใช้บัญชีนั้นหรือสร้างงานทดลองใหม่ของตนตามสิทธิ์"
+        ]
+      },
+      {
+        "title": "ดูแลชุดตัวอย่าง",
+        "body": [
+          "ข้อมูลตัวอย่างเป็นข้อมูลสมมติและค่าตั้งต้นเพื่อทดสอบ ไม่ใช่ข้อมูลการค้าหรือนโยบายที่รับรองให้ใช้จริง",
+          "การตรวจ seed ซ้ำไม่ล้างข้อมูลหรือเปลี่ยนรหัสผ่าน หากข้อมูลไม่แสดงให้ตรวจหน่วยงานและสิทธิ์ก่อนขอให้ผู้ดูแลจัดเตรียมชุดใหม่"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "ใช้บัญชี admin เดิมดูชุดตัวอย่างได้ไหม",
+        "answer": "ต้องมีรายการมอบหมายให้หน่วยงานตัวอย่าง โดยผู้มีอำนาจจัดการสิทธิ์"
+      },
+      {
+        "question": "รัน seed ซ้ำแล้วข้อมูลที่แก้จะถูกรีเซ็ตไหม",
+        "answer": "การนำเข้าชุดเดิมตรวจการทำซ้ำและเก็บข้อมูล/รหัสผ่านเดิมไว้"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-dashboard",
+      "cpe-users-organizations",
+      "cpe-getting-started"
+    ]
+  },
+  {
+    "slug": "ai-page-assistant",
+    "title": "ใช้ CPE AI Assistant และอ่านคำตอบอย่างปลอดภัย",
+    "summary": "ถามวิธีใช้งานจากคู่มือ CPE และสรุปข้อมูลหน้าที่รองรับโดยผู้ใช้ยังเป็นผู้ตัดสินใจ",
+    "audience": [
+      "ALL"
+    ],
+    "category": "คำแนะนำและแก้ปัญหา",
+    "tags": [
+      "CPE AI Assistant",
+      "read-only",
+      "AI",
+      "แหล่งอ้างอิง",
+      "รหัสผ่าน",
+      "Help Center"
+    ],
+    "updatedAt": "2026-11-06",
+    "readingMinutes": 6,
+    "workspaceHref": "/help",
+    "sections": [
+      {
+        "title": "เปิดผู้ช่วยบนหน้าที่รองรับ",
+        "body": [
+          "ใน Help Center และหน้าที่มีปุ่ม AI ให้กดปุ่มมุมขวาล่าง แล้วเลือกคำถามหรือพิมพ์คำถามเกี่ยวกับหน้าปัจจุบัน Enter ใช้ส่ง และ Shift+Enter ใช้ขึ้นบรรทัดใหม่",
+          "หน้าธุรกิจ CPE ใช้แบบฟอร์มและกราฟของระบบตามปกติ ไม่ได้มีผู้ช่วย AI เปิดใช้งานในทุกหน้า"
+        ]
+      },
+      {
+        "title": "ตรวจคำตอบกับหลักฐาน",
+        "body": [
+          "ผู้ช่วยได้รับเฉพาะข้อความหน้าที่แสดงและคู่มือ CPE ที่ระบบเลือกอ้างอิง พร้อมลิงก์อ่านเพิ่มเติมสูงสุดสามบทความ",
+          "หากไม่มีข้อมูลพอให้กลับไปตรวจรายการต้นทาง อย่านำคำตอบที่ไม่มีหลักฐานไปใช้เป็นราคา ต้นทุน หรือการอนุมัติ"
+        ]
+      },
+      {
+        "title": "ขอบเขตอ่านอย่างเดียว",
+        "body": [
+          "CPE AI Assistant อ่านอย่างเดียว จึงไม่สร้าง แก้ไข อนุมัติ ออก PO หรือเปลี่ยนสถานะงานให้ การดำเนินงานต้องใช้แบบฟอร์มตามสิทธิ์",
+          "ห้ามส่งรหัสผ่าน API key, token หรือข้อมูลรับรอง ผู้ช่วยไม่ได้เข้าถึงข้อมูลทั้งฐานหรือค้นเว็บให้อัตโนมัติ"
+        ]
+      },
+      {
+        "title": "เมื่อ AI ไม่พร้อมใช้งาน",
+        "body": [
+          "ตรวจว่าเข้าสู่ระบบอยู่ หากผู้ให้บริการยังไม่พร้อม ให้เปิดบทความ Help Center และทำงานจากเมนูปกติได้ต่อ",
+          "ปิดหน้าต่างด้วยปุ่มปิดหรือ Escape การใช้งานหลักไม่ต้องรอ AI และคำตอบ AI ไม่ทำให้ข้ามขั้นตอนตรวจต้นทุนหรืออนุมัติ"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "สั่ง AI ออก PO หรืออนุมัติข้อเสนอได้ไหม",
+        "answer": "ไม่ได้ ผู้ช่วยเป็น read-only และไม่มีสิทธิ์เปลี่ยนข้อมูลหรืออนุมัติแทนผู้ใช้"
+      },
+      {
+        "question": "AI อ่านข้อมูลทั้งหน่วยงานหรือไม่",
+        "answer": "รับเฉพาะข้อความที่หน้าปัจจุบันส่งให้และบทความอ้างอิง ไม่ได้อ่านฐานข้อมูลเพิ่มเติมเอง"
+      }
+    ],
+    "relatedSlugs": [
+      "cpe-getting-started",
+      "cpe-forms-troubleshooting",
+      "cpe-knowledge-master"
+    ]
+  }
 ];
 
 function articleSearchText(article: HelpArticle) {
-  return [article.slug, article.title, article.summary, article.category, ...article.tags, ...article.sections.flatMap((section) => [section.title, ...section.body]), ...article.faqs.flatMap((faq) => [faq.question, faq.answer])].join(" ").toLocaleLowerCase("th-TH");
+  return [article.slug, article.title, article.summary, article.category, ...article.tags,
+    ...article.sections.flatMap((section) => [section.title, ...section.body]),
+    ...article.faqs.flatMap((faq) => [faq.question, faq.answer])].join(" ").toLocaleLowerCase("th-TH");
 }
 
-export function getHelpArticle(slug: string) { return helpArticles.find((article) => article.slug === slug); }
-export function getRelatedHelpArticles(article: HelpArticle) { return (article.relatedSlugs ?? []).flatMap((slug) => { const item = getHelpArticle(slug); return item ? [item] : []; }); }
+export function getHelpArticle(slug: string): HelpArticle | undefined {
+  const active = helpArticles.find((article) => article.slug === slug);
+  if (active) return active;
+  const legacy = legacyHelpArticles.find((article) => article.slug === slug);
+  return legacy ? { ...legacy, legacy: true } : undefined;
+}
+
+export function getRelatedHelpArticles(article: HelpArticle) {
+  return (article.relatedSlugs ?? []).flatMap((slug) => {
+    const related = getHelpArticle(slug);
+    return related && (article.legacy || !related.legacy) ? [related] : [];
+  });
+}
+
 export function searchHelpArticles(query: string, audience: string) {
-  const normalized = query.trim().toLocaleLowerCase("th-TH");
-  return helpArticles.filter((article) => (!audience || article.audience.includes(audience as HelpAudience) || article.audience.includes("ALL")) && (!normalized || articleSearchText(article).includes(normalized)));
+  const tokens = query.trim().slice(0, 200).toLocaleLowerCase("th-TH").split(/\s+/u).filter(Boolean);
+  const role = audience === "PRESALES" ? "ESTIMATOR" : audience;
+  return helpArticles.filter((article) =>
+    (!role || article.audience.includes(role as HelpAudience) || article.audience.includes("ALL")) &&
+    tokens.every((token) => articleSearchText(article).includes(token)));
 }
 
 function helpSearchTokens(value: string) {
-  return [...new Set(value.toLocaleLowerCase("th-TH").split(/[^\p{L}\p{N}]+/u).filter((token) => token.length >= 2).flatMap((token) => token.endsWith("s") && token.length > 4 ? [token, token.slice(0, -1)] : [token]))];
+  return [...new Set(value.slice(0, 2000).toLocaleLowerCase("th-TH").split(/[^\p{L}\p{N}]+/u)
+    .filter((token) => token.length >= 2)
+    .flatMap((token) => token.endsWith("s") && token.length > 4 ? [token, token.slice(0, -1)] : [token]))].slice(0, 80);
 }
 
 export function getRelevantHelpArticles(query: string, limit = 3) {
   const tokens = helpSearchTokens(query);
-  const normalizedQuery = query.toLocaleLowerCase("th-TH");
-  const routeArticle = [
-    [/\/prospects(?:\/|\s|$)/, "prospect-to-lead"],
-    [/\/leads(?:\/|\s|$)/, "lead-qualification-and-conversion"],
-    [/\/(?:customers|opportunities)(?:\/|\s|$)/, "customer-to-opportunity"],
-    [/\/activities(?:\/|\s|$)/, "notifications-and-tasks"],
-    [/\/pipeline(?:\/|\s|$)/, "sales-pipeline-and-forecast"],
-    [/\/(?:coverage|solution-designs|site-surveys|boqs)(?:\/|\s|$)/, "presales-solution-survey-boq"],
-    [/\/proposals(?:\/|\s|$)/, "proposal-and-ai-draft"],
-    [/\/(?:quotes|approvals)(?:\/|\s|$)/, "quotation-and-approval"],
-    [/\/contracts(?:\/|\s|$)/, "contract-to-service-order"],
-    [/\/admin(?:\/|\s|$)/, "workflow-administration"],
-  ].find(([pattern]) => (pattern as RegExp).test(normalizedQuery))?.[1] as string | undefined;
+  const normalized = query.toLocaleLowerCase("th-TH");
+  const articleSlug = /\/help\/([a-z0-9-]+)(?=[/?#\s]|$)/.exec(normalized)?.[1];
+  const cpeRoute = /\/cpe(?:\/[a-z]+)?(?=[/?#\s]|$)/.exec(normalized)?.[0];
+  const routeArticle = helpArticles.find((article) => article.slug === articleSlug)?.slug ??
+    helpArticles.find((article) => article.workspaceHref === cpeRoute)?.slug ??
+    (/\/admin(?:[/?#\s]|$)/.test(normalized) ? "cpe-users-organizations" : undefined);
   const ranked = helpArticles.map((article, index) => {
     const title = article.title.toLocaleLowerCase("th-TH");
     const searchable = articleSearchText(article);
-    const score = (article.slug === routeArticle ? 10 : 0) + tokens.reduce((total, token) => total + (title.includes(token) ? 4 : searchable.includes(token) ? 1 : 0), 0);
+    const score = (article.slug === routeArticle ? 1000 : 0) + tokens.reduce((total, token) => total + (title.includes(token) ? 4 : searchable.includes(token) ? 1 : 0), 0);
     return { article, index, score };
   }).sort((left, right) => right.score - left.score || left.index - right.index);
-  const matches = ranked.filter((item) => item.score > 0).map((item) => item.article);
-  const assistantGuide = getHelpArticle("ai-page-assistant");
-  const selected = assistantGuide ? [assistantGuide, ...matches.filter((article) => article.slug !== assistantGuide.slug)] : matches;
-  return selected.slice(0, Math.max(0, limit));
+  const assistant = helpArticles.find((article) => article.slug === "ai-page-assistant")!;
+  const selected = [assistant, ...ranked.filter((item) => item.score > 0 && item.article.slug !== assistant.slug).map((item) => item.article)];
+  const count = Number.isFinite(limit) ? Math.max(0, Math.min(3, Math.floor(limit))) : 3;
+  return selected.slice(0, count);
 }

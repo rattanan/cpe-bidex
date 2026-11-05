@@ -29,50 +29,26 @@ describe("App shell and Help Center", () => {
     expect(query).not.toContain("mock");
   });
 
-  it("searches NTOP help articles and resolves article routes", () => {
-    expect(searchHelpArticles("floor price", "SALES").map((item) => item.slug)).toContain("quotation-and-approval");
-    expect(searchHelpArticles("Transition Policy", "SALES").map((item) => item.slug)).toContain("opportunity-transition-policy");
-    expect(searchHelpArticles("ขั้นตอนใดก็ได้", "ADMIN").map((item) => item.slug)).toContain("opportunity-transition-policy");
-    expect(getHelpArticle("customer-to-opportunity")?.category).toBe("Customer & Opportunity");
+  it("searches current CPE guides and resolves retained legacy URLs", () => {
+    expect(searchHelpArticles("BOQ", "ESTIMATOR").map((item) => item.slug)).toContain("cpe-boq-estimation");
+    expect(searchHelpArticles("RFQ PO", "PROCUREMENT").map((item) => item.slug)).toContain("cpe-rfq-po");
+    expect(getHelpArticle("customer-to-opportunity")?.legacy).toBe(true);
     expect(getHelpArticle("ai-page-assistant")?.audience).toContain("ALL");
-    expect(getRelevantHelpArticles("opportunity", 3).map((item) => item.slug)).toContain("customer-to-opportunity");
+    expect(getRelevantHelpArticles("/cpe/sales opportunity", 3).map((item) => item.slug)).toContain("cpe-sales-opportunities");
   });
 
-  it("covers the current governed sales journey with detailed, current articles", () => {
-    expect(helpArticles.map((article) => article.slug)).toEqual(expect.arrayContaining([
-      "ai-page-assistant", "prospect-to-lead", "lead-qualification-and-conversion",
-      "customer-to-opportunity", "opportunity-transition-policy", "notifications-and-tasks", "sales-pipeline-and-forecast",
-      "presales-solution-survey-boq", "proposal-and-ai-draft", "quotation-and-approval",
-      "contract-to-service-order", "ai-assistance-and-safety", "workflow-administration",
-    ]));
-    expect(helpArticles.filter((article) => article.slug !== "opportunity-transition-policy").every((article) => article.updatedAt === "2026-08-24")).toBe(true);
-    expect(getHelpArticle("opportunity-transition-policy")?.updatedAt).toBe("2026-08-26");
-    expect(helpArticles.every((article) => article.sections.length >= 4 && article.faqs.length >= 2)).toBe(true);
-  });
-
-  it("documents unrestricted Opportunity stage selection and retained controls", () => {
+  it("keeps the old workflow guide reachable without putting it in the CPE catalog", () => {
     const article = getHelpArticle("opportunity-transition-policy");
-    const content = article?.sections.flatMap((section) => section.body).join(" ") ?? "";
-    expect(article?.title).toContain("แบบอิสระ");
-    expect(content).toContain("Stage อื่นทุกค่าให้เลือก");
-    expect(content).toContain("ไม่บังคับเดินตามลำดับ");
-    expect(content).toContain("Requirements, Coverage, Solution และ Quote ไม่ block");
-    expect(content).toContain("Lost Reason และ Lost Category");
-    expect(content).toContain("Cancelled Reason");
-    expect(content).toContain("permission opportunity.transition");
-    expect(content).toContain("Expected Version");
-    expect(content).toContain("Idempotency Key");
+    expect(article?.legacy).toBe(true);
+    expect(article?.sections.flatMap((section) => section.body).join(" ")).toContain("ไม่บังคับเดินตามลำดับ");
+    expect(helpArticles.some((item) => item.slug === article?.slug)).toBe(false);
   });
 
-  it("searches article guidance and FAQs, not only card metadata", () => {
-    expect(searchHelpArticles("malware scan", "SALES").map((item) => item.slug)).toContain("contract-to-service-order");
-    expect(searchHelpArticles("training consent", "ALL").map((item) => item.slug)).toContain("ai-assistance-and-safety");
-    expect(searchHelpArticles("Round Robin", "ADMIN").map((item) => item.slug)).toContain("workflow-administration");
-  });
-
-  it("only links to existing related help articles", () => {
+  it("only links current guides to existing current guides", () => {
     for (const article of helpArticles) {
-      expect(getRelatedHelpArticles(article)).toHaveLength(article.relatedSlugs?.length ?? 0);
+      const related = getRelatedHelpArticles(article);
+      expect(related).toHaveLength(article.relatedSlugs?.length ?? 0);
+      expect(related.every(item => !item.legacy)).toBe(true);
     }
   });
 });

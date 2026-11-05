@@ -5,22 +5,22 @@ import { PAGE_ASSISTANT_CONTEXT_LIMIT, PageAssistantService, normalizePageAssist
 
 const baseInput: PageAssistantInput = {
   question: "หน้านี้ใช้งานอย่างไร",
-  pathname: "/opportunities/opp-1",
-  pageTitle: "Opportunity ABC",
-  pageContent: "Opportunity ABC\nStage QUALIFY\nNext Action โทรหาลูกค้า",
+  pathname: "/cpe/estimate",
+  pageTitle: "BOQ ABC",
+  pageContent: "BOQ ABC\nต้นทุน 100000 บาท\nรอตรวจต้นทุน",
   conversation: [],
 };
 
 describe("PageAssistantService", () => {
   it("grounds the answer in visible page content and deterministic Help articles", async () => {
     const createChatCompletion = vi.fn().mockResolvedValue({
-      content: "จากข้อมูลในหน้า Opportunity อยู่ที่ QUALIFY และมี Next Action ให้โทรหาลูกค้า",
+      content: "จากข้อมูลในหน้า BOQ มีต้นทุน 100000 บาท และรอตรวจต้นทุน",
       providerModel: "configured-model",
       usage: { inputTokens: 20, outputTokens: 15, totalTokens: 35 },
     });
     const result = await new PageAssistantService({ createChatCompletion }).answer(baseInput);
 
-    expect(result.answer).toContain("QUALIFY");
+    expect(result.answer).toContain("BOQ");
     expect(result.sources[0]).toMatchObject({ slug: "ai-page-assistant", href: "/help/ai-page-assistant" });
     expect(result.sources.length).toBeGreaterThan(1);
     const messages = createChatCompletion.mock.calls[0][0];
@@ -29,7 +29,7 @@ describe("PageAssistantService", () => {
     expect(messages[0].content).toContain("CPE Project Bid Excellence");
     expect(messages[0].content).not.toContain("NTOP");
     expect(messages[0].content).toContain("read-only");
-    expect(messages[1].content).toContain("Opportunity ABC");
+    expect(messages[1].content).toContain("BOQ ABC");
     expect(messages[1].content).toContain("helpArticles");
   });
 
@@ -66,8 +66,8 @@ describe("page assistant context and Help ranking", () => {
   });
 
   it("ranks route-relevant Help while always including the assistant safety guide", () => {
-    const articles = getRelevantHelpArticles("/quotes/new floor price approval", 3);
+    const articles = getRelevantHelpArticles("/cpe/procurement?org=demo RFQ PO", 3);
     expect(articles[0].slug).toBe("ai-page-assistant");
-    expect(articles.map((article) => article.slug)).toContain("quotation-and-approval");
+    expect(articles.map((article) => article.slug)).toContain("cpe-rfq-po");
   });
 });

@@ -1,10 +1,35 @@
-import { PRODUCT } from "@/lib/company-profile";
 import Link from "next/link";
 import { BookOpen, Search } from "lucide-react";
-import { helpAudienceLabels, helpArticles, searchHelpArticles } from "@/lib/help-center";
+import { HELP_AUDIENCES, helpAudienceLabels, helpArticles, searchHelpArticles } from "@/lib/help-center";
 
-export default async function HelpCenterPage({ searchParams }: { searchParams: Promise<{ q?: string; audience?: string }> }) {
-  const { q = "", audience = "" } = await searchParams; const articles = searchHelpArticles(q, audience); const categories = [...new Set(helpArticles.map((article) => article.category))];
-  return <><section className="help-hero"><div className="help-hero-icon"><BookOpen/></div><p className="eyebrow">Help Center</p><h1>ศูนย์ช่วยเหลือ {PRODUCT.shortName}</h1><p>คู่มือวงจรงานขายปัจจุบัน ตั้งแต่ Prospect และ Lead จนถึง Presales, Approval, Contract, AI และการดูแลระบบ</p><form className="help-search"><label><Search/><input name="q" defaultValue={q} placeholder="ค้นหา เช่น Convert Lead, Site Survey, Floor Price, Service Order"/></label><select name="audience" defaultValue={audience}><option value="">ทุกบทบาท</option>{Object.entries(helpAudienceLabels).map(([value,label])=><option value={value} key={value}>{label}</option>)}</select><button className="primary">ค้นหา</button></form></section>
-    <div className="help-layout"><aside className="help-categories"><h2>หมวดหมู่</h2>{categories.map((category)=><span key={category}>{category}</span>)}</aside><section><div className="help-result-head"><p>พบบทความ {articles.length} รายการ</p>{(q||audience)&&<Link href="/help">ล้างตัวกรอง</Link>}</div><div className="help-cards">{articles.map((article)=><Link className="help-card" href={`/help/${article.slug}`} key={article.slug}><div><span className="badge">{article.category}</span><small>{article.readingMinutes} นาที · อัปเดต {article.updatedAt}</small></div><h2>{article.title}</h2><p>{article.summary}</p><div>{article.audience.map((item)=><span key={item}>{helpAudienceLabels[item]}</span>)}</div></Link>)}{!articles.length&&<div className="card empty">ไม่พบบทความที่ตรงกับคำค้นหา</div>}</div></section></div></>;
+export default async function HelpCenterPage({ searchParams }: { searchParams: Promise<{ q?: string | string[]; audience?: string | string[] }> }) {
+  const raw = await searchParams;
+  const q = typeof raw.q === "string" ? raw.q.slice(0, 200) : "";
+  const audience = typeof raw.audience === "string" ? raw.audience : "";
+  const articles = searchHelpArticles(q, audience);
+  const categories = [...new Set(helpArticles.map((article) => article.category))];
+  return <>
+    <section className="help-hero">
+      <div className="help-hero-icon"><BookOpen aria-hidden="true" /></div>
+      <p className="eyebrow">CPE BIDEX · HELP CENTER</p>
+      <h1>ศูนย์ช่วยเหลือ CPE Bidex</h1>
+      <p>คู่มือรับงาน ประมาณราคา BOQ จัดซื้อ RFQ/PO บริหารโครงการ และกระแสเงินสด</p>
+      <form className="help-search">
+        <label><Search aria-hidden="true" /><input type="search" name="q" aria-label="ค้นหาคู่มือ CPE Bidex" defaultValue={q} maxLength={200} placeholder="ค้นหา เช่น BOQ, RFQ, PO, S-Curve หรือเปิดฟอร์ม" /></label>
+        <select name="audience" aria-label="กรองตามบทบาท" defaultValue={audience}><option value="">ทุกบทบาท</option>{HELP_AUDIENCES.map((role) => <option value={role} key={role}>{helpAudienceLabels[role]}</option>)}</select>
+        <button className="primary">ค้นหา</button>
+      </form>
+    </section>
+    <div className="help-layout">
+      <aside className="help-categories"><h2>หมวดหมู่คู่มือ</h2>{categories.map((category) => <span key={category}>{category}</span>)}</aside>
+      <section aria-label="บทความช่วยเหลือ CPE Bidex">
+        <div className="help-result-head"><p>พบบทความ {articles.length} รายการ</p>{(q || audience) && <Link href="/help">ล้างตัวกรอง</Link>}</div>
+        <div className="help-cards">{articles.map((article) => <Link className="help-card" href={`/help/${article.slug}`} key={article.slug}>
+          <div><span className="badge">{article.category}</span><small>{article.readingMinutes} นาที · อัปเดต {article.updatedAt}</small></div>
+          <h2>{article.title}</h2><p>{article.summary}</p>
+          <div>{article.audience.map((role) => <span key={role}>{helpAudienceLabels[role]}</span>)}</div>
+        </Link>)}{!articles.length && <div className="card empty">ไม่พบบทความที่ตรงกับคำค้นหา ลองใช้ชื่อเมนูหรือคำอย่าง BOQ, RFQ และ PO</div>}</div>
+      </section>
+    </div>
+  </>;
 }

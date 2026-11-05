@@ -222,7 +222,7 @@ test.describe("CPE seeded prototype preview", () => {
     await page.screenshot({ path: "/tmp/cpe-demo-preview/company-dark.png", fullPage: true });
     await page.getByRole("button", { name: "ใช้โหมดสว่าง", exact: true }).click();
     await page.goto("/help");
-    await expect(page.getByRole("heading", { name: "ศูนย์ช่วยเหลือ CPE", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "ศูนย์ช่วยเหลือ CPE Bidex", exact: true })).toBeVisible();
     await page.getByRole("button", { name: "เปิด AI Assistant", exact: true }).click();
     await expect(page.getByRole("dialog", { name: "CPE AI Assistant", exact: true })).toBeVisible();
     await expect(page.getByText("NTOP AI Assistant", { exact: true })).toHaveCount(0);
