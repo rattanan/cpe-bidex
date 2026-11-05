@@ -78,7 +78,7 @@
 .cpe-app .cpe-kpi>span { font-size:14px; }
 .cpe-app .cpe-kpi>small { font-size:14px; }
 .cpe-app .cpe-process { padding-block:16px;background:#1b315c; }
-.cpe-app .cpe-process>a,.cpe-app .cpe-process>.unavailable { min-width:200px;font-size:14px;line-height:1.7; }
+.cpe-app .cpe-process>a,.cpe-app .cpe-process>.unavailable { font-size:14px;line-height:1.7; }
 .cpe-app .cpe-process small { font-size:13px; }
 .cpe-app .cpe-chart { overflow-x:auto; }
 .cpe-app .cpe-chart svg { min-width:600px; }

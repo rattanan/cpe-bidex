@@ -111,9 +111,9 @@
   outline-offset: 3px;
 }
 .cpe-process {
-  display: flex;
-  overflow-x: auto;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 12px 0;
   margin: 0 -26px 23px;
   padding: 12px 20px;
   background: #192e5c;
@@ -122,8 +122,7 @@
 .cpe-process > a,
 .cpe-process > .unavailable {
   position: relative;
-  flex: 1;
-  min-width: 145px;
+  min-width: 0;
   display: grid;
   gap: 5px;
   padding: 0 12px 0 17px;
@@ -131,6 +130,18 @@
   font-size: 14px;
   border-right: 1px solid #405b86;
   line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.cpe-process > :last-child {
+  border-right: 0;
+}
+@media (max-width: 1400px) {
+  .cpe-process {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .cpe-process > :nth-child(3n) {
+    border-right: 0;
+  }
 }
 .cpe-process small {
   font: 14px monospace;

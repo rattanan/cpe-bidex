@@ -7,6 +7,7 @@ The owner explicitly chose: use the CPE SRS as the new baseline; retain NTOP fun
 ## Scope and reuse
 
 CPE is the default landing workspace at `/cpe`, with twelve screens under `/cpe/[screen]`.
+The nine-step process navigation fits in one row above 1400px viewport width and uses a three-column, three-row layout at narrower widths. Labels wrap without truncation or horizontal scrolling; existing links and permission-based unavailable states are preserved. `tests/e2e/cpe-process-layout.spec.ts` checks the real shell styles at 320–1728px with expanded/collapsed sidebars without a database.
 NTOP routes, business records, `/api/v1` contracts and historical migrations are retained.
 The active sidebar, command palette and quick-create surface CPE plus the existing user, organization and audit administration pages.
 The existing read-only CPE AI Assistant is available throughout the authenticated portal, including all twelve CPE workspaces and the company page. It uses visible page text and current CPE Help Center guides; business authorization, provider configuration and read-only limits remain unchanged. Legacy automatic field-assistance behavior stays on legacy routes and does not decorate CPE forms. The launcher remains available in short landscape viewports; only its open-panel duplicate is hidden there, with the panel close button retained.
