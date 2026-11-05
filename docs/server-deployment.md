@@ -72,12 +72,21 @@ Rollback material is under `/opt/apps/cpe-bidex-private/backups`: original datab
 
 ## CPE Bidex Help Center — 2026-11-06
 
-- Active application revision: `b6c8b3246decca685a3e32ca2c4a03adff54a775`, pushed to CPE `origin/main`. Seventeen Thai guides cover all twelve CPE screens, onboarding, role/organization assignment, demo data, dialog troubleshooting and the read-only assistant. [Content and changed-file inventory](cpe/help-center.md).
+- Help Center application revision: `b6c8b3246decca685a3e32ca2c4a03adff54a775`, pushed to CPE `origin/main`. Seventeen Thai guides cover all twelve CPE screens, onboarding, role/organization assignment, demo data, dialog troubleshooting and the read-only assistant. [Content and changed-file inventory](cpe/help-center.md).
 - Current search supports body/FAQ keywords and CPE role filters. Guides provide a contents list, FAQs and links to related workspaces. The existing AI retrieval uses only current CPE articles; old bookmarks remain readable with an archive notice. Provider calls and business mutations are not added.
 - Local and server staging gates passed: `npm run lint` (0 errors, 7 existing prospect warnings), `npm run typecheck`, `npm test` (827 passed, 34 opt-in tests skipped) and `npm run build`. Local Help Center E2E passed, covering all seventeen routes, role/keyword search, FAQ opening, workspace links, mobile width and readable dark/light text.
 - Live HTTPS Playwright acceptance: **5 passed**, including the Help Center suite and the existing login contrast, administrator demo scope, repeated modal/quick-create and all twelve workspace checks with restricted PM denial. Tests did not submit business mutations or call an AI provider.
 - Delivery checksums verified before staging build. Only PM2 `cpe-bidex` was restarted; local login returned HTTP 200 and active metadata matched the application revision. No migration, seed, permission/account change or environment change was required.
 - Protected database backup: `/opt/apps/cpe-bidex-private/backups/db-before-b6c8b32.sql`; prior application: `/opt/apps/cpe-bidex-private/backups/app-before-b6c8b32`. A code rollback retains existing CPE data, audit records and administrator scope.
+
+## CPE assistant launcher restoration — 2026-11-06
+
+- Active application revision: `5ca3bb7b7ee7edb8378f817f4b61ba1c79724702`, pushed to CPE `origin/main`. Removed shell route exclusions so the existing read-only assistant appears throughout authenticated CPE, company and Help Center pages. Login remains outside the authenticated shell.
+- Corrected short landscape CSS: closed launcher remains visible; the open panel fits viewport height with an accessible header close button. Focus returns after the closed state is committed. [Acceptance and changed-file inventory](ai-page-assistant-implementation.md#cpe-availability-correction--2026-11-06).
+- Local and server staging gates passed: `npm run lint` (0 errors, 7 existing prospect warnings), `npm run typecheck`, `npm test` (828 passed, 34 opt-in tests skipped), `npm run build`. Local assistant E2E passed.
+- Live HTTPS Playwright acceptance: **6 passed**, including launcher open/close across all twelve screens, company and Help Center, keyboard focus/Escape, portrait and short landscape views, correct current-page payload and graceful provider-unavailable handling. Existing Help Center, login contrast, administrator scope, record modal and restricted PM coverage also passed. The failure-state test intercepts the provider endpoint; no AI provider call or business mutation is submitted.
+- Archive checksums verified before staging build. Only PM2 `cpe-bidex` restarted; local login HTTP 200 and active revision metadata verified. No migration, seed, account/permission or environment change.
+- Protected database backup: `/opt/apps/cpe-bidex-private/backups/db-before-5ca3bb7.sql`; prior application: `/opt/apps/cpe-bidex-private/backups/app-before-5ca3bb7`. Roll back code while retaining current CPE data, audit and assigned scope.
 
 ---
 
