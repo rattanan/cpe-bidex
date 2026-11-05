@@ -15,7 +15,7 @@ describe("App shell and Help Center", () => {
     expect(css).toContain(".sidebar-submenu-list { min-height:0;overflow:hidden; }");
     expect(css).not.toContain("max-height:320px");
     expect(shell).toContain("notification-panel");
-    expect(shell).toContain("Orchestration Platform");
+    expect(shell).toContain("BID EXCELLENCE");
     expect(shell).not.toContain("Sales Platform");
     expect(shell).toContain('href="/help"');
     expect(shell).toContain('href: "/admin/users"');

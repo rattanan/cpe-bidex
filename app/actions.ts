@@ -31,7 +31,7 @@ export async function login(_: FormState, formData: FormData): Promise<FormState
   });
   if (!user) return { message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
   await createSession({ id: user.id, email: user.email, name: user.name, role: user.role });
-  redirect("/dashboard");
+  redirect("/cpe");
 }
 
 export async function logout() { await clearSession(); redirect("/login"); }

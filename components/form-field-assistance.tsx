@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 import { getFormFieldMetadata } from "@/lib/form-field-metadata";
 
@@ -95,13 +96,15 @@ function decorate(root: ParentNode) {
 }
 
 export function FormFieldAssistance() {
+  const pathname = usePathname();
   useEffect(() => {
+    if (pathname.startsWith("/cpe")) return;
     decorate(document);
     const observer = new MutationObserver((entries) => entries.forEach((entry) => entry.addedNodes.forEach((node) => {
       if (node instanceof HTMLElement) decorate(node);
     })));
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
   return null;
 }

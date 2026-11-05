@@ -7,13 +7,12 @@ import { describe, expect, it } from "vitest";
 const read = (path: string) => readFileSync(join(process.cwd(), path), "utf8");
 
 describe("login page branding", () => {
-  it("renders the accessible NTOP identity without changing the login form", () => {
+  it("renders the accessible CPE identity while preserving authentication", () => {
     const page = read("app/login/page.tsx");
 
-    expect(page).toContain('src="/nt-logo.png"');
-    expect(page).toContain('alt="NT"');
-    expect(page).toContain("unoptimized");
-    expect(page).toContain("NT Orchestration Platform");
+    expect(page).toContain('className="login-cpe-mark"');
+    expect(page).toContain("CPE Project Bid Excellence");
+    expect(page).toContain("Project Bid Excellence");
     expect(page).not.toContain("/ntop-logo.svg");
     expect(page).toContain('className="login-network"');
     expect(page).toContain('className="login-showcase"');

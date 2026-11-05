@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { LoginForm } from "@/components/forms";
 
 export default function LoginPage() {
@@ -33,32 +32,25 @@ export default function LoginPage() {
         </g>
       </svg>
       <div className="login-layout">
-        <section className="login-showcase" aria-label="NTOP — NT Orchestration Platform">
+        <section className="login-showcase" aria-label="CPE Project Bid Excellence">
           <div className="login-showcase-lockup">
-            <Image
-              src="/nt-logo.png"
-              alt="NT"
-              width={1534}
-              height={997}
-              priority
-              unoptimized
-            />
+            <span className="login-cpe-mark">CPE</span>
             <span className="login-brand-divider" aria-hidden="true" />
             <span className="login-brand-copy">
-              <strong>NTOP</strong>
-              <small>NT Orchestration Platform</small>
+              <strong>CPE</strong>
+              <small>Project Bid Excellence</small>
             </span>
           </div>
-          <p>Enterprise Sales Orchestration</p>
+          <p>ต้นทุนแม่นยำ · เสนอราคาอย่างมั่นใจ</p>
         </section>
         <section className="login-card" aria-labelledby="login-title">
           <div className="login-heading">
             <p className="eyebrow">Secure workspace</p>
             <h1 id="login-title">เข้าสู่ระบบ</h1>
-            <p>จัดการกระบวนการขายลูกค้าองค์กรบนแพลตฟอร์มเดียว</p>
+            <p>รวมงานขาย ประมาณราคา จัดซื้อ และบริหารโครงการในระบบเดียว</p>
           </div>
           <LoginForm />
-          <p className="login-support">NT Orchestration Platform</p>
+          <p className="login-support">Project Bid Excellence</p>
         </section>
       </div>
     </main>

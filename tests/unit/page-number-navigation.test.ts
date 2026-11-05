@@ -18,8 +18,10 @@ describe("PageNumberNavigation contract", () => {
   const source = readFileSync(join(process.cwd(), "components/page-number-navigation.tsx"), "utf8");
 
   it("always renders consistent Prev and Next controls with disabled states", () => {
-    expect(source).toContain('aria-disabled="true">Prev</span>');
-    expect(source).toContain('aria-disabled="true">Next</span>');
+    expect(source).toContain('aria-disabled="true">{previousLabel}</span>');
+    expect(source).toContain('aria-disabled="true">{nextLabel}</span>');
+    expect(source).toContain('previousLabel = "Prev"');
+    expect(source).toContain('nextLabel = "Next"');
     expect(source).toContain('rel="prev"');
     expect(source).toContain('rel="next"');
   });

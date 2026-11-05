@@ -110,3 +110,7 @@ Test summary, requirement trace, defect/risk disposition, performance report, se
 | Operations | timeout, transient/non-retryable error, bounded retry, concurrency/quota, circuit breaker, feature flag, cancel/retry AI Job and telemetry redaction |
 
 AI acceptance blocks capability enablement, not core application release Core regression suite must prove all manual workflows remain operational with AI disabled and provider unavailable
+
+## 12. CPE construction workspace
+
+The active CPE baseline and acceptance trace are in [CPE implementation](cpe/implementation.md). Run the added CPE unit suite with `npm test`; opt-in real-database and browser suites require an isolated local `cpe_*test*` database and explicit `RUN_CPE_DB_INTEGRATION=1` / `CPE_E2E=1`. Legacy tests remain regression coverage for the retained NTOP routes and contracts.

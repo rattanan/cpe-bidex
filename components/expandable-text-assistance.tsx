@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const selector = "[data-expandable-text], .detail-value, .timeline p, .related-list article p, .document-row p, .prospect-activity-summary p, .card-body p:not(.help):not(.form-feedback):not(.notice), .table td";
 
 export function shouldCollapseText(value:string){return value.length>220||value.split(/\r?\n/).length>4;}
 
 export function ExpandableTextAssistance(){
+  const pathname=usePathname();
   useEffect(()=>{
+    if(pathname.startsWith("/cpe"))return;
     const enhance=(root:ParentNode)=>root.querySelectorAll<HTMLElement>(selector).forEach(element=>{
       if(element.dataset.expandableReady||!shouldCollapseText(element.textContent??""))return;
       if(element.querySelector("button,a,input,textarea,select"))return;
@@ -17,6 +20,6 @@ export function ExpandableTextAssistance(){
       element.insertAdjacentElement("afterend",button);
     });
     enhance(document);const observer=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node instanceof HTMLElement)enhance(node);})));observer.observe(document.body,{childList:true,subtree:true});return()=>observer.disconnect();
-  },[]);
+  },[pathname]);
   return null;
 }

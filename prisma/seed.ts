@@ -2,6 +2,7 @@ import { ActivityType, LeadSource, LeadStatus, LeadTemperature, PrismaClient, Pr
 import { hash } from "bcryptjs";
 
 import { NAVIGATION_PERMISSIONS, QUICK_CREATE_PERMISSIONS } from "../lib/authorization/navigation-permissions";
+import { CPE_ROLE_GRANTS } from "../lib/cpe/config";
 import { DASHBOARD_PERMISSIONS } from "../lib/dashboard/dashboard-permissions";
 import { THAI_DISTRICTS } from "../lib/customer/district-reference-data";
 import { THAI_PROVINCES } from "../lib/customer/province-reference";
@@ -9,6 +10,9 @@ import { THAI_PROVINCES } from "../lib/customer/province-reference";
 const prisma = new PrismaClient();
 
 async function main() {
+  for (const [roleCode, codes] of Object.entries(CPE_ROLE_GRANTS)) for (const permissionCode of codes) {
+    await prisma.rolePermissionGrant.upsert({where:{roleCode_permissionCode:{roleCode,permissionCode}},update:{},create:{roleCode,permissionCode}});
+  }
   const email = process.env.SEED_ADMIN_EMAIL;
   const password = process.env.SEED_ADMIN_PASSWORD;
   const demoMode = process.env.SEED_DEMO_DATA === "1";

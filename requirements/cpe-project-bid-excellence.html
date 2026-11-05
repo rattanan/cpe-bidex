@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPE Project Bid Excellence — ระบบบริหารต้นทุนและจัดซื้อเชิงรุกสำหรับงานก่อสร้าง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E211C;
+  --ink-2:#17332B;
+  --ink-3:#25473D;
+  --paper:#E7ECEA;
+  --card:#FFFFFF;
+  --line:#D4DCD9;
+  --line-2:#E7EDEB;
+  --muted:#61756F;
+  --text:#12211E;
+  --amber:#E39B1F;
+  --amber-soft:#FBF0DA;
+  --blue:#2C6E8F;
+  --blue-soft:#E3EEF3;
+  --green:#2C8461;
+  --green-soft:#E1F0E9;
+  --red:#B8443A;
+  --red-soft:#FAE6E3;
+  --violet:#6A5A9E;
+  --r:10px;
+  --shadow:0 1px 2px rgba(14,33,28,.06), 0 8px 24px -12px rgba(14,33,28,.28);
+  --font-d:"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif;
+  --font-b:"Noto Sans Thai","IBM Plex Sans Thai",Tahoma,sans-serif;
+  --font-m:"IBM Plex Mono","IBM Plex Sans Thai",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--text);
+  font-family:var(--font-b);
+  font-size:14px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-d);margin:0;line-height:1.3;font-weight:600}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+.mono{font-family:var(--font-m);font-variant-numeric:tabular-nums}
+.num{font-family:var(--font-m);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ---------- TOP BAR ---------- */
+.topbar{
+  background:var(--ink);color:#DCE7E3;
+  display:flex;align-items:center;gap:18px;
+  padding:0 20px;height:56px;
+  position:sticky;top:0;z-index:60;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;letter-spacing:.14em;font-size:15px;color:#fff}
+.brand .mark{
+  height:26px;padding:0 7px;border-radius:5px;background:var(--amber);
+  display:grid;place-items:center;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.04em;
+  font-family:var(--font-m);
+}
+.brand small{display:block;font-family:var(--font-b);font-weight:400;font-size:10px;letter-spacing:.02em;color:#8FA9A1;margin-top:-4px}
+.topbar .spacer{flex:1}
+.rolepick{display:flex;align-items:center;gap:8px;background:var(--ink-2);border-radius:8px;padding:5px 6px 5px 12px}
+.rolepick label{font-size:11px;color:#8FA9A1;letter-spacing:.04em}
+.rolepick select{background:var(--ink-3);border:1px solid #31564A;border-radius:6px;color:#fff;padding:5px 8px;outline:none}
+.clockchip{font-size:11.5px;color:#8FA9A1;letter-spacing:.03em}
+.avatar{width:30px;height:30px;border-radius:50%;background:#31564A;display:grid;place-items:center;font-size:12px;color:#DCE7E3;font-weight:600}
+
+/* ---------- SIGNATURE: PROCESS RAIL ---------- */
+.rail{
+  background:var(--ink-2);
+  border-bottom:1px solid #2C5548;
+  padding:9px 20px 11px;
+  overflow-x:auto;
+}
+.rail-inner{display:flex;align-items:stretch;gap:0;min-width:1280px}
+.station{
+  flex:1;position:relative;padding:2px 10px 0 16px;color:#8FA9A1;
+  border:none;background:none;text-align:left;
+}
+.station:before{
+  content:"";position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;
+  background:#3B6759;outline:3px solid var(--ink-2);
+}
+.station:after{
+  content:"";position:absolute;left:8px;top:17.5px;right:-8px;height:1px;background:#3B6759;
+}
+.station:last-child:after{display:none}
+.station .st-n{font-family:var(--font-m);font-size:9.5px;letter-spacing:.12em;color:#6E8E84;display:block}
+.station .st-t{font-size:11.5px;line-height:1.3;display:block;margin-top:5px;font-family:var(--font-d);font-weight:500}
+.station .st-c{font-family:var(--font-m);font-size:10px;color:#6E8E84;margin-top:2px;display:block}
+.station:hover .st-t{color:#CFE0DA}
+.station.on{color:#fff}
+.station.on:before{background:var(--amber);box-shadow:0 0 0 3px rgba(227,155,31,.22)}
+.station.on .st-n{color:var(--amber)}
+.station.on .st-c{color:#A9C2BA}
+.station.done:before{background:#5C8C7C}
+
+/* ---------- LAYOUT ---------- */
+.shell{display:grid;grid-template-columns:214px 1fr;min-height:calc(100vh - 56px)}
+.side{background:#F2F5F4;border-right:1px solid var(--line);padding:14px 10px 40px;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+.side .grp{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:16px 10px 6px;font-family:var(--font-m)}
+.navbtn{
+  display:flex;align-items:center;gap:9px;width:100%;border:none;background:none;
+  padding:8px 10px;border-radius:8px;color:#33463F;text-align:left;font-size:13.2px;
+}
+.navbtn:hover{background:#E4EAE8}
+.navbtn.on{background:var(--ink);color:#fff;font-weight:500}
+.navbtn .ic{width:17px;text-align:center;opacity:.85;font-size:13px}
+.navbtn .badge{margin-left:auto;font-family:var(--font-m);font-size:10px;background:var(--amber);color:#3A2905;border-radius:20px;padding:1px 6px}
+.navbtn.on .badge{background:var(--amber);color:#3A2905}
+main{padding:22px 26px 70px;max-width:1500px}
+
+/* ---------- PAGE HEAD ---------- */
+.phead{display:flex;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.phead .eyebrow{font-family:var(--font-m);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.phead h1{font-size:23px;letter-spacing:-.01em;margin-top:3px}
+.phead p{margin:5px 0 0;color:var(--muted);font-size:13px;max-width:70ch}
+.phead .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500}
+.btn:hover{background:var(--ink-3)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:#F2F5F4}
+.btn.amber{background:var(--amber);color:#3A2905}
+
+/* ---------- CARDS / GRID ---------- */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--shadow)}
+.card.tight{padding:0;overflow:hidden}
+.card h3{font-size:14.5px;display:flex;align-items:center;gap:8px}
+.card .sub{color:var(--muted);font-size:12px;margin-top:2px}
+.cardhead{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.cardhead .right{margin-left:auto;font-size:11.5px;color:var(--muted)}
+.kpi .lbl{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.kpi .val{font-family:var(--font-m);font-size:25px;font-weight:600;letter-spacing:-.02em;margin-top:4px;line-height:1.1}
+.kpi .val small{font-size:12px;font-weight:500;color:var(--muted);margin-left:3px}
+.kpi .delta{font-size:11.5px;margin-top:5px;display:flex;align-items:center;gap:5px}
+.up{color:var(--green)} .down{color:var(--red)}
+.accent-t{border-top:3px solid var(--amber)}
+
+/* ---------- TABLES ---------- */
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+thead th{
+  text-align:left;font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;padding:9px 10px;border-bottom:1px solid var(--line);background:#F7F9F8;
+}
+.tbl-wrap thead th{position:sticky;top:0;z-index:2}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tbody tr:hover{background:#F7F9F8}
+tbody tr.clickable{cursor:pointer}
+td.r,th.r{text-align:right}
+td.c,th.c{text-align:center}
+.tbl-wrap{max-height:none;overflow:auto}
+.t-title{font-weight:500}
+.t-sub{color:var(--muted);font-size:11px}
+
+/* ---------- CHIPS ---------- */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid transparent;white-space:nowrap;font-weight:500}
+.c-gray{background:#EDF1F0;color:#4A5C57;border-color:#DFE6E4}
+.c-amber{background:var(--amber-soft);color:#8A5D06;border-color:#F2DDB4}
+.c-blue{background:var(--blue-soft);color:#1E5470;border-color:#CADFE8}
+.c-green{background:var(--green-soft);color:#1D6448;border-color:#C6E3D6}
+.c-red{background:var(--red-soft);color:#8E2F27;border-color:#F0CEC9}
+.c-violet{background:#EDEAF6;color:#4A3D7D;border-color:#DBD5EE}
+.tag{font-family:var(--font-m);font-size:10px;letter-spacing:.06em;color:var(--muted)}
+
+/* ---------- BARS ---------- */
+.bar{height:6px;border-radius:6px;background:#E7EDEB;overflow:hidden;min-width:60px}
+.bar > span{display:block;height:100%;border-radius:6px;background:var(--ink-3)}
+.bar.amber > span{background:var(--amber)}
+.bar.green > span{background:var(--green)}
+.bar.red > span{background:var(--red)}
+.bar.blue > span{background:var(--blue)}
+.dualbar{position:relative;height:16px}
+.dualbar .plan{position:absolute;top:5px;left:0;height:6px;background:#CDD8D4;border-radius:6px}
+.dualbar .act{position:absolute;top:5px;left:0;height:6px;background:var(--ink-3);border-radius:6px}
+
+/* ---------- MISC ---------- */
+.note{background:#F7F9F8;border-left:3px solid var(--amber);padding:10px 13px;border-radius:0 8px 8px 0;font-size:12.5px;color:#3B4E48}
+.note b{color:var(--text)}
+.split{display:flex;gap:14px;flex-wrap:wrap}
+.metaline{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.metaline b{color:var(--text);font-weight:500}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:8px}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filters select,.filters input{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px}
+.filters select:focus,.filters input:focus{border-color:var(--ink-3)}
+.seg{display:inline-flex;background:#EDF1F0;border-radius:8px;padding:3px;gap:2px}
+.seg button{border:none;background:none;padding:5px 11px;border-radius:6px;font-size:12.5px;color:#4A5C57}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);font-weight:500}
+.stat-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line-2);font-size:12.8px}
+.stat-row:last-child{border-bottom:none}
+.stat-row .k{color:var(--muted)}
+.stat-row .v{font-family:var(--font-m);font-weight:500}
+svg{display:block;max-width:100%}
+.hint{font-size:11.5px;color:var(--muted);margin-top:8px}
+.scorebars div{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.scorebars .lb{width:74px;color:var(--muted)}
+.scorebars .bar{flex:1}
+.scorebars .vv{width:34px;text-align:right;font-family:var(--font-m);font-size:11.5px}
+.ai{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-family:var(--font-m);letter-spacing:.08em;color:var(--violet);background:#EDEAF6;border:1px solid #DBD5EE;padding:1px 7px;border-radius:20px}
+.pain{border-left:3px solid var(--red);background:var(--red-soft);padding:8px 12px;border-radius:0 8px 8px 0;font-size:12.3px;margin-bottom:8px}
+.gain{border-left:3px solid var(--green);background:var(--green-soft);padding:8px 12px;border-radius:0 8px 8px 0;font-size:12.3px;margin-bottom:8px}
+
+/* ---------- DRAWER ---------- */
+.scrim{position:fixed;inset:0;background:rgba(14,33,28,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(760px,94vw);background:var(--paper);z-index:90;
+  transform:translateX(102%);transition:transform .24s cubic-bezier(.3,.8,.4,1);overflow-y:auto;
+  box-shadow:-20px 0 50px -20px rgba(14,33,28,.5);
+}
+.drawer.on{transform:translateX(0)}
+.drawer-head{background:var(--ink);color:#fff;padding:16px 22px;position:sticky;top:0;z-index:5}
+.drawer-head .eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;color:var(--amber)}
+.drawer-head h2{font-size:18px;margin-top:3px}
+.drawer-head .metaline{color:#9DB5AD;margin-top:8px}
+.drawer-head .metaline b{color:#fff}
+.drawer-body{padding:18px 22px 60px}
+.xbtn{position:absolute;top:14px;right:16px;background:#25473D;border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:15px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
+.tabs button{background:none;border:none;padding:9px 13px;font-size:12.8px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--amber);font-weight:500}
+
+@media (max-width:1150px){
+  .g5,.g4{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;display:flex;overflow-x:auto;gap:6px;padding:10px}
+  .side .grp{display:none}
+  .navbtn{width:auto;white-space:nowrap}
+  .g2,.g4,.g5{grid-template-columns:1fr}
+  main{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+
+/* ---------- MODAL / TOAST / INPUT ---------- */
+.mwrap{position:fixed;inset:0;z-index:100;display:none;align-items:flex-start;justify-content:center;padding:60px 16px;background:rgba(14,33,28,.45);overflow-y:auto}
+.mwrap.on{display:flex}
+.mbox{background:var(--paper);border-radius:12px;width:min(660px,100%);box-shadow:0 30px 60px -20px rgba(14,33,28,.55);overflow:hidden}
+.mbox header{background:var(--ink);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px}
+.mbox header h3{font-size:16px;color:#fff}
+.mbox header button{margin-left:auto;background:#25473D;border:none;color:#fff;width:28px;height:28px;border-radius:7px}
+.mbox .mbody{padding:18px}
+.mbox .mfoot{padding:12px 18px;background:#F2F5F4;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;letter-spacing:.02em}
+.field input,.field select,.field textarea{width:100%;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none}
+.field input:focus,.field select:focus{border-color:var(--ink-3)}
+.frow{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+#toasts{position:fixed;right:18px;bottom:18px;z-index:120;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--ink);color:#fff;padding:11px 15px;border-radius:9px;font-size:12.8px;box-shadow:var(--shadow);border-left:3px solid var(--amber);max-width:340px;animation:tin .18s ease-out}
+.toast.ok{border-left-color:#4FBF8B}
+.toast.warn{border-left-color:#E39B1F}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+input.cell{width:88px;background:#FBFCFC;border:1px solid var(--line);border-radius:6px;padding:4px 7px;text-align:right;font-family:var(--font-m);font-size:12px}
+input.cell:focus{border-color:var(--amber);background:#fff}
+input[type=range]{width:100%;accent-color:var(--amber)}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#EDF1F0;color:#4A5C57;margin-right:5px}
+.startlist li{margin-bottom:7px;font-size:12.8px}
+.startlist a{color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="mark">CPE</span><span>CPE PROJECT<small>Bid Excellence · Cost &amp; Procurement Intelligence</small></span></div>
+  <div class="spacer"></div>
+  <span class="clockchip" id="clock"></span>
+  <div class="rolepick">
+    <label for="role">มุมมอง</label>
+    <select id="role">
+      <option value="exec">ผู้บริหาร</option>
+      <option value="sales">ฝ่ายขาย</option>
+      <option value="est">ฝ่ายวิศวกรรมประมาณราคา</option>
+      <option value="pur">ฝ่ายจัดซื้อ</option>
+      <option value="pm">ฝ่าย PM โครงการ</option>
+      <option value="all" selected>ทุกฝ่าย (Demo)</option>
+    </select>
+  </div>
+  <button class="btn ghost" style="padding:6px 11px;font-size:12px" onclick="location.reload()">รีเซ็ตข้อมูลตัวอย่าง</button>
+  <div class="avatar">กร</div>
+</div>
+
+<div class="rail"><div class="rail-inner" id="rail"></div></div>
+
+<div class="shell">
+  <nav class="side" id="side"></nav>
+  <main id="main"></main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+<div class="mwrap" id="modalwrap"><div class="mbox" id="modalbox"></div></div>
+<div id="toasts"></div>
+
+<script>
+/* =======================================================================
+   CPE Project Bid Excellence — ข้อมูลจำลอง (Mock master data)
+   ทุกตัวเลขร้อยต่อกันทั้งสายงาน: ขาย → ประมาณราคา → จัดซื้อ → หน้างาน
+   ======================================================================= */
+const F = n => n.toLocaleString('th-TH',{maximumFractionDigits:0});
+const M = n => (n/1e6).toFixed(2);
+const P = n => n.toFixed(1)+'%';
+
+const SECTORS = ['งานราชการ','งานเอกชน','งานต่างประเทศ'];
+const WORKTYPES = ['งานก่อสร้าง','งานโยธา','งาน MEP','งานพลังงานทดแทน','งานเครื่องจักรอุตสาหกรรม'];
+
+/* ---------- 1) โอกาสการขาย / ประมูล ---------- */
+const OPPS = [
+ {id:'OPP-68-014', name:'อาคารคลังสินค้าและสำนักงาน 2 ชั้น', cust:'บจก. เอบีซี โลจิสติกส์', sector:'งานเอกชน', wt:'งานก่อสร้าง',
+  bid:45_100_000, cost:38_260_500, stage:'ทำสัญญา', status:'ได้งาน', prob:100, owner:'สมชาย ว.', est:'ปวีณา ก.', due:'2026-06-18',
+  area:'สมุทรปราการ', dur:9, note:'ลูกค้าเก่า ต่อยอดจากเฟส 1', winner:'เรา', gap:0},
+ {id:'OPP-68-021', name:'ปรับปรุงระบบไฟฟ้าและปรับอากาศ อาคารผู้ป่วยนอก', cust:'โรงพยาบาลศูนย์ (e-bidding)', sector:'งานราชการ', wt:'งาน MEP',
+  bid:22_350_000, cost:18_600_000, stage:'ยื่นซองแล้ว', status:'กำลังเสนอ', prob:55, owner:'ณัฐพล ส.', est:'ปวีณา ก.', due:'2026-08-21',
+  area:'นครราชสีมา', dur:6, note:'ราคากลางประกาศ 23.8 ลบ. ต้องต่ำกว่า 3%', winner:'-', gap:0},
+ {id:'OPP-68-027', name:'Solar Rooftop 2.4 MWp โรงงานผลิตชิ้นส่วนยานยนต์', cust:'บมจ. เอ็กซ์วายแซด อินดัสทรี', sector:'งานเอกชน', wt:'งานพลังงานทดแทน',
+  bid:51_700_000, cost:42_196_174, stage:'เจรจาต่อรอง', status:'กำลังเสนอ', prob:70, owner:'สมชาย ว.', est:'ธนกร ล.', due:'2026-08-30',
+  area:'ระยอง', dur:7, note:'ลูกค้าขอ Option แบตเตอรี่ 500 kWh เพิ่ม', winner:'-', gap:0},
+ {id:'OPP-68-031', name:'งานถนน คสล. พร้อมระบบระบายน้ำ ระยะ 3.2 กม.', cust:'อบจ. ปทุมธานี', sector:'งานราชการ', wt:'งานโยธา',
+  bid:38_900_000, cost:34_450_000, stage:'แพ้ประมูล', status:'ไม่ได้งาน', prob:0, owner:'ณัฐพล ส.', est:'ธนกร ล.', due:'2026-05-09',
+  area:'ปทุมธานี', dur:8, note:'แพ้ให้ผู้รับเหมาท้องถิ่น', winner:'หจก. ปทุมรุ่งเรือง', gap:-6.4},
+ {id:'OPP-68-033', name:'ติดตั้งสายการผลิตบรรจุภัณฑ์อัตโนมัติ Line 4', cust:'บจก. สยามฟู้ดแพ็ค', sector:'งานเอกชน', wt:'งานเครื่องจักรอุตสาหกรรม',
+  bid:29_600_000, cost:24_100_000, stage:'ทำสัญญา', status:'ได้งาน', prob:100, owner:'พรทิพย์ จ.', est:'ธนกร ล.', due:'2026-06-02',
+  area:'ชลบุรี', dur:5, note:'งาน Turnkey รวม Commissioning', winner:'เรา', gap:0},
+ {id:'OPP-68-036', name:'ปรับปรุงสถานีไฟฟ้าย่อย 22kV เมืองเวียงจันทน์', cust:'Électricité du Laos (EDL)', sector:'งานต่างประเทศ', wt:'งาน MEP',
+  bid:41_200_000, cost:33_800_000, stage:'ยื่นซองแล้ว', status:'กำลังเสนอ', prob:45, owner:'พรทิพย์ จ.', est:'ปวีณา ก.', due:'2026-09-12',
+  area:'สปป.ลาว', dur:10, note:'มีความเสี่ยงอัตราแลกเปลี่ยนและภาษีนำเข้า', winner:'-', gap:0},
+ {id:'OPP-68-038', name:'อาคารโรงงานผลิต 1 ชั้น พร้อมงานระบบ', cust:'บจก. ไทยพลาสติกเทค', sector:'งานเอกชน', wt:'งานก่อสร้าง',
+  bid:57_400_000, cost:49_900_000, stage:'ประมาณราคา', status:'กำลังเสนอ', prob:40, owner:'สมชาย ว.', est:'ปวีณา ก.', due:'2026-08-25',
+  area:'ฉะเชิงเทรา', dur:11, note:'รอราคาเหล็กรูปพรรณยืนยันจาก Vendor', winner:'-', gap:0},
+ {id:'OPP-68-040', name:'งานเปลี่ยนระบบ Chiller และ AHU อาคารสำนักงานใหญ่', cust:'ธนาคารพาณิชย์แห่งหนึ่ง', sector:'งานเอกชน', wt:'งาน MEP',
+  bid:18_700_000, cost:15_200_000, stage:'แพ้ประมูล', status:'ไม่ได้งาน', prob:0, owner:'ณัฐพล ส.', est:'ธนกร ล.', due:'2026-04-28',
+  area:'กรุงเทพฯ', dur:4, note:'แพ้เพราะกำหนดส่งมอบช้ากว่าคู่แข่ง 3 สัปดาห์', winner:'บจก. คูลเทค', gap:-2.1},
+ {id:'OPP-68-042', name:'โรงไฟฟ้าชีวมวลชุมชน 1.5 MW งานโยธาและติดตั้ง', cust:'สหกรณ์การเกษตรอุบลฯ', sector:'งานราชการ', wt:'งานพลังงานทดแทน',
+  bid:73_500_000, cost:62_300_000, stage:'รับแบบ/ศึกษาความต้องการ', status:'กำลังเสนอ', prob:25, owner:'พรทิพย์ จ.', est:'ธนกร ล.', due:'2026-09-30',
+  area:'อุบลราชธานี', dur:14, note:'ยังไม่ได้แบบครบ รอ TOR ฉบับสมบูรณ์', winner:'-', gap:0},
+ {id:'OPP-68-045', name:'งานปรับปรุงระบบระบายน้ำนิคมอุตสาหกรรม', cust:'การนิคมอุตสาหกรรมฯ', sector:'งานราชการ', wt:'งานโยธา',
+  bid:26_800_000, cost:23_100_000, stage:'ประมาณราคา', status:'กำลังเสนอ', prob:35, owner:'ณัฐพล ส.', est:'ปวีณา ก.', due:'2026-09-05',
+  area:'ระยอง', dur:6, note:'ราคากลางยังไม่ประกาศ ใช้ฐานข้อมูลกลางประเมิน', winner:'-', gap:0},
+];
+
+/* ---------- 2) BOQ ตัวอย่าง (ผูกกับ OPP-68-027 Solar และ OPP-68-014) ---------- */
+const BOQ = {
+ 'OPP-68-027':[
+  {cat:'งานโครงสร้างรองรับ', code:'ST-001', d:'โครงเหล็กชุบกัลวาไนซ์รองรับแผง (Mounting Structure)', u:'ชุด', q:4800, mat:1180, lab:210, src:'ฐานข้อมูลกลาง', vol:'สูง'},
+  {cat:'งานโครงสร้างรองรับ', code:'ST-002', d:'งานเสริมโครงหลังคาเหล็กรูปพรรณ SS400', u:'กก.', q:38500, mat:31.5, lab:9.2, src:'ราคาตลาด (D-1)', vol:'สูง'},
+  {cat:'อุปกรณ์หลัก', code:'PV-001', d:'แผงโซลาร์ Mono PERC 610 Wp (Tier-1)', u:'แผง', q:3935, mat:3720, lab:95, src:'สัญญาราคาปี 2569', vol:'กลาง'},
+  {cat:'อุปกรณ์หลัก', code:'PV-002', d:'อินเวอร์เตอร์ String 250 kW', u:'ชุด', q:10, mat:398000, lab:12000, src:'ใบเสนอราคา Vendor', vol:'ต่ำ'},
+  {cat:'อุปกรณ์หลัก', code:'PV-003', d:'ตู้ AC Combiner + Protection', u:'ชุด', q:10, mat:86500, lab:8500, src:'ฐานข้อมูลกลาง', vol:'ต่ำ'},
+  {cat:'งานไฟฟ้า', code:'EE-001', d:'สายไฟ PV1-F 1x6 sq.mm.', u:'ม.', q:24500, mat:31.8, lab:6.5, src:'ราคาตลาด (D-1)', vol:'สูง'},
+  {cat:'งานไฟฟ้า', code:'EE-002', d:'สาย CV 3x240+1x120 sq.mm.', u:'ม.', q:1250, mat:2480, lab:180, src:'ราคาตลาด (D-1)', vol:'สูง'},
+  {cat:'งานไฟฟ้า', code:'EE-003', d:'รางเดินสาย Cable Tray + อุปกรณ์', u:'ม.', q:1800, mat:640, lab:120, src:'ฐานข้อมูลกลาง', vol:'กลาง'},
+  {cat:'งานระบบควบคุม', code:'SC-001', d:'ระบบ Monitoring + Weather Station', u:'ระบบ', q:1, mat:685000, lab:65000, src:'ใบเสนอราคา Vendor', vol:'ต่ำ'},
+  {cat:'งานทดสอบและอื่นๆ', code:'GN-001', d:'งานทดสอบ Commissioning และเอกสารขออนุญาต', u:'งาน', q:1, mat:0, lab:920000, src:'ประสบการณ์โครงการเดิม', vol:'ต่ำ'},
+  {cat:'งานทดสอบและอื่นๆ', code:'GN-002', d:'ค่าดำเนินการ ความปลอดภัย และ Site Facility', u:'งาน', q:1, mat:410000, lab:680000, src:'อัตรามาตรฐานบริษัท', vol:'ต่ำ'},
+ ],
+ 'OPP-68-014':[
+  {cat:'งานฐานราก', code:'FD-001', d:'เสาเข็มเจาะ Ø0.60 ม. ลึก 21 ม.', u:'ต้น', q:96, mat:38500, lab:9800, src:'ราคาผู้รับเหมาช่วง', vol:'กลาง'},
+  {cat:'งานฐานราก', code:'FD-002', d:'คอนกรีตหยาบ + ฐานราก คสล. 240 ksc', u:'ลบ.ม.', q:420, mat:2180, lab:640, src:'ฐานข้อมูลกลาง', vol:'กลาง'},
+  {cat:'งานโครงสร้าง', code:'SR-001', d:'เหล็กเสริม SD40 (รวมดัด-ผูก)', u:'ตัน', q:186, mat:24800, lab:3900, src:'ราคาตลาด (D-1)', vol:'สูง'},
+  {cat:'งานโครงสร้าง', code:'SR-002', d:'โครงหลังคาเหล็กรูปพรรณ + ติดตั้ง', u:'ตัน', q:142, mat:34200, lab:7600, src:'ราคาตลาด (D-1)', vol:'สูง'},
+  {cat:'งานสถาปัตยกรรม', code:'AR-001', d:'ผนังก่ออิฐมวลเบา ฉาบเรียบ 2 ด้าน', u:'ตร.ม.', q:3850, mat:385, lab:210, src:'ฐานข้อมูลกลาง', vol:'ต่ำ'},
+  {cat:'งานสถาปัตยกรรม', code:'AR-002', d:'หลังคาเมทัลชีท หนา 0.47 มม. พร้อมฉนวน', u:'ตร.ม.', q:5600, mat:395, lab:110, src:'ราคาตลาด (D-1)', vol:'สูง'},
+  {cat:'งานระบบ', code:'MEP-01', d:'งานระบบไฟฟ้าและสื่อสารทั้งอาคาร', u:'งาน', q:1, mat:3_850_000, lab:1_120_000, src:'ผู้รับเหมาช่วง', vol:'กลาง'},
+  {cat:'งานระบบ', code:'MEP-02', d:'งานสุขาภิบาลและระบบดับเพลิง', u:'งาน', q:1, mat:2_240_000, lab:780_000, src:'ผู้รับเหมาช่วง', vol:'กลาง'},
+  {cat:'งานภายนอก', code:'EX-001', d:'ถนน คสล. และลานจอดรถ', u:'ตร.ม.', q:2400, mat:520, lab:180, src:'ฐานข้อมูลกลาง', vol:'ต่ำ'},
+ ]
+};
+
+/* ---------- 3) ฐานข้อมูลต้นทุน / Catalogue ---------- */
+const CATALOG = [
+ {code:'MAT-STL-001', n:'เหล็กเส้นกลม SR24 Ø9 มม.', u:'กก.', cur:24.10, prev:22.85, y:[21.4,21.8,22.3,22.85,23.4,24.1], fc:+4.2, vola:'สูง', src:'ตลาด+Vendor 4 ราย', upd:'วันนี้ 08:05', cat:'เหล็ก'},
+ {code:'MAT-STL-002', n:'เหล็กข้ออ้อย SD40 Ø16 มม.', u:'กก.', cur:24.80, prev:23.60, y:[22.1,22.6,23.0,23.6,24.2,24.8], fc:+3.8, vola:'สูง', src:'ตลาด+Vendor 4 ราย', upd:'วันนี้ 08:05', cat:'เหล็ก'},
+ {code:'MAT-STL-010', n:'เหล็กรูปพรรณ H-Beam 200x200 SS400', u:'กก.', cur:34.20, prev:32.40, y:[30.8,31.2,31.9,32.4,33.3,34.2], fc:+5.1, vola:'สูง', src:'ตลาด+Vendor 3 ราย', upd:'วันนี้ 08:05', cat:'เหล็ก'},
+ {code:'MAT-CON-001', n:'คอนกรีตผสมเสร็จ 240 ksc (Cube)', u:'ลบ.ม.', cur:2180, prev:2150, y:[2090,2110,2120,2150,2165,2180], fc:+1.2, vola:'ต่ำ', src:'สัญญาราคาปี 2569', upd:'3 วันที่แล้ว', cat:'คอนกรีต'},
+ {code:'MAT-CON-004', n:'ปูนซีเมนต์ปอร์ตแลนด์ ประเภท 1 (50 กก.)', u:'ถุง', cur:172, prev:168, y:[162,164,166,168,170,172], fc:+1.8, vola:'ต่ำ', src:'ผู้แทนจำหน่าย', upd:'2 วันที่แล้ว', cat:'คอนกรีต'},
+ {code:'MAT-ELE-011', n:'สายไฟ CV 1x240 sq.mm. (ทองแดง)', u:'ม.', cur:865, prev:792, y:[735,748,770,792,830,865], fc:+6.5, vola:'สูงมาก', src:'ตลาด LME + Vendor', upd:'วันนี้ 08:05', cat:'ไฟฟ้า'},
+ {code:'MAT-ELE-024', n:'สาย PV1-F 1x6 sq.mm.', u:'ม.', cur:31.80, prev:29.50, y:[27.9,28.4,28.9,29.5,30.6,31.8], fc:+5.4, vola:'สูง', src:'Vendor 3 ราย', upd:'เมื่อวาน', cat:'ไฟฟ้า'},
+ {code:'MAT-PV-006', n:'แผงโซลาร์ Mono PERC 610 Wp (Tier-1)', u:'แผง', cur:3720, prev:3890, y:[4120,4050,3960,3890,3810,3720], fc:-3.6, vola:'กลาง', src:'สัญญาราคาปี 2569', upd:'สัปดาห์นี้', cat:'พลังงาน'},
+ {code:'MAT-PV-012', n:'อินเวอร์เตอร์ String 250 kW', u:'ชุด', cur:398000, prev:405000, y:[421000,415000,410000,405000,401000,398000], fc:-1.8, vola:'ต่ำ', src:'Vendor 2 ราย', upd:'สัปดาห์นี้', cat:'พลังงาน'},
+ {code:'MAT-ARC-003', n:'อิฐมวลเบา ขนาด 20x60x7.5 ซม.', u:'ก้อน', cur:23.50, prev:23.00, y:[22.2,22.4,22.7,23.0,23.2,23.5], fc:+1.1, vola:'ต่ำ', src:'ผู้แทนจำหน่าย', upd:'5 วันที่แล้ว', cat:'สถาปัตย์'},
+ {code:'MAT-ARC-018', n:'เมทัลชีท 0.47 มม. เคลือบสี', u:'ตร.ม.', cur:395, prev:372, y:[352,358,364,372,384,395], fc:+4.4, vola:'สูง', src:'ตลาด+Vendor 3 ราย', upd:'เมื่อวาน', cat:'สถาปัตย์'},
+ {code:'LAB-GEN-001', n:'ค่าแรงช่างทั่วไป (รวมสวัสดิการ)', u:'วัน', cur:520, prev:495, y:[470,478,485,495,508,520], fc:+3.0, vola:'กลาง', src:'อัตราบริษัท + ตลาดแรงงาน', upd:'เดือนนี้', cat:'ค่าแรง'},
+ {code:'LAB-ELE-002', n:'ค่าแรงช่างไฟฟ้ามีใบรับรอง', u:'วัน', cur:780, prev:735, y:[695,705,720,735,760,780], fc:+4.1, vola:'กลาง', src:'อัตราบริษัท + ตลาดแรงงาน', upd:'เดือนนี้', cat:'ค่าแรง'},
+ {code:'MCH-CRN-001', n:'เช่ารถเครน 25 ตัน พร้อมพนักงาน', u:'วัน', cur:9800, prev:9500, y:[9100,9200,9350,9500,9650,9800], fc:+2.4, vola:'ต่ำ', src:'ผู้ให้เช่า 3 ราย', upd:'สัปดาห์นี้', cat:'เครื่องจักร'},
+];
+const MONTHS6 = ['มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.'];
+
+/* ---------- 4) งานจัดซื้อ / สรรหาผู้รับเหมา ---------- */
+const RFQS = [
+ {id:'RFQ-68-102', prj:'OPP-68-027', prjn:'Solar Rooftop 2.4 MWp', pkg:'งานติดตั้งโครงสร้างรองรับแผง', budget:6_672_000, need:'2026-08-14',
+  status:'เปรียบเทียบราคา', buyer:'อรวรรณ ท.', docs:{boq:1,tor:1,dwg:1,spec:1,safety:1},
+  quotes:[{v:'V-014',n:'หจก. ธนกิจ สตีลเวิร์ค', p:6_240_000, days:45, term:'เครดิต 30 วัน', valid:'30 วัน', score:88, note:'เคยทำงานร่วมกัน 6 โครงการ'},
+          {v:'V-031',n:'บจก. เอสพี เมทัลโปร', p:6_415_000, days:38, term:'เครดิต 45 วัน', valid:'15 วัน', score:82, note:'ส่งเร็วกว่า 7 วัน'},
+          {v:'V-052',n:'บจก. ไทยแฟบริเคชั่น', p:6_980_000, days:50, term:'เงินสด', valid:'30 วัน', score:71, note:'ราคาสูงกว่าต้นทุนกลาง'}]},
+ {id:'RFQ-68-104', prj:'OPP-68-027', prjn:'Solar Rooftop 2.4 MWp', pkg:'จัดหาแผงโซลาร์ 3,935 แผง', budget:14_638_200, need:'2026-08-20',
+  status:'รอใบเสนอราคา', buyer:'อรวรรณ ท.', docs:{boq:1,tor:1,dwg:1,spec:1,safety:0},
+  quotes:[{v:'V-008',n:'บจก. ซันพาวเวอร์ ซัพพลาย', p:14_182_000, days:60, term:'LC 60 วัน', valid:'7 วัน', score:90, note:'ยืนราคาสั้น ต้องรีบตัดสินใจ'},
+          {v:'V-045',n:'บจก. กรีนเอ็นเนอร์ยี เทรดดิ้ง', p:14_760_000, days:55, term:'เครดิต 30 วัน', valid:'14 วัน', score:78, note:'-'}]},
+ {id:'RFQ-68-108', prj:'OPP-68-014', prjn:'คลังสินค้า ABC โลจิสติกส์', pkg:'งานเสาเข็มเจาะ 96 ต้น', budget:4_636_800, need:'2026-08-12',
+  status:'ออก PO แล้ว', buyer:'กิตติ พ.', docs:{boq:1,tor:1,dwg:1,spec:1,safety:1},
+  quotes:[{v:'V-003',n:'บจก. ไพล์ลิ่ง มาสเตอร์', p:4_368_000, days:30, term:'เครดิต 30 วัน', valid:'30 วัน', score:92, note:'ผู้ชนะ — ต่ำกว่าต้นทุนกลาง 5.8%'},
+          {v:'V-019',n:'หจก. เจริญเสาเข็ม', p:4_512_000, days:35, term:'เครดิต 30 วัน', valid:'30 วัน', score:80, note:'-'},
+          {v:'V-066',n:'บจก. ฐานรากไทย', p:4_890_000, days:28, term:'เงินสด', valid:'20 วัน', score:74, note:'-'}]},
+ {id:'RFQ-68-111', prj:'OPP-68-014', prjn:'คลังสินค้า ABC โลจิสติกส์', pkg:'งานโครงหลังคาเหล็ก 142 ตัน', budget:5_936_400, need:'2026-09-01',
+  status:'ส่งขอราคา', buyer:'กิตติ พ.', docs:{boq:1,tor:1,dwg:1,spec:0,safety:1},
+  quotes:[]},
+ {id:'RFQ-68-115', prj:'OPP-68-033', prjn:'สายการผลิต Line 4 สยามฟู้ดแพ็ค', pkg:'งานติดตั้งเครื่องจักรและ Alignment', budget:3_180_000, need:'2026-08-26',
+  status:'เปรียบเทียบราคา', buyer:'อรวรรณ ท.', docs:{boq:1,tor:1,dwg:1,spec:1,safety:1},
+  quotes:[{v:'V-027',n:'บจก. พรีซิชั่น อินสตอลเลชั่น', p:3_040_000, days:40, term:'เครดิต 45 วัน', valid:'30 วัน', score:86, note:'มีทีมงานผ่านการอบรมความปลอดภัย'},
+          {v:'V-071',n:'หจก. เมคคานิค เซอร์วิส', p:3_265_000, days:35, term:'เครดิต 30 วัน', valid:'30 วัน', score:69, note:'ประวัติงานล่าช้า 2 ครั้ง'}]},
+ {id:'RFQ-68-118', prj:'OPP-68-014', prjn:'คลังสินค้า ABC โลจิสติกส์', pkg:'งานระบบไฟฟ้าและสื่อสาร', budget:4_970_000, need:'2026-09-15',
+  status:'รวบรวมเอกสาร', buyer:'กิตติ พ.', docs:{boq:1,tor:0,dwg:1,spec:0,safety:0},
+  quotes:[]},
+];
+
+/* ---------- 5) ทะเบียนผู้รับเหมา / ผู้ขาย ---------- */
+const VENDORS = [
+ {code:'V-003', n:'บจก. ไพล์ลิ่ง มาสเตอร์', type:'งานฐานราก/เสาเข็ม', grade:'A', jobs:14, val:68_400_000, s:{q:92,t:90,sf:95,pr:86,dc:94}, status:'ใช้งาน', last:'ก.ค. 2026'},
+ {code:'V-008', n:'บจก. ซันพาวเวอร์ ซัพพลาย', type:'อุปกรณ์พลังงานทดแทน', grade:'A', jobs:9, val:112_600_000, s:{q:94,t:86,sf:88,pr:90,dc:92}, status:'ใช้งาน', last:'ส.ค. 2026'},
+ {code:'V-014', n:'หจก. ธนกิจ สตีลเวิร์ค', type:'งานโครงสร้างเหล็ก', grade:'A', jobs:21, val:96_800_000, s:{q:88,t:84,sf:90,pr:88,dc:86}, status:'ใช้งาน', last:'ส.ค. 2026'},
+ {code:'V-019', n:'หจก. เจริญเสาเข็ม', type:'งานฐานราก/เสาเข็ม', grade:'B', jobs:7, val:24_100_000, s:{q:80,t:76,sf:82,pr:84,dc:70}, status:'ใช้งาน', last:'พ.ค. 2026'},
+ {code:'V-027', n:'บจก. พรีซิชั่น อินสตอลเลชั่น', type:'ติดตั้งเครื่องจักร', grade:'A', jobs:11, val:54_300_000, s:{q:90,t:88,sf:94,pr:78,dc:88}, status:'ใช้งาน', last:'ส.ค. 2026'},
+ {code:'V-031', n:'บจก. เอสพี เมทัลโปร', type:'งานโครงสร้างเหล็ก', grade:'B', jobs:5, val:18_900_000, s:{q:84,t:88,sf:80,pr:86,dc:74}, status:'ใช้งาน', last:'มิ.ย. 2026'},
+ {code:'V-045', n:'บจก. กรีนเอ็นเนอร์ยี เทรดดิ้ง', type:'อุปกรณ์พลังงานทดแทน', grade:'B', jobs:4, val:31_500_000, s:{q:78,t:74,sf:76,pr:84,dc:78}, status:'ใช้งาน', last:'เม.ย. 2026'},
+ {code:'V-052', n:'บจก. ไทยแฟบริเคชั่น', type:'งานโครงสร้างเหล็ก', grade:'C', jobs:3, val:9_800_000, s:{q:72,t:66,sf:74,pr:70,dc:72}, status:'เฝ้าระวัง', last:'ก.พ. 2026'},
+ {code:'V-066', n:'บจก. ฐานรากไทย', type:'งานฐานราก/เสาเข็ม', grade:'B', jobs:6, val:21_200_000, s:{q:82,t:80,sf:78,pr:72,dc:80}, status:'ใช้งาน', last:'มี.ค. 2026'},
+ {code:'V-071', n:'หจก. เมคคานิค เซอร์วิส', type:'ติดตั้งเครื่องจักร', grade:'C', jobs:8, val:16_400_000, s:{q:70,t:58,sf:72,pr:82,dc:64}, status:'เฝ้าระวัง', last:'ก.ค. 2026'},
+ {code:'V-088', n:'บจก. เอ็มอีพี โซลูชั่นส์', type:'งานระบบ MEP', grade:'A', jobs:17, val:88_700_000, s:{q:90,t:86,sf:92,pr:80,dc:90}, status:'ใช้งาน', last:'ส.ค. 2026'},
+ {code:'V-093', n:'หจก. สุขสวัสดิ์ก่อสร้าง', type:'งานโยธาทั่วไป', grade:'D', jobs:2, val:5_600_000, s:{q:58,t:52,sf:60,pr:88,dc:50}, status:'ระงับชั่วคราว', last:'พ.ย. 2025'},
+];
+
+/* ---------- 6) โครงการที่กำลังก่อสร้าง ---------- */
+const PROJECTS = [
+ {code:'PRJ-2601', name:'อาคารคลังสินค้าและสำนักงาน ABC โลจิสติกส์', cust:'บจก. เอบีซี โลจิสติกส์', wt:'งานก่อสร้าง', sector:'งานเอกชน',
+  value:45_100_000, budget:38_260_500, actual:19_450_000, commit:8_900_000, pm:'วิชัย ป.', start:'2026-06-25', end:'2027-03-25',
+  plan:[4,12,23,36,50,64,78,90,100], act:[4,11,21,32,46,0,0,0,0], cursor:4,
+  cin:[9700,0,7275,0,9700,0,7275,0,14550], cout:[3100,4600,5900,6400,6800,7100,6200,5100,3900],
+  risks:[{r:'ราคาเหล็กรูปพรรณสูงกว่าที่ประเมิน 5.1%', i:'สูง', a:'ล็อกราคากับ V-014 ภายใน 10 ส.ค.'},
+         {r:'ฝนตกหนักช่วง ส.ค.–ก.ย. กระทบงานฐานราก', i:'กลาง', a:'เร่งงานใต้ดินให้จบก่อน 25 ส.ค.'}]},
+ {code:'PRJ-2602', name:'ติดตั้งสายการผลิตบรรจุภัณฑ์ Line 4', cust:'บจก. สยามฟู้ดแพ็ค', wt:'งานเครื่องจักรอุตสาหกรรม', sector:'งานเอกชน',
+  value:29_600_000, budget:24_100_000, actual:14_820_000, commit:4_300_000, pm:'อนุชา ร.', start:'2026-06-10', end:'2026-11-10',
+  plan:[8,22,40,58,74,88,100], act:[9,25,44,63,79,0,0], cursor:4,
+  cin:[5920,0,8880,0,5920,0,8880], cout:[2400,3600,4100,4720,3900,3100,2280],
+  risks:[{r:'เครื่องจักรนำเข้าติดพิธีการศุลกากร', i:'กลาง', a:'ตัวแทนออกของยืนยันเคลียร์ภายใน 14 ส.ค.'}]},
+ {code:'PRJ-2588', name:'อาคารสำนักงาน 3 ชั้น (เฟส 1) ABC โลจิสติกส์', cust:'บจก. เอบีซี โลจิสติกส์', wt:'งานก่อสร้าง', sector:'งานเอกชน',
+  value:36_200_000, budget:31_000_000, actual:30_240_000, commit:0, pm:'วิชัย ป.', start:'2025-08-01', end:'2026-05-30',
+  plan:[10,25,42,60,76,90,100], act:[10,24,40,59,77,92,100], cursor:6,
+  cin:[7240,0,10860,0,7240,0,10860], cout:[3900,4600,5100,5300,4800,3800,2740],
+  risks:[]},
+ {code:'PRJ-2595', name:'ปรับปรุงระบบสุขาภิบาลอาคารพาณิชย์', cust:'บจก. ริเวอร์ไซด์ พร็อพเพอร์ตี้', wt:'งาน MEP', sector:'งานเอกชน',
+  value:12_400_000, budget:10_150_000, actual:8_890_000, commit:600_000, pm:'อนุชา ร.', start:'2026-02-15', end:'2026-09-15',
+  plan:[12,28,45,62,78,92,100], act:[10,24,38,54,70,0,0], cursor:4,
+  cin:[2480,0,3720,0,2480,0,3720], cout:[1200,1600,1900,2100,2090,1400,900],
+  risks:[{r:'ความคืบหน้าล่าช้ากว่าแผน 8% จากปัญหาแรงงานผู้รับเหมาช่วง', i:'สูง', a:'เพิ่มทีมจาก V-088 อีก 6 คน เริ่ม 12 ส.ค.'}]},
+];
+const PMONTHS = ['มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.'];
+
+/* ---------- 7) กระแสเงินสดรวมบริษัท ---------- */
+const CASH = {
+  m:['มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],
+  in:[18.4,14.2,21.6,16.9,24.3,19.8,26.4,22.1,28.7,31.2],
+  out:[15.1,16.8,17.2,18.6,20.4,21.7,22.9,20.3,24.1,25.6],
+  actualTo:5,
+  open:12.6,
+  credit:{limit:60, used:23.4},
+  ar:[{b:'ยังไม่ครบกำหนด', v:38.4},{b:'เกิน 1–30 วัน', v:12.1},{b:'เกิน 31–60 วัน', v:5.8},{b:'เกิน 60 วันขึ้นไป', v:2.3}],
+  ap:[{b:'ครบกำหนดใน 7 วัน', v:8.9},{b:'ครบกำหนด 8–30 วัน', v:16.4},{b:'ครบกำหนด 31–60 วัน', v:11.2}]
+};
+
+/* ---------- 8) คลังความรู้ วิเคราะห์แพ้-ชนะ ---------- */
+const LOSS = [
+ {r:'ราคาสูงกว่าคู่แข่ง', n:11, pct:39},
+ {r:'ต้นทุนวัสดุประเมินสูงเกินจริง', n:6, pct:21},
+ {r:'ระยะเวลาส่งมอบไม่ตอบโจทย์', n:4, pct:14},
+ {r:'เผื่อความเสี่ยงมากเกินไป', n:4, pct:14},
+ {r:'คุณสมบัติ/ผลงานไม่ผ่านเกณฑ์', n:2, pct:7},
+ {r:'ส่งเอกสารไม่ทันกำหนด', n:1, pct:5},
+];
+const BENCH = [
+ {wt:'งานก่อสร้าง', bids:14, win:6, gap:-3.2, margin:15.4, target:15},
+ {wt:'งานโยธา', bids:9, win:2, gap:-6.1, margin:11.8, target:13},
+ {wt:'งาน MEP', bids:12, win:5, gap:-2.4, margin:17.2, target:16},
+ {wt:'งานพลังงานทดแทน', bids:7, win:4, gap:-1.8, margin:18.4, target:18},
+ {wt:'งานเครื่องจักรอุตสาหกรรม', bids:6, win:3, gap:-2.9, margin:18.6, target:17},
+];
+const IMPROVE = [
+ {t:'ปรับค่าเผื่อความเสี่ยงงานโยธาจาก 8% เหลือ 5%', why:'ข้อมูลย้อนหลัง 9 ประมูล พบว่าเราสูงกว่าผู้ชนะเฉลี่ย 6.1% ขณะที่ต้นทุนจริงเบี่ยงเบนเพียง 2.3%', impact:'เพิ่มโอกาสชนะประมาณ 18%', st:'รอผู้บริหารอนุมัติ'},
+ {t:'ล็อกราคาเหล็กล่วงหน้ากับ Vendor เกรด A 2 ราย', why:'ราคาเหล็กรูปพรรณ +5.1% ใน 3 เดือน และคาดว่าจะขึ้นต่ออีก 5.1%', impact:'ลดความเสี่ยงต้นทุนบานปลาย 1.9 ลบ./ปี', st:'ดำเนินการแล้ว'},
+ {t:'แยกราคาค่าขนส่งออกจากค่าวัสดุใน BOQ ทุกหมวด', why:'พบว่า 4 โครงการมีค่าขนส่งซ่อนอยู่ในค่าวัสดุ ทำให้เทียบราคา Vendor ผิดพลาด', impact:'ความแม่นยำการเทียบราคาเพิ่มขึ้น', st:'กำลังทำ'},
+ {t:'ทบทวนเกณฑ์คัดเลือก Vendor เกรด C ออกจากงานเร่งด่วน', why:'V-071 และ V-052 มีคะแนนตรงเวลาต่ำกว่า 70 และทำให้ 2 โครงการล่าช้า', impact:'ลดความเสี่ยงค่าปรับส่งมอบล่าช้า', st:'รอผู้บริหารอนุมัติ'},
+];
+
+/* ---------- 9) ค่าคงที่ระบบ ---------- */
+const PROCESS = [
+ {n:'01', t:'รับแบบ / ความต้องการลูกค้า', v:'sales', c:'3 งานใหม่'},
+ {n:'02', t:'ออกแบบและทำ BOQ ต้นทุน', v:'estimate', c:'2 อยู่ระหว่างทำ'},
+ {n:'03', t:'ตรวจต้นทุนเทียบงานเดิม', v:'costcheck', c:'2 รอตรวจ'},
+ {n:'04', t:'วิเคราะห์ราคาก่อนเสนอ', v:'bidsim', c:'2 รอตัดสินใจ'},
+ {n:'05', t:'เสนอราคาและติดตามผล', v:'sales', c:'5 รอผล'},
+ {n:'06', t:'แยกรายการ ส่งขอสรรหาผู้รับเหมา', v:'procurement', c:'2 ชุดเอกสาร'},
+ {n:'07', t:'ขอราคา เทียบราคา และออก PO', v:'procurement', c:'6 RFQ'},
+ {n:'08', t:'ส่งมอบให้ PM บริหารโครงการ', v:'projects', c:'4 โครงการ'},
+ {n:'09', t:'ประเมิน Vendor และเก็บข้อมูลปิดงาน', v:'knowledge', c:'2 รอประเมิน'},
+];
+
+const NAV = [
+ {g:'ภาพรวม', items:[
+   {v:'exec', ic:'◧', t:'แดชบอร์ดผู้บริหาร', roles:['exec','all']},
+ ]},
+ {g:'สายงานขาย', items:[
+   {v:'sales', ic:'◈', t:'โอกาสการขาย', roles:['sales','exec','all'], badge:'6'},
+   {v:'estimate', ic:'▤', t:'ประมาณราคา / BOQ', roles:['est','sales','all'], badge:'2'},
+   {v:'costcheck', ic:'⊞', t:'ตรวจต้นทุนก่อนส่งฝ่ายขาย', roles:['est','exec','all'], badge:'2'},
+   {v:'bidsim', ic:'◮', t:'วิเคราะห์ราคาก่อนเสนอ', roles:['sales','est','exec','all']},
+ ]},
+ {g:'ต้นทุนและจัดซื้อ', items:[
+   {v:'catalog', ic:'◎', t:'ฐานข้อมูลต้นทุนกลาง', roles:['est','pur','exec','all']},
+   {v:'forecast', ic:'◭', t:'พยากรณ์ราคาวัสดุ', roles:['est','pur','exec','all']},
+   {v:'procurement', ic:'⬒', t:'จัดซื้อและสรรหาผู้รับเหมา', roles:['pur','est','all'], badge:'6'},
+   {v:'vendors', ic:'◇', t:'ทะเบียนและประเมินผู้รับเหมา', roles:['pur','pm','exec','all']},
+ ]},
+ {g:'หน้างานและการเงิน', items:[
+   {v:'projects', ic:'▥', t:'บริหารโครงการ', roles:['pm','exec','all'], badge:'4'},
+   {v:'cash', ic:'◫', t:'การเงินและกระแสเงินสด', roles:['exec','pm','all']},
+ ]},
+ {g:'เรียนรู้และปรับปรุง', items:[
+   {v:'knowledge', ic:'◔', t:'คลังข้อมูลและ Data Master', roles:['exec','sales','est','pur','all']},
+ ]},
+];
+
+/* =======================================================================
+   ตัวช่วยวาดกราฟ (SVG เขียนเอง ไม่พึ่งไลบรารีภายนอก)
+   ======================================================================= */
+function lineChart(series, labels, opt={}){
+  const w=opt.w||620,h=opt.h||190,pl=42,pr=12,pt=12,pb=26;
+  const all=series.flatMap(s=>s.d.filter(v=>v!==null));
+  let mx=opt.max??Math.max(...all), mn=opt.min??Math.min(...all,0);
+  if(mx===mn)mx=mn+1;
+  const X=i=>pl+i*(w-pl-pr)/Math.max(1,labels.length-1);
+  const Y=v=>pt+(1-(v-mn)/(mx-mn))*(h-pt-pb);
+  let g='';
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);
+    g+=`<line x1="${pl}" y1="${y}" x2="${w-pr}" y2="${y}" stroke="#E7EDEB"/>`;
+    g+=`<text x="${pl-7}" y="${y+3.5}" text-anchor="end" font-size="9.5" fill="#61756F" font-family="IBM Plex Mono">${opt.fmt?opt.fmt(v):Math.round(v)}</text>`;}
+  labels.forEach((l,i)=>{g+=`<text x="${X(i)}" y="${h-8}" text-anchor="middle" font-size="9.5" fill="#61756F">${l}</text>`;});
+  if(opt.mark!==undefined&&opt.mark>=0){const xm=X(opt.mark);g+=`<line x1="${xm}" y1="${pt}" x2="${xm}" y2="${h-pb}" stroke="#E39B1F" stroke-width="1.6" stroke-dasharray="4 3"/>`;}
+  series.forEach(s=>{
+    const pts=s.d.map((v,i)=>v===null?null:[X(i),Y(v)]).filter(Boolean);
+    if(!pts.length)return;
+    const dd=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    if(s.fill)g+=`<path d="${dd} L${pts[pts.length-1][0]} ${Y(mn)} L${pts[0][0]} ${Y(mn)} Z" fill="${s.c}" opacity=".10"/>`;
+    g+=`<path d="${dd}" fill="none" stroke="${s.c}" stroke-width="${s.w||2}" stroke-dasharray="${s.dash||''}" stroke-linejoin="round" stroke-linecap="round"/>`;
+    if(s.dots!==false)pts.forEach(p=>{g+=`<circle cx="${p[0]}" cy="${p[1]}" r="2.8" fill="#fff" stroke="${s.c}" stroke-width="1.8"/>`;});
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg>`;
+}
+function barChart(data, opt={}){
+  const w=opt.w||620,h=opt.h||190,pl=opt.pl||42,pr=10,pt=14,pb=34;
+  const mx=Math.max(...data.map(d=>Math.max(d.v,d.v2||0)))*1.12||1;
+  const bw=(w-pl-pr)/data.length, Y=v=>pt+(1-v/mx)*(h-pt-pb);
+  let g='';
+  for(let i=0;i<=3;i++){const y=pt+(h-pt-pb)*i/3;
+    g+=`<line x1="${pl}" y1="${y}" x2="${w-pr}" y2="${y}" stroke="#E7EDEB"/>`;
+    g+=`<text x="${pl-7}" y="${y+3.5}" text-anchor="end" font-size="9.5" fill="#61756F" font-family="IBM Plex Mono">${Math.round(mx*(3-i)/3).toLocaleString()}</text>`;}
+  data.forEach((d,i)=>{
+    const x=pl+i*bw, pad=bw*0.22, iw=(bw-pad*2)/(d.v2!==undefined?2:1);
+    g+=`<rect x="${x+pad}" y="${Y(d.v)}" width="${iw-2}" height="${Math.max(1,h-pb-Y(d.v))}" fill="${d.c||opt.c||'#25473D'}" rx="2"/>`;
+    if(d.v2!==undefined)g+=`<rect x="${x+pad+iw}" y="${Y(d.v2)}" width="${iw-2}" height="${Math.max(1,h-pb-Y(d.v2))}" fill="${opt.c2||'#E39B1F'}" rx="2"/>`;
+    g+=`<text x="${x+bw/2}" y="${h-19}" text-anchor="middle" font-size="9.5" fill="#61756F">${d.l}</text>`;
+    if(d.l2)g+=`<text x="${x+bw/2}" y="${h-7}" text-anchor="middle" font-size="9" fill="#93A5A0">${d.l2}</text>`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg>`;
+}
+function donut(parts, opt={}){
+  const s=opt.s||150, r=s/2-6, ir=opt.ir||r*0.62, cx=s/2, cy=s/2;
+  const tot=parts.reduce((a,b)=>a+b.v,0)||1; let a0=-Math.PI/2, g='';
+  parts.forEach(p=>{
+    const a1=a0+p.v/tot*Math.PI*2, big=(a1-a0)>Math.PI?1:0;
+    const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    const X0=cx+ir*Math.cos(a1),Y0=cy+ir*Math.sin(a1),X1=cx+ir*Math.cos(a0),Y1=cy+ir*Math.sin(a0);
+    g+=`<path d="M${x0} ${y0} A${r} ${r} 0 ${big} 1 ${x1} ${y1} L${X0} ${Y0} A${ir} ${ir} 0 ${big} 0 ${X1} ${Y1} Z" fill="${p.c}"/>`;
+    a0=a1;});
+  if(opt.center)g+=`<text x="${cx}" y="${cy-1}" text-anchor="middle" font-size="19" font-family="IBM Plex Mono" font-weight="600" fill="#12211E">${opt.center}</text>`;
+  if(opt.sub)g+=`<text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="9.5" fill="#61756F">${opt.sub}</text>`;
+  return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">${g}</svg>`;
+}
+function spark(d, c='#25473D', w=90, h=26){
+  const mx=Math.max(...d),mn=Math.min(...d),rg=(mx-mn)||1;
+  const pts=d.map((v,i)=>[i*w/(d.length-1),h-2-((v-mn)/rg)*(h-5)]);
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><path d="${pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${c}" stroke-width="1.8" stroke-linejoin="round"/><circle cx="${pts[pts.length-1][0]}" cy="${pts[pts.length-1][1]}" r="2.4" fill="${c}"/></svg>`;
+}
+function stackBar(rows,opt={}){
+  const w=opt.w||620,rh=opt.rh||26,pl=opt.pl||128,h=rows.length*rh+8;
+  const mx=Math.max(...rows.map(r=>r.v))*1.1||1;let g='';
+  rows.forEach((r,i)=>{
+    const y=i*rh+4, bw=(r.v/mx)*(w-pl-64);
+    g+=`<text x="${pl-9}" y="${y+13}" text-anchor="end" font-size="11" fill="#3B4E48">${r.l}</text>`;
+    g+=`<rect x="${pl}" y="${y+3}" width="${Math.max(2,bw)}" height="13" rx="3" fill="${r.c||'#25473D'}"/>`;
+    g+=`<text x="${pl+bw+8}" y="${y+14}" font-size="10.5" font-family="IBM Plex Mono" fill="#61756F">${r.t}</text>`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg>`;
+}
+const bar=(p,cls='')=>`<div class="bar ${cls}"><span style="width:${Math.max(0,Math.min(100,p))}%"></span></div>`;
+
+/* =======================================================================
+   สถานะแอป + เชลล์
+   ======================================================================= */
+let VIEW='exec', ROLE='all';
+const $=s=>document.querySelector(s);
+
+function drawRail(){
+  $('#rail').innerHTML = PROCESS.map((p,i)=>{
+    const on = p.v===VIEW;
+    return `<button class="station ${on?'on':''} ${i<3?'done':''}" onclick="go('${p.v}')">
+      <span class="st-n">${p.n}</span><span class="st-t">${p.t}</span><span class="st-c">${p.c}</span></button>`;
+  }).join('');
+}
+function drawNav(){
+  $('#side').innerHTML = NAV.map(g=>{
+    const items=g.items.filter(i=>i.roles.includes(ROLE));
+    if(!items.length)return '';
+    return `<div class="grp">${g.g}</div>`+items.map(i=>
+      `<button class="navbtn ${i.v===VIEW?'on':''}" onclick="go('${i.v}')"><span class="ic">${i.ic}</span>${i.t}${i.badge?`<span class="badge">${i.badge}</span>`:''}</button>`).join('');
+  }).join('');
+}
+function go(v){
+  const allowed=NAV.flatMap(g=>g.items).find(i=>i.v===v);
+  if(allowed && !allowed.roles.includes(ROLE)) ROLE='all', $('#role').value='all';
+  VIEW=v; drawNav(); drawRail(); render(); window.scrollTo({top:0,behavior:'instant'});
+}
+$('#role').addEventListener('change',e=>{
+  ROLE=e.target.value;
+  const first=NAV.flatMap(g=>g.items).filter(i=>i.roles.includes(ROLE));
+  if(!first.find(i=>i.v===VIEW)) VIEW=first[0].v;
+  drawNav(); drawRail(); render();
+});
+function openDrawer(html){
+  $('#drawer').innerHTML=html; $('#drawer').classList.add('on'); $('#scrim').classList.add('on');
+  $('#drawer').setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on');
+  $('#drawer').setAttribute('aria-hidden','true'); document.body.style.overflow='';
+}
+$('#scrim').addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+function dtab(btn,id){
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('[data-pane]').forEach(p=>p.style.display='none');
+  document.querySelector(`[data-pane="${id}"]`).style.display='';
+}
+function phead(eyebrow,title,desc,right=''){
+  return `<div class="phead"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p>${desc}</p></div><div class="right">${right}</div></div>`;
+}
+(function clock(){
+  const d=new Date();
+  $('#clock').textContent='ข้อมูล ณ '+d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})+' · อัปเดตอัตโนมัติทุก 15 นาที';
+})();
+
+/* =======================================================================
+   VIEW 1 — แดชบอร์ดผู้บริหาร
+   ======================================================================= */
+function vExec(){
+  const won=OPPS.filter(o=>o.status==='ได้งาน'), lost=OPPS.filter(o=>o.status==='ไม่ได้งาน'), open_=OPPS.filter(o=>o.status==='กำลังเสนอ');
+  const pipe=open_.reduce((a,o)=>a+o.bid,0), wonV=won.reduce((a,o)=>a+o.bid,0);
+  const wr=won.length/(won.length+lost.length)*100;
+  const wtd=open_.reduce((a,o)=>a+o.bid*o.prob/100,0);
+  const backlog=PROJECTS.filter(p=>p.act[p.cursor]<100).reduce((a,p)=>a+p.value*(1-p.act[p.cursor]/100),0);
+  const gm=(wonV-won.reduce((a,o)=>a+o.cost,0))/wonV*100;
+  const cashNow=CASH.open+CASH.in.slice(0,6).reduce((a,b)=>a+b,0)-CASH.out.slice(0,6).reduce((a,b)=>a+b,0);
+
+  const kpi=(l,v,s,d,cls)=>`<div class="card kpi accent-t"><div class="lbl">${l}</div><div class="val">${v}<small>${s||''}</small></div><div class="delta ${cls||''}">${d}</div></div>`;
+
+  const bySector=SECTORS.map((s,i)=>({l:s.replace('งาน',''),v:OPPS.filter(o=>o.sector===s).reduce((a,o)=>a+o.bid,0)/1e6,c:['#25473D','#2C6E8F','#E39B1F'][i]}));
+  const byWT=WORKTYPES.map((w,i)=>({l:w.replace('งาน',''),v:OPPS.filter(o=>o.wt===w).reduce((a,o)=>a+o.bid,0)/1e6,c:['#25473D','#2C6E8F','#2C8461','#E39B1F','#6A5A9E'][i]}));
+
+  return phead('ภาพรวมองค์กร','แดชบอร์ดผู้บริหาร','ตัวเลขทุกช่องดึงจากงานจริงในระบบ ไม่ต้องรอฝ่ายไหนส่งรายงาน — เห็นตั้งแต่โอกาสการขายจนถึงเงินสดในมือ',
+   `<div class="seg"><button class="on">ปีนี้</button><button>ไตรมาสนี้</button><button>เดือนนี้</button></div>`)
+  + `<div class="grid g5" style="margin-bottom:14px">
+      ${kpi('มูลค่างานที่กำลังเสนอ',M(pipe),'ลบ.','▲ '+open_.length+' งานอยู่ระหว่างเสนอราคา','up')}
+      ${kpi('มูลค่าถ่วงน้ำหนักโอกาส',M(wtd),'ลบ.','คำนวณจาก % โอกาสชนะรายงาน')}
+      ${kpi('อัตราชนะประมูล',wr.toFixed(0),'%','▼ ต่ำกว่าเป้า 45% อยู่ 12 จุด','down')}
+      ${kpi('กำไรขั้นต้นงานที่ได้',gm.toFixed(1),'%','▲ สูงกว่าเป้า 15.0%','up')}
+      ${kpi('เงินสดคงเหลือประมาณการ',cashNow.toFixed(1),'ลบ.','วงเงินคงเหลือ '+(CASH.credit.limit-CASH.credit.used).toFixed(1)+' ลบ.')}
+     </div>
+
+     <div class="grid g3" style="margin-bottom:14px">
+       <div class="card" style="grid-column:span 2">
+         <div class="cardhead"><div><h3>กระแสเงินสดรับ–จ่าย ตลอดปี</h3><div class="sub">เส้นทึบ = เกิดขึ้นจริง · เส้นประ = ประมาณการจากแผนงานและเงื่อนไขการชำระ</div></div><div class="right">หน่วย: ล้านบาท</div></div>
+         ${lineChart([
+            {d:CASH.in.map((v,i)=>i<=CASH.actualTo?v:null),c:'#2C8461',fill:true},
+            {d:CASH.in.map((v,i)=>i>=CASH.actualTo?v:null),c:'#2C8461',dash:'5 4',dots:false},
+            {d:CASH.out.map((v,i)=>i<=CASH.actualTo?v:null),c:'#B8443A'},
+            {d:CASH.out.map((v,i)=>i>=CASH.actualTo?v:null),c:'#B8443A',dash:'5 4',dots:false}
+         ],CASH.m,{h:210})}
+         <div class="legend"><span><i style="background:#2C8461"></i>เงินรับจากลูกค้า</span><span><i style="background:#B8443A"></i>เงินจ่ายผู้รับเหมา/วัสดุ</span><span><i style="background:#93A5A0"></i>เส้นประ = ประมาณการ</span></div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>สัดส่วนงานตามประเภทลูกค้า</h3><div class="sub">มูลค่าเสนอราคาปีนี้</div></div></div>
+         <div style="display:flex;gap:14px;align-items:center">
+           ${donut(bySector,{center:M(OPPS.reduce((a,o)=>a+o.bid,0)),sub:'ลบ. รวม'})}
+           <div style="flex:1">${bySector.map(s=>`<div class="stat-row"><span class="k"><i style="width:9px;height:9px;border-radius:2px;display:inline-block;background:${s.c};margin-right:6px"></i>${s.l}</span><span class="v">${s.v.toFixed(1)}</span></div>`).join('')}</div>
+         </div>
+       </div>
+     </div>
+
+     <div class="grid g2" style="margin-bottom:14px">
+       <div class="card">
+         <div class="cardhead"><div><h3>มูลค่างานแยกตามประเภทงาน</h3><div class="sub">หน่วย: ล้านบาท</div></div></div>
+         ${barChart(byWT,{h:200,pl:38})}
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>สุขภาพโครงการที่กำลังก่อสร้าง</h3><div class="sub">เทียบความคืบหน้าจริงกับแผน และต้นทุนที่ใช้ไปกับงบ</div></div></div>
+         <table><thead><tr><th>โครงการ</th><th class="c">คืบหน้า</th><th class="r">ใช้งบไป</th><th class="c">สถานะ</th></tr></thead><tbody>
+         ${PROJECTS.map(p=>{
+           const a=p.act[p.cursor],pl=p.plan[p.cursor],d=a-pl;
+           const used=(p.actual+p.commit)/p.budget*100;
+           const st=d<-5?['c-red','ล่าช้า']:d<0?['c-amber','ช้ากว่าแผน']:['c-green','ตามแผน'];
+           return `<tr class="clickable" onclick="prjDrawer('${p.code}')">
+             <td><div class="t-title">${p.name.slice(0,32)}${p.name.length>32?'…':''}</div><div class="t-sub">${p.code} · ${p.pm}</div></td>
+             <td class="c"><div class="dualbar" style="min-width:90px"><div class="plan" style="width:${pl}%"></div><div class="act" style="width:${a}%"></div></div><div class="t-sub num">${a}% / แผน ${pl}%</div></td>
+             <td class="r"><span class="num">${used.toFixed(0)}%</span><div class="t-sub num">${M(p.actual+p.commit)} ลบ.</div></td>
+             <td class="c"><span class="chip ${st[0]}">${st[1]}</span></td></tr>`;}).join('')}
+         </tbody></table>
+       </div>
+     </div>
+
+     <div class="grid g3">
+       <div class="card">
+         <div class="cardhead"><div><h3>สิ่งที่ต้องตัดสินใจสัปดาห์นี้</h3><div class="sub">รายการที่รอผู้บริหารเท่านั้น</div></div></div>
+         <div class="pain"><b>ยืนราคาแผงโซลาร์เหลือ 7 วัน</b> — RFQ-68-104 มูลค่า 14.18 ลบ. ต่ำกว่าต้นทุนกลาง 3.1% หากไม่อนุมัติภายใน 14 ส.ค. ต้องขอราคาใหม่</div>
+         <div class="pain"><b>ปรับค่าเผื่อความเสี่ยงงานโยธา 8% → 5%</b> — จากข้อมูลแพ้ประมูล 9 ครั้ง คาดเพิ่มโอกาสชนะ 18%</div>
+         <div class="gain"><b>ล็อกราคาเหล็กกับ Vendor เกรด A แล้ว</b> — ป้องกันต้นทุนบานปลายประมาณ 1.9 ลบ./ปี</div>
+         <button class="btn ghost" style="width:100%;margin-top:8px" onclick="go('knowledge')">ดูข้อเสนอปรับปรุงทั้งหมด</button>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>ทำไมเราถึงแพ้ประมูล</h3><div class="sub">รวบรวมจาก 28 งานที่ไม่ได้ในรอบ 12 เดือน</div></div></div>
+         ${stackBar(LOSS.map((l,i)=>({l:l.r.length>18?l.r.slice(0,17)+'…':l.r,v:l.pct,t:l.pct+'% ('+l.n+')',c:i<2?'#B8443A':'#25473D'})),{pl:118})}
+         <div class="hint">สองสาเหตุแรกรวมกัน 60% เป็นเรื่องราคาและการประเมินต้นทุน — แก้ที่ฐานข้อมูลต้นทุนได้โดยตรง</div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>ความเสี่ยงต้นทุนวัสดุ</h3><div class="sub"><span class="ai">AI พยากรณ์ 90 วัน</span></div></div></div>
+         ${CATALOG.filter(c=>Math.abs(c.fc)>3).slice(0,5).map(c=>`
+           <div class="stat-row"><span class="k">${c.n.slice(0,26)}${c.n.length>26?'…':''}</span>
+           <span class="v ${c.fc>0?'down':'up'}">${c.fc>0?'▲':'▼'} ${Math.abs(c.fc).toFixed(1)}%</span></div>`).join('')}
+         <button class="btn ghost" style="width:100%;margin-top:10px" onclick="go('forecast')">เปิดหน้าพยากรณ์ราคา</button>
+       </div>
+     </div>`;
+}
+
+/* =======================================================================
+   VIEW 2 — ฝ่ายขาย: โอกาสการขาย
+   ======================================================================= */
+function vSales(){
+  const stages=['รับแบบ/ศึกษาความต้องการ','ประมาณราคา','ยื่นซองแล้ว','เจรจาต่อรอง','ทำสัญญา'];
+  const cnt=s=>OPPS.filter(o=>o.stage===s);
+  const f=FILT.sales;
+  const list=OPPS.filter(o=>(!f.sector||o.sector===f.sector)&&(!f.wt||o.wt===f.wt)&&(!f.status||o.status===f.status)
+    &&(!f.q||(o.name+o.cust+o.id).toLowerCase().includes(f.q.toLowerCase())));
+  return phead('สายงานขาย','โอกาสการขายและการเสนอราคา','ทุกงานที่เข้ามาถูกบันทึกไว้ตั้งแต่วันรับแบบ ไม่ว่าจะได้หรือไม่ได้ ข้อมูลราคาและต้นทุนจะถูกเก็บเพื่อใช้วิเคราะห์รอบถัดไป',
+    `<button class="btn ghost" onclick="toast('เดโมนี้ยังไม่ได้ต่อกับกล่องอีเมล','warn')">นำเข้าจากอีเมล</button><button class="btn" onclick="newOppModal()">รับงานใหม่</button>`)
+  + `<div class="grid g5" style="margin-bottom:16px">
+    ${stages.map(s=>{const l=cnt(s),v=l.reduce((a,o)=>a+o.bid,0);
+      return `<div class="card" style="padding:12px 13px"><div class="tag">${s}</div>
+        <div class="num" style="font-size:20px;font-weight:600;margin-top:5px">${M(v)}<span style="font-size:11px;color:var(--muted);margin-left:3px">ลบ.</span></div>
+        <div class="t-sub">${l.length} งาน</div>
+        <div style="margin-top:8px">${bar(l.length/4*100,'amber')}</div></div>`}).join('')}
+  </div>
+
+  <div class="filters">
+    <select onchange="setF('sales','sector',this.value)"><option value="">ทุกประเภทลูกค้า</option>${SECTORS.map(s=>`<option ${f.sector===s?'selected':''}>${s}</option>`).join('')}</select>
+    <select onchange="setF('sales','wt',this.value)"><option value="">ทุกประเภทงาน</option>${WORKTYPES.map(s=>`<option ${f.wt===s?'selected':''}>${s}</option>`).join('')}</select>
+    <select onchange="setF('sales','status',this.value)"><option value="">ทุกสถานะ</option>${['กำลังเสนอ','ได้งาน','ไม่ได้งาน'].map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}</select>
+    <input id="f-sales-q" value="${f.q}" oninput="FILT.sales.q=this.value;render()" placeholder="ค้นหาชื่องานหรือลูกค้า" style="flex:1;min-width:180px">
+    ${f.sector||f.wt||f.status||f.q?`<button class="btn ghost" style="padding:6px 11px;font-size:12px" onclick="FILT.sales={sector:'',wt:'',status:'',q:''};render()">ล้างตัวกรอง</button>`:''}
+    <span class="tag">พบ ${list.length} งาน</span>
+  </div>
+
+  <div class="card tight"><div class="tbl-wrap"><table>
+    <thead><tr><th>รหัส / ชื่องาน</th><th>ลูกค้า</th><th>ประเภท</th><th class="r">ราคาเสนอ</th><th class="r">ต้นทุนประเมิน</th><th class="r">กำไร</th><th class="c">ตรวจต้นทุน</th><th class="c">โอกาส</th><th class="c">สถานะ</th><th class="c">การดำเนินการ</th></tr></thead>
+    <tbody>${list.length?list.map(o=>{
+      const mg=(o.bid-o.cost)/o.bid*100;
+      const stc=o.status==='ได้งาน'?'c-green':o.status==='ไม่ได้งาน'?'c-red':'c-amber';
+      const rv=REVIEW[o.id];
+      return `<tr>
+        <td class="clickable" onclick="oppDrawer('${o.id}')"><div class="t-title">${o.name}</div><div class="t-sub mono">${o.id} · ${o.owner} · ${o.due}</div></td>
+        <td>${o.cust}<div class="t-sub">${o.area}</div></td>
+        <td><span class="chip c-gray">${o.sector.replace('งาน','')}</span> <span class="chip c-blue">${o.wt.replace('งาน','')}</span></td>
+        <td class="r num">${F(o.bid)}</td>
+        <td class="r num" style="color:var(--muted)">${F(o.cost)}</td>
+        <td class="r num" style="color:${mg<12?'var(--red)':'var(--green)'}">${mg.toFixed(1)}%</td>
+        <td class="c">${BOQ[o.id]?(rv?'<span class="chip c-green">ผ่าน</span>':'<span class="chip c-amber">รอตรวจ</span>'):'<span class="t-sub">—</span>'}</td>
+        <td class="c"><span class="num">${o.prob}%</span>${bar(o.prob,'blue')}</td>
+        <td class="c"><span class="chip ${stc}">${o.status}</span></td>
+        <td class="c" style="white-space:nowrap">${SIZE[o.id]?`<button class="btn ghost" style="padding:4px 9px;font-size:11.5px" onclick="BIDID='${o.id}';BIDM=null;go('bidsim')">วิเคราะห์</button> `:''}
+          ${o.status==='กำลังเสนอ'&&!BOQ[o.id]?`<button class="btn ghost" style="padding:4px 9px;font-size:11.5px" onclick="ESTID='${o.id}';go('estimate')">ทำ BOQ</button> `:''}
+          ${o.status==='กำลังเสนอ'?`<button class="btn amber" style="padding:4px 9px;font-size:11.5px" onclick="resultModal('${o.id}')">บันทึกผล</button>`
+            :o.status==='ได้งาน'?`<span class="t-sub">${(PROJECTS.find(pp=>pp.name===o.name)||{}).code||'ส่งต่อโครงการแล้ว'}</span>`:'<span class="t-sub">ปิดงานแล้ว</span>'}</td></tr>`}).join('')
+      :'<tr><td colspan="10" style="padding:26px;text-align:center;color:var(--muted)">ไม่พบงานที่ตรงกับตัวกรอง ลองล้างตัวกรองหรือกด “รับงานใหม่” เพื่อเพิ่มงาน</td></tr>'}
+    </tbody></table></div></div>
+  <div class="hint">คลิกชื่องานเพื่อดู BOQ และประวัติ · กด “วิเคราะห์” เพื่อเทียบราคานี้กับงานที่เคยเสนอไปแล้ว</div>`;
+}
+function newOppModal(){
+  openModal('รับงานใหม่เข้าระบบ',
+   `<div class="frow"><div class="field"><label>ชื่องาน</label><input id="no-n" placeholder="เช่น อาคารคลังสินค้า 2 ชั้น"></div>
+      <div class="field"><label>ลูกค้า</label><input id="no-c" placeholder="ชื่อบริษัทหรือหน่วยงาน"></div></div>
+    <div class="frow"><div class="field"><label>ประเภทลูกค้า</label><select id="no-s">${SECTORS.map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="field"><label>ประเภทงาน</label><select id="no-w">${WORKTYPES.map(s=>`<option>${s}</option>`).join('')}</select></div></div>
+    <div class="frow"><div class="field"><label>ขนาดงาน</label><input id="no-q" type="number" value="3000"></div>
+      <div class="field"><label>หน่วยของขนาดงาน</label><select id="no-u">${MASTER.units.map(u=>`<option ${u==='ตร.ม.'?'selected':''}>${u}</option>`).join('')}</select></div></div>
+    <div class="frow"><div class="field"><label>ต้นทุนที่ประเมินเบื้องต้น (บาท)</label><input id="no-cost" type="number" value="25000000"></div>
+      <div class="field"><label>กำไรที่ต้องการ (%)</label><input id="no-m" type="number" value="15" step="0.5"></div></div>
+    <div class="frow"><div class="field"><label>สถานที่</label><input id="no-a" value="กรุงเทพฯ"></div>
+      <div class="field"><label>ผู้รับผิดชอบฝ่ายขาย</label><select id="no-o"><option>สมชาย ว.</option><option>ณัฐพล ส.</option><option>พรทิพย์ จ.</option></select></div></div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveOpp()">บันทึกงานใหม่</button>`);
+}
+function saveOpp(){
+  const n=val('no-n').trim(); if(!n){toast('กรุณากรอกชื่องานก่อนบันทึก','warn');return;}
+  const cost=numv('no-cost'), m=numv('no-m')||15, wt=val('no-w'), sector=val('no-s');
+  const id='OPP-68-'+String(46+OPPS.filter(o=>o.id.startsWith('OPP-68')).length-9).padStart(3,'0');
+  const mo=bidModel(wt,sector);
+  OPPS.unshift({id,name:n,cust:val('no-c')||'ยังไม่ระบุ',sector,wt,bid:Math.round(cost/(1-m/100)),cost,
+    stage:'รับแบบ/ศึกษาความต้องการ',status:'กำลังเสนอ',prob:Math.round(winProb(mo,m)*100),
+    owner:val('no-o'),est:'ปวีณา ก.',due:'2026-10-15',area:val('no-a'),dur:8,note:'งานใหม่ที่เพิ่งรับเข้าระบบ',winner:'-',gap:0});
+  SIZE[id]={u:val('no-u'),q:numv('no-q')||1};
+  closeModal(); render(); toast(`เพิ่มงาน ${id} เข้าระบบแล้ว — กด “วิเคราะห์” เพื่อเทียบราคากับงานเดิม`);
+}
+
+function oppDrawer(id){
+  const o=OPPS.find(x=>x.id===id); const items=BOQ[id];
+  const mg=(o.bid-o.cost)/o.bid*100;
+  const cats=items?[...new Set(items.map(i=>i.cat))]:[];
+  const total=items?items.reduce((a,i)=>a+i.q*(i.mat+i.lab),0):o.cost;
+  openDrawer(`
+  <div class="drawer-head"><button class="xbtn" onclick="closeDrawer()">✕</button>
+    <div class="eyebrow">${o.id} · ${o.sector} · ${o.wt}</div>
+    <h2>${o.name}</h2>
+    <div class="metaline"><span>ลูกค้า <b>${o.cust}</b></span><span>ฝ่ายขาย <b>${o.owner}</b></span><span>ประมาณราคา <b>${o.est}</b></span><span>ระยะเวลา <b>${o.dur} เดือน</b></span></div>
+  </div>
+  <div class="drawer-body">
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi"><div class="lbl">ราคาเสนอ</div><div class="val">${M(o.bid)}<small>ลบ.</small></div></div>
+      <div class="card kpi"><div class="lbl">ต้นทุนประเมิน</div><div class="val">${M(o.cost)}<small>ลบ.</small></div></div>
+      <div class="card kpi"><div class="lbl">กำไรขั้นต้น</div><div class="val" style="color:${mg<12?'var(--red)':'var(--green)'}">${mg.toFixed(1)}<small>%</small></div></div>
+      <div class="card kpi"><div class="lbl">โอกาสชนะ</div><div class="val">${o.prob}<small>%</small></div>
+        ${SIZE[o.id]?`<button class="btn ghost" style="width:100%;margin-top:8px;padding:5px" onclick="closeDrawer();BIDID='${o.id}';BIDM=null;go('bidsim')">วิเคราะห์ราคา</button>`:''}</div>
+    </div>
+    ${o.status==='กำลังเสนอ'?`<div class="card" style="margin-bottom:14px;border-left:3px solid var(--amber)">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px"><div style="font-weight:600">ทราบผลการเสนอราคาแล้วหรือยัง</div>
+        <div class="t-sub">บันทึกผลที่นี่ — ถ้าได้งาน ระบบจะเปิดโครงการและตั้งชุดขอราคาตามงบประมาณใน BOQ ให้ทันที</div></div>
+        <button class="btn" onclick="closeDrawer();winModal('${o.id}')">ได้งาน</button>
+        <button class="btn ghost" onclick="closeDrawer();lostModal('${o.id}')">ไม่ได้งาน</button>
+      </div></div>`
+    :o.status==='ได้งาน'?`<div class="gain" style="margin-bottom:14px"><b>ได้งานแล้ว</b> — ${o.contract?'สัญญาเลขที่ '+o.contract+' · ':''}ส่งต่อให้ฝ่ายจัดซื้อและฝ่ายโครงการเรียบร้อย
+      <a onclick="closeDrawer();go('procurement')" style="color:var(--blue);cursor:pointer;text-decoration:underline;margin-left:6px">ดูชุดขอราคา</a></div>`
+    :`<div class="pain" style="margin-bottom:14px"><b>ไม่ได้งาน</b> — ผู้ชนะคือ ${o.winner} · ราคาเราสูงกว่า ${Math.abs(o.gap).toFixed(1)}% · ข้อมูลถูกเก็บเข้าคลังความรู้แล้ว</div>`}
+    <div class="tabs">
+      <button class="on" onclick="dtab(this,'a')">BOQ และต้นทุน</button>
+      <button onclick="dtab(this,'b')">ข้อมูลเชิงเทคนิค</button>
+      <button onclick="dtab(this,'c')">ความเสี่ยงราคา</button>
+      <button onclick="dtab(this,'d')">บันทึกและประวัติ</button>
+    </div>
+    <div data-pane="a">
+      ${items?`
+      <div class="card tight" style="margin-bottom:12px"><table>
+      <thead><tr><th>รหัส</th><th>รายการ</th><th class="c">หน่วย</th><th class="r">ปริมาณ</th><th class="r">ค่าวัสดุ</th><th class="r">ค่าแรง</th><th class="r">รวม</th><th>ที่มาราคา</th></tr></thead>
+      <tbody>${cats.map(c=>{
+        const rows=items.filter(i=>i.cat===c), sum=rows.reduce((a,i)=>a+i.q*(i.mat+i.lab),0);
+        return `<tr style="background:#F2F5F4"><td colspan="6" style="font-weight:600">${c}</td><td class="r num" style="font-weight:600">${F(sum)}</td><td class="t-sub">${(sum/total*100).toFixed(1)}% ของงาน</td></tr>`
+        + rows.map(i=>`<tr><td class="mono" style="font-size:11px">${i.code}</td><td>${i.d}</td><td class="c">${i.u}</td>
+          <td class="r num">${F(i.q)}</td><td class="r num">${i.mat.toLocaleString('th-TH',{maximumFractionDigits:2})}</td>
+          <td class="r num">${i.lab.toLocaleString('th-TH',{maximumFractionDigits:2})}</td>
+          <td class="r num">${F(i.q*(i.mat+i.lab))}</td>
+          <td><span class="chip ${i.src.includes('ฐานข้อมูล')?'c-green':i.src.includes('ตลาด')?'c-blue':'c-gray'}">${i.src}</span></td></tr>`).join('');
+      }).join('')}
+      <tr style="background:var(--ink);color:#fff"><td colspan="6" style="font-weight:600">รวมต้นทุนตรง</td><td class="r num" style="font-weight:600">${F(total)}</td><td></td></tr>
+      </tbody></table></div>
+      <div class="note"><b>ทุกบรรทัดผูกกับฐานข้อมูลต้นทุนกลาง</b> — เมื่อราคาวัสดุในระบบเปลี่ยน ระบบจะแจ้งเตือนว่า BOQ ฉบับนี้ต้องทบทวน ไม่ต้องรื้อไฟล์ Excel ทีละใบ</div>
+      `:`<div class="note">งานนี้ยังไม่ได้ทำ BOQ — อยู่ในขั้น <b>${o.stage}</b>
+        <div style="margin-top:9px"><button class="btn" onclick="closeDrawer();ESTID='${o.id}';go('estimate')">ไปจัดทำ BOQ</button></div></div>`}
+    </div>
+    <div data-pane="b" style="display:none">
+      <div class="card">
+        <div class="cardhead"><div><h3>ขอบเขตงานและเงื่อนไขทางเทคนิค</h3><div class="sub">ใช้เป็นต้นทางของ TOR ที่ส่งให้ฝ่ายจัดซื้อ</div></div></div>
+        <div class="stat-row"><span class="k">สถานที่ก่อสร้าง</span><span class="v">${o.area}</span></div>
+        <div class="stat-row"><span class="k">ระยะเวลาดำเนินการ</span><span class="v">${o.dur} เดือน</span></div>
+        <div class="stat-row"><span class="k">ประเภทสัญญา</span><span class="v">${o.sector==='งานราชการ'?'สัญญาราคาเหมารวม (Lump Sum)':'Design & Build'}</span></div>
+        <div class="stat-row"><span class="k">เงื่อนไขการชำระเงิน</span><span class="v">${o.sector==='งานราชการ'?'งวดตามความคืบหน้า 6 งวด':'เงินล่วงหน้า 15% + งวดรายเดือน'}</span></div>
+        <div class="stat-row"><span class="k">หลักประกันผลงาน</span><span class="v">5% เป็นเวลา 24 เดือน</span></div>
+        <div class="stat-row"><span class="k">ค่าปรับส่งมอบล่าช้า</span><span class="v">0.10% ต่อวัน</span></div>
+      </div>
+      <div class="note" style="margin-top:12px">${o.note}</div>
+    </div>
+    <div data-pane="c" style="display:none">
+      <div class="card">
+        <div class="cardhead"><div><h3>รายการวัสดุที่กระทบต้นทุนงานนี้มากที่สุด</h3><div class="sub"><span class="ai">AI พยากรณ์ 90 วัน</span> อ้างอิงราคาตลาดและใบเสนอราคาย้อนหลัง</div></div></div>
+        ${CATALOG.filter(c=>Math.abs(c.fc)>2.5).slice(0,6).map(c=>`
+          <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line-2)">
+            <div style="flex:1"><div>${c.n}</div><div class="t-sub mono">${c.code} · ปัจจุบัน ${F(c.cur)} บาท/${c.u}</div></div>
+            ${spark(c.y, c.fc>0?'#B8443A':'#2C8461')}
+            <div style="width:64px;text-align:right" class="num ${c.fc>0?'down':'up'}">${c.fc>0?'+':''}${c.fc.toFixed(1)}%</div>
+          </div>`).join('')}
+        <div class="note" style="margin-top:12px"><b>ข้อเสนอจากระบบ:</b> ล็อกราคาเหล็กและสายไฟก่อนยื่นซอง หากยื่นราคาโดยไม่ล็อก ควรเผื่อความเสี่ยงเพิ่ม 2.4% ของมูลค่าวัสดุ (ประมาณ ${F(o.cost*0.024)} บาท)</div>
+      </div>
+    </div>
+    <div data-pane="d" style="display:none">
+      <div class="card">
+        <div class="cardhead"><div><h3>ประวัติการทำงาน</h3></div></div>
+        ${(o.status==='ไม่ได้งาน'?[
+          ['ปิดงาน — ไม่ได้งาน',`ผู้ชนะ: ${o.winner} · ราคาเราสูงกว่า ${Math.abs(o.gap)}%`,'c-red'],
+          ['บันทึกข้อมูลเข้าคลังความรู้','ราคาและต้นทุนถูกเก็บเพื่อใช้เทียบเคียงงานถัดไป','c-blue'],
+          ['ยื่นซองเสนอราคา','ส่งเอกสารครบตามกำหนด','c-gray'],
+        ]:o.status==='ได้งาน'?[
+          ['ได้รับงาน — ส่งต่อฝ่ายจัดซื้อ','แยก BOQ เป็นแพ็กเกจงานและออก RFQ แล้ว 3 ชุด','c-green'],
+          ['ลูกค้ายืนยันคำสั่งจ้าง','ลงนามสัญญาเรียบร้อย','c-green'],
+          ['ยื่นซองเสนอราคา','เสนอราคา '+M(o.bid)+' ลบ.','c-gray'],
+        ]:[
+          ['อยู่ระหว่าง '+o.stage,o.note,'c-amber'],
+          ['จัดทำ BOQ ต้นทุน','โดย '+o.est,'c-gray'],
+          ['รับแบบจากลูกค้า','บันทึกความต้องการและข้อจำกัดหน้างานแล้ว','c-gray'],
+        ]).map(h=>`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line-2)">
+          <span class="chip ${h[2]}" style="height:fit-content">${h[0]}</span>
+          <div style="flex:1;font-size:12.5px;color:var(--muted)">${h[1]}</div></div>`).join('')}
+      </div>
+    </div>
+  </div>`);
+}
+
+/* =======================================================================
+   VIEW 3 — ประมาณราคา / BOQ
+   ======================================================================= */
+let ESTID='OPP-68-027';
+function vEstimate(){
+  const queue=OPPS.filter(o=>!BOQ[o.id]&&o.status==='กำลังเสนอ');
+  const o=OPPS.find(x=>x.id===ESTID)||OPPS[0];
+  const picker=`<select onchange="ESTID=this.value;render()" style="border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;max-width:340px">
+      ${OPPS.filter(x=>x.status!=='ไม่ได้งาน').map(x=>`<option value="${x.id}" ${x.id===ESTID?'selected':''}>${BOQ[x.id]?'●':'○'} ${x.id} — ${x.name.slice(0,26)}${x.name.length>26?'…':''}</option>`).join('')}
+    </select>`;
+  const qcard = queue.length?`<div class="card" style="margin-bottom:14px;border-left:3px solid var(--amber)">
+      <div class="cardhead"><div><h3>งานที่รอจัดทำ BOQ (${queue.length})</h3>
+      <div class="sub">งานที่ฝ่ายขายรับเข้ามาแล้วแต่ยังไม่มีต้นทุน — เริ่มทำ BOQ ได้จากที่นี่</div></div></div>
+      <table><thead><tr><th>รหัส / ชื่องาน</th><th>ลูกค้า</th><th>ประเภทงาน</th><th class="r">ขนาดงาน</th><th>กำหนดยื่น</th><th class="c">เริ่มทำ BOQ</th></tr></thead><tbody>
+      ${queue.map(q=>`<tr><td><div class="t-title">${q.name}</div><div class="t-sub mono">${q.id} · ฝ่ายขาย ${q.owner}</div></td>
+        <td>${q.cust}</td><td><span class="chip c-blue">${q.wt.replace('งาน','')}</span></td>
+        <td class="r num">${SIZE[q.id]?F(SIZE[q.id].q)+' '+SIZE[q.id].u:'—'}</td>
+        <td class="mono" style="font-size:11.5px">${q.due}</td>
+        <td class="c"><button class="btn amber" style="padding:4px 10px;font-size:11.5px" onclick="startModal('${q.id}')">เริ่มทำ BOQ</button></td></tr>`).join('')}
+      </tbody></table></div>`:'';
+
+  if(!BOQ[ESTID]){
+    return phead('ฝ่ายวิศวกรรมประมาณราคา','จัดทำ BOQ และต้นทุนมาตรฐาน','เลือกงานจากคิวด้านล่างเพื่อเริ่มจัดทำ BOQ — สร้างจากหมวดงานมาตรฐาน หรือคัดลอกจากงานเดิมที่ใกล้เคียงแล้วปรับปริมาณ',picker)
+      + qcard
+      + `<div class="card" style="text-align:center;padding:34px 20px">
+          <h3 style="font-size:16px">งาน ${ESTID} ยังไม่มี BOQ</h3>
+          <p style="color:var(--muted);margin:8px 0 16px;font-size:13px">${o.name}${SIZE[ESTID]?` · ${F(SIZE[ESTID].q)} ${SIZE[ESTID].u}`:''}</p>
+          <button class="btn" onclick="startModal('${ESTID}')">เริ่มจัดทำ BOQ ของงานนี้</button></div>`;
+  }
+
+  const items=BOQ[ESTID], cats=catsOf(ESTID);
+  const direct=boqTot(ESTID);
+  const pol=MASTER.wt.find(w=>w.n===o.wt)||{oh:6,risk:3,target:15};
+  const indirect=o.cost-direct;
+  const matT=items.reduce((a,i)=>a+i.q*i.mat,0), labT=items.reduce((a,i)=>a+i.q*i.lab,0);
+  const profit=o.bid-o.cost;
+  const highVol=items.filter(i=>i.vol==='สูง').reduce((a,i)=>a+i.q*i.mat,0);
+  const rv=REVIEW[ESTID];
+  return phead('ฝ่ายวิศวกรรมประมาณราคา','จัดทำ BOQ และต้นทุนมาตรฐาน','แต่ละบรรทัดดึงราคาจากฐานข้อมูลกลางชุดเดียวกันทั้งองค์กร แก้ปริมาณหรือราคาในตารางได้เลย ระบบจะคำนวณต้นทุนและกำไรใหม่ทันที',
+   `${picker}<button class="btn ghost" onclick="toast('ส่งออกไฟล์ BOQ เป็น Excel (ยังไม่เปิดใช้ในเดโม)','warn')">ส่งออก BOQ</button>
+    <button class="btn" onclick="ESTID2=ESTID;go('costcheck')">ส่งตรวจสอบต้นทุน</button>`)
+  + qcard
+  + `${rv?`<div class="gain" style="margin-bottom:14px"><b>ต้นทุนชุดนี้ผ่านการตรวจเทียบงานเดิมแล้ว</b> โดย ${rv.by} เมื่อ ${rv.at}</div>`
+        :`<div class="note" style="margin-bottom:14px">ยังไม่ผ่านการตรวจเทียบกับต้นทุนจริงของงานเดิม — กด <b>ส่งตรวจสอบต้นทุน</b> ก่อนส่งให้ฝ่ายขาย</div>`}
+     <div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">ต้นทุนตรงจาก BOQ</div><div class="val">${M(direct)}<small>ลบ.</small></div><div class="delta">${direct?`วัสดุ ${(matT/direct*100).toFixed(0)}% · ค่าแรง ${(labT/direct*100).toFixed(0)}%`:'ยังไม่มีรายการ'}</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ค่าดำเนินการ ความเสี่ยง และงานสนับสนุน</div><div class="val">${M(indirect)}<small>ลบ.</small></div><div class="delta">มาตรฐาน ${pol.oh}% + ${pol.risk}% ของประเภทงานนี้</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ต้นทุนรวมที่ส่งฝ่ายขาย</div><div class="val">${M(o.cost)}<small>ลบ.</small></div><div class="delta">${SIZE[ESTID]?uf(o.cost/SIZE[ESTID].q,SIZE[ESTID].u):''}</div></div>
+      <div class="card kpi accent-t"><div class="lbl">มูลค่าวัสดุที่ราคาผันผวนสูง</div><div class="val">${M(highVol)}<small>ลบ.</small></div><div class="delta down">${matT?(highVol/matT*100).toFixed(0):0}% ของค่าวัสดุ ควรล็อกราคา</div></div>
+     </div>
+
+     <div class="grid g3" style="margin-bottom:14px">
+      <div class="card" style="grid-column:span 2">
+        <div class="cardhead"><div><h3>โครงสร้างต้นทุนแยกตามหมวดงาน</h3><div class="sub">${o.name}</div></div><div class="right">หน่วย: ล้านบาท</div></div>
+        ${direct?stackBar(cats.map((c,i)=>{
+          const v=items.filter(x=>x.cat===c).reduce((a,x)=>a+x.q*(x.mat+x.lab),0);
+          return {l:c,v:v/1e6,t:M(v)+' ลบ. ('+(v/direct*100).toFixed(0)+'%)',c:['#25473D','#2C6E8F','#2C8461','#E39B1F','#6A5A9E'][i%5]};
+        }),{rh:30,pl:150}):'<div class="hint">ยังไม่มีรายการใน BOQ — กดปุ่มเพิ่มรายการในตารางด้านล่าง</div>'}
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>จากต้นทุนถึงราคาเสนอ</h3></div></div>
+        <div class="stat-row"><span class="k">ค่าวัสดุ</span><span class="v">${F(Math.round(matT))}</span></div>
+        <div class="stat-row"><span class="k">ค่าแรงและติดตั้ง</span><span class="v">${F(Math.round(labT))}</span></div>
+        <div class="stat-row"><span class="k">ค่าดำเนินการและงานสนับสนุน</span><span class="v">${F(Math.round(indirect))}</span></div>
+        <div class="stat-row"><span class="k">รวมต้นทุน</span><span class="v">${F(Math.round(o.cost))}</span></div>
+        <div class="stat-row"><span class="k">กำไร ${o.bid?((profit/o.bid)*100).toFixed(1):0}%</span><span class="v" style="color:var(--green)">${F(Math.round(profit))}</span></div>
+        <div class="stat-row" style="border-top:1.5px solid var(--ink);margin-top:4px;padding-top:9px"><span class="k" style="color:var(--text);font-weight:600">ราคาเสนอลูกค้า</span><span class="v" style="font-size:15px">${F(o.bid)}</span></div>
+        <button class="btn ghost" style="width:100%;margin-top:10px" onclick="BIDID='${ESTID}';BIDM=null;go('bidsim')">ทดลองปรับราคาและดูโอกาสชนะ</button>
+      </div>
+     </div>
+
+     <div class="card tight" style="margin-bottom:14px">
+      <div style="padding:15px 16px 6px;display:flex;align-items:flex-end;gap:10px">
+        <div><h3>รายการ BOQ (แก้ไขได้)</h3><div class="sub">คลิกช่องปริมาณ ค่าวัสดุ หรือค่าแรง เพื่อแก้ไข แล้วกด Enter</div></div>
+        <div style="margin-left:auto;display:flex;gap:8px"><button class="btn ghost" onclick="copyModal('${ESTID}')">คัดลอกจากงานเดิม</button><button class="btn" onclick="rowModal('${ESTID}')">เพิ่มรายการ</button></div></div>
+      <div class="tbl-wrap"><table>
+      <thead><tr><th>รหัส</th><th>รายการ</th><th class="c">หน่วย</th><th class="r">ปริมาณ</th><th class="r">ค่าวัสดุ/หน่วย</th><th class="r">ค่าแรง/หน่วย</th><th class="r">รวมเป็นเงิน</th><th class="c">ผันผวน</th><th>ที่มาของราคา</th><th class="c"></th></tr></thead>
+      <tbody>${cats.map(c=>{
+        const idxs=items.map((it,i)=>i).filter(i=>items[i].cat===c);
+        const sum=idxs.reduce((a,i)=>a+items[i].q*(items[i].mat+items[i].lab),0);
+        return `<tr style="background:#F2F5F4"><td colspan="6" style="font-weight:600">${c}</td><td class="r num" style="font-weight:600">${F(Math.round(sum))}</td>
+          <td colspan="2"></td><td class="c"><button class="btn ghost" style="padding:2px 8px;font-size:11px" onclick="rowModal('${ESTID}','${c}')">+ รายการ</button></td></tr>`
+        + (idxs.length?idxs.map(i=>{const it=items[i];
+          return `<tr><td class="mono" style="font-size:11px">${it.code}</td><td>${it.d}</td><td class="c">${it.u}</td>
+          <td class="r"><input class="cell" id="bq-${i}-q" value="${it.q}" onchange="editBOQ('${ESTID}',${i},'q',this.value)"></td>
+          <td class="r"><input class="cell" id="bq-${i}-mat" value="${it.mat}" onchange="editBOQ('${ESTID}',${i},'mat',this.value)"></td>
+          <td class="r"><input class="cell" id="bq-${i}-lab" value="${it.lab}" onchange="editBOQ('${ESTID}',${i},'lab',this.value)"></td>
+          <td class="r num">${F(Math.round(it.q*(it.mat+it.lab)))}</td>
+          <td class="c"><span class="chip ${it.vol==='สูง'?'c-red':it.vol==='กลาง'?'c-amber':'c-gray'}">${it.vol}</span></td>
+          <td class="t-sub">${it.src}</td>
+          <td class="c"><button class="btn ghost" style="padding:2px 7px;font-size:11px" onclick="delRow('${ESTID}',${i})">ลบ</button></td></tr>`}).join('')
+          :`<tr><td colspan="10" style="padding:14px;text-align:center;color:var(--muted);font-size:12.5px">ยังไม่มีรายการในหมวดนี้</td></tr>`);
+      }).join('')}</tbody></table></div></div>
+
+     <div class="grid g2">
+       <div class="card">
+         <div class="cardhead"><div><h3>เทียบกับงานลักษณะเดียวกันที่เคยทำ</h3><div class="sub">${SIZE[ESTID]?'ต้นทุนต่อ '+SIZE[ESTID].u+' ของโครงการที่ปิดงานแล้ว':''}</div></div></div>
+         ${(()=>{const r=REFPRJ[o.wt]; if(!r||!SIZE[ESTID])return '<div class="hint">ยังไม่มีโครงการอ้างอิงของงานประเภทนี้ในคลังข้อมูล</div>';
+           const fm=v=>SIZE[ESTID].u==='Wp'?v.toFixed(1):Math.round(v);
+           return barChart([...r.prj.map(pr=>({l:pr.code.replace('PRJ-',''),l2:fm(pr.act)+'',v:pr.act})),
+             {l:'งานนี้',l2:fm(o.cost/SIZE[ESTID].q)+'',v:o.cost/SIZE[ESTID].q,c:'#E39B1F'}],{h:190,pl:40});})()}
+         <div class="hint">ดูรายละเอียดรายหมวดได้ที่หน้า <a onclick="ESTID2=ESTID;go('costcheck')" style="color:var(--blue);cursor:pointer;text-decoration:underline">ตรวจต้นทุนก่อนส่งฝ่ายขาย</a></div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>สิ่งที่ระบบตรวจพบใน BOQ ฉบับนี้</h3><div class="sub"><span class="ai">ตรวจอัตโนมัติ</span></div></div></div>
+         ${(()=>{
+            const warn=[];
+            const st=CATALOG.find(x=>x.code==='MAT-STL-010');
+            const stItem=items.find(i=>i.d.includes('เหล็กรูปพรรณ'));
+            if(stItem&&stItem.mat<st.cur)warn.push(`<div class="pain"><b>ราคาเหล็กรูปพรรณต่ำกว่าราคาล่าสุด</b> — BOQ ใช้ ${stItem.mat} บ./กก. ขณะที่ราคาปัจจุบันคือ ${st.cur} บ./กก. หากใช้ราคาใหม่ ต้นทุนจะเพิ่ม ${F(Math.round(stItem.q*(st.cur-stItem.mat)))} บาท</div>`);
+            const pv=CATALOG.find(x=>x.code==='MAT-PV-006');
+            const pvItem=items.find(i=>i.d.includes('แผงโซลาร์'));
+            if(pvItem)warn.push(`<div class="gain"><b>แผงโซลาร์ราคาลดลง ${Math.abs(pv.fc)}%</b> — หากสั่งซื้อไตรมาสหน้าจะประหยัดได้ประมาณ ${F(Math.round(pvItem.q*pv.cur*Math.abs(pv.fc)/100))} บาท</div>`);
+            const empty=cats.filter(c=>!items.some(i=>i.cat===c));
+            if(empty.length)warn.push(`<div class="pain"><b>ยังไม่มีรายการใน ${empty.length} หมวด</b> — ${empty.join(', ')} · ถ้าไม่ใส่ ต้นทุนจะต่ำกว่าความเป็นจริง</div>`);
+            if(REFPRJ[o.wt]){const miss=(MASTER.cats[o.wt]||[]).filter(c=>!cats.includes(c));
+              if(miss.length)warn.push(`<div class="pain"><b>ขาดหมวดงานมาตรฐาน</b> — ${miss.join(', ')}</div>`);}
+            if(!warn.length)warn.push(`<div class="gain"><b>ไม่พบความผิดปกติ</b> — ราคาทุกรายการตรงกับฐานข้อมูลกลาง และหมวดงานครบตามมาตรฐาน</div>`);
+            return warn.join('');
+         })()}
+       </div>
+     </div>`;
+}
+
+/* ---------- เริ่มทำ BOQ / คัดลอกจากงานเดิม / เพิ่ม-ลบรายการ ---------- */
+const BOQCATS={};
+function catsOf(id){
+  const fromItems=[...new Set((BOQ[id]||[]).map(i=>i.cat))];
+  return [...new Set([...(BOQCATS[id]||[]),...fromItems])];
+}
+function startModal(id){
+  const o=OPPS.find(x=>x.id===id);
+  const src=Object.keys(BOQ).filter(k=>k!==id).map(k=>OPPS.find(x=>x.id===k)).filter(Boolean);
+  const same=src.filter(x=>x.wt===o.wt);
+  openModal('เริ่มจัดทำ BOQ — '+o.name,
+   `<div class="note" style="margin-bottom:12px">${o.wt} · ${SIZE[id]?F(SIZE[id].q)+' '+SIZE[id].u:'ยังไม่ระบุขนาดงาน'} · กำหนดยื่น ${o.due}</div>
+    <div class="field"><label>วิธีเริ่มต้น</label><select id="st-m">
+      <option value="blank">สร้างใหม่จากหมวดงานมาตรฐานของ${o.wt}</option>
+      ${same.map(x=>`<option value="${x.id}">คัดลอกจาก ${x.name.slice(0,30)} (${x.id})</option>`).join('')}
+      ${src.filter(x=>x.wt!==o.wt).map(x=>`<option value="${x.id}">คัดลอกจาก ${x.name.slice(0,30)} (ต่างประเภทงาน)</option>`).join('')}
+    </select></div>
+    <div class="note">การคัดลอกจะปรับปริมาณตามสัดส่วนขนาดงานให้อัตโนมัติ ถ้าใช้หน่วยเดียวกัน แล้วค่อยแก้รายบรรทัดทีหลัง</div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="startBOQ('${id}',val('st-m'))">สร้าง BOQ</button>`);
+}
+function startBOQ(id,mode){
+  const o=OPPS.find(x=>x.id===id);
+  const pol=MASTER.wt.find(w=>w.n===o.wt)||{oh:6,risk:3};
+  IND[id]=1+(pol.oh+pol.risk)/100;
+  let msg='';
+  if(mode&&mode!=='blank'&&BOQ[mode]){
+    const f=(SIZE[id]&&SIZE[mode]&&SIZE[id].u===SIZE[mode].u&&SIZE[mode].q)?SIZE[id].q/SIZE[mode].q:1;
+    BOQ[id]=BOQ[mode].map(i=>({...i,q:+(i.q*f).toFixed(2)}));
+    BOQCATS[id]=catsOf(mode);
+    msg=`คัดลอก ${BOQ[id].length} รายการจาก ${mode}${f!==1?` และปรับปริมาณ ×${f.toFixed(2)} ตามขนาดงาน`:''}`;
+  } else {
+    BOQ[id]=[]; BOQCATS[id]=(MASTER.cats[o.wt]||['งานหลัก','งานสนับสนุน','งานอื่นๆ']).slice();
+    msg=`สร้าง BOQ เปล่าพร้อมหมวดงานมาตรฐาน ${BOQCATS[id].length} หมวด`;
+  }
+  recalcCost(id); ESTID=id; delete REVIEW[id];
+  closeModal(); render(); toast(msg+' — เริ่มใส่รายการได้เลย');
+}
+function copyModal(id){startModal(id);}
+function rowModal(id,cat){
+  const cats=catsOf(id);
+  openModal('เพิ่มรายการใน BOQ',
+   `<div class="field"><label>หมวดงาน</label><select id="r-c">${cats.map(c=>`<option ${c===cat?'selected':''}>${c}</option>`).join('')}<option value="__new">+ หมวดงานใหม่</option></select></div>
+    <div class="field"><label>ชื่อหมวดงานใหม่ (กรอกเมื่อเลือก “หมวดงานใหม่”)</label><input id="r-cn" placeholder="เช่น งานรื้อถอน"></div>
+    <div class="field"><label>เลือกรายการจากฐานข้อมูลต้นทุนกลาง</label><select id="r-m">
+      ${CATALOG.map(c=>`<option value="${c.code}">${c.n} — ${F(c.cur)} บ./${c.u}</option>`).join('')}</select></div>
+    <div class="frow"><div class="field"><label>ปริมาณ</label><input id="r-q" type="number" value="1"></div>
+      <div class="field"><label>ค่าแรง/ติดตั้ง ต่อหน่วย (บาท)</label><input id="r-l" type="number" value="0"></div></div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveRow('${id}')">เพิ่มรายการ</button>`);
+}
+function saveRow(id){
+  const c=CATALOG.find(x=>x.code===val('r-m'));
+  let cat=val('r-c'); if(cat==='__new'){cat=val('r-cn').trim(); if(!cat){toast('กรุณาตั้งชื่อหมวดงานใหม่','warn');return;} BOQCATS[id]=[...catsOf(id),cat];}
+  const q=numv('r-q'); if(q<=0){toast('ปริมาณต้องมากกว่าศูนย์','warn');return;}
+  BOQ[id].push({cat, code:c.code.replace('MAT-','').replace('LAB-','').replace('MCH-',''), d:c.n, u:c.u, q,
+    mat:c.cur, lab:numv('r-l'), src:'ฐานข้อมูลกลาง', vol:c.vola==='สูงมาก'?'สูง':c.vola});
+  recalcCost(id); delete REVIEW[id];
+  closeModal(); render(); toast(`เพิ่ม ${c.n} แล้ว — ต้นทุนรวมเป็น ${M(OPPS.find(o=>o.id===id).cost)} ลบ.`);
+}
+function delRow(id,idx){
+  const it=BOQ[id][idx]; BOQ[id].splice(idx,1); recalcCost(id); delete REVIEW[id];
+  render(); toast(`ลบรายการ ${it.d} แล้ว`);
+}
+
+function editBOQ(id,idx,f,v){
+  const n=parseFloat(String(v).replace(/,/g,''));
+  if(isNaN(n)||n<0){toast('กรุณากรอกตัวเลขที่ถูกต้อง','warn');render();return;}
+  BOQ[id][idx][f]=n; recalcCost(id);
+  if(REVIEW[id]){delete REVIEW[id]; toast('BOQ เปลี่ยน — สถานะตรวจต้นทุนถูกยกเลิก ต้องตรวจใหม่','warn');}
+  render();
+  toast('อัปเดตแล้ว — ต้นทุนรวมเป็น '+M(OPPS.find(o=>o.id===id).cost)+' ลบ.');
+}
+
+/* =======================================================================
+   VIEW 4 — ฐานข้อมูลต้นทุนกลาง / Catalogue
+   ======================================================================= */
+function vCatalog(){
+  const cats=[...new Set(CATALOG.map(c=>c.cat))], f=FILT.cat;
+  const list=CATALOG.filter(c=>(!f.c||c.cat===f.c)&&(!f.v||c.vola===f.v)&&(!f.q||(c.n+c.code).toLowerCase().includes(f.q.toLowerCase())));
+  return phead('ฐานข้อมูลต้นทุนส่วนกลาง','Catalogue ต้นทุนและราคามาตรฐาน','แหล่งราคาชุดเดียวที่ทุกฝ่ายใช้ร่วมกัน แก้ราคาที่นี่แล้วระบบจะบอกว่ามี BOQ ฉบับไหนบ้างที่ต้องทบทวน',
+   `<button class="btn ghost" onclick="toast('อ่านราคาจากไฟล์ใบเสนอราคา (ยังไม่เปิดใช้ในเดโม)','warn')">นำเข้าราคาจากใบเสนอราคา</button><button class="btn" onclick="newMatModal()">เพิ่มรายการใหม่</button>`)
+  + `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">รายการในฐานข้อมูล</div><div class="val">${F(1833+CATALOG.length)}</div><div class="delta">ใช้งานจริงใน BOQ 1,204 รายการ</div></div>
+      <div class="card kpi accent-t"><div class="lbl">อัปเดตภายใน 7 วัน</div><div class="val">86<small>%</small></div><div class="delta up">▲ จาก 41% ก่อนใช้ระบบ</div></div>
+      <div class="card kpi accent-t"><div class="lbl">รายการผันผวนสูง</div><div class="val">${CATALOG.filter(c=>c.vola.includes('สูง')).length*23}</div><div class="delta down">ต้องทบทวนราคาทุกสัปดาห์</div></div>
+      <div class="card kpi accent-t"><div class="lbl">แหล่งราคาที่เชื่อมต่อ</div><div class="val">12</div><div class="delta">Vendor 9 ราย + ราคาตลาด 3 แหล่ง</div></div>
+     </div>
+     <div class="filters">
+       <select onchange="setF('cat','c',this.value)"><option value="">ทุกหมวด</option>${cats.map(c=>`<option ${f.c===c?'selected':''}>${c}</option>`).join('')}</select>
+       <select onchange="setF('cat','v',this.value)"><option value="">ทุกระดับความผันผวน</option>${['สูงมาก','สูง','กลาง','ต่ำ'].map(v=>`<option ${f.v===v?'selected':''}>${v}</option>`).join('')}</select>
+       <input id="f-cat-q" value="${f.q}" oninput="FILT.cat.q=this.value;render()" placeholder="ค้นหารหัสหรือชื่อวัสดุ" style="flex:1;min-width:200px">
+       <span class="tag">แสดง ${list.length} รายการ</span>
+     </div>
+     <div class="card tight"><div class="tbl-wrap"><table>
+      <thead><tr><th>รหัส</th><th>รายการ</th><th class="c">หน่วย</th><th class="r">ราคาปัจจุบัน</th><th class="r">เทียบ 3 เดือน</th><th class="c">แนวโน้ม</th><th class="c">ผันผวน</th><th>แหล่งที่มา</th><th>อัปเดตล่าสุด</th><th class="c">แก้ไข</th></tr></thead>
+      <tbody>${list.map(c=>{
+        const chg=(c.cur-c.prev)/c.prev*100;
+        return `<tr>
+        <td class="mono clickable" style="font-size:11px" onclick="matDrawer('${c.code}')">${c.code}</td>
+        <td class="clickable" onclick="matDrawer('${c.code}')"><div class="t-title">${c.n}</div><div class="t-sub">${c.cat}</div></td>
+        <td class="c">${c.u}</td>
+        <td class="r num" style="font-weight:600">${c.cur.toLocaleString('th-TH',{maximumFractionDigits:2})}</td>
+        <td class="r num ${chg>0?'down':'up'}">${chg>0?'+':''}${chg.toFixed(1)}%</td>
+        <td class="c">${spark(c.y, chg>0?'#B8443A':'#2C8461',80,24)}</td>
+        <td class="c"><span class="chip ${c.vola==='สูงมาก'?'c-red':c.vola==='สูง'?'c-amber':c.vola==='กลาง'?'c-blue':'c-gray'}">${c.vola}</span></td>
+        <td class="t-sub">${c.src}</td>
+        <td class="t-sub">${c.upd}</td>
+        <td class="c"><button class="btn ghost" style="padding:4px 9px;font-size:11.5px" onclick="priceModal('${c.code}')">แก้ราคา</button></td></tr>`}).join('')}
+     </tbody></table></div></div>
+     <div class="note" style="margin-top:14px"><b>ลองแก้ราคาดู</b> — เช่นแก้ราคาเหล็กรูปพรรณ H-Beam แล้วกลับไปหน้าประมาณราคา ระบบจะเตือนว่า BOQ ที่ใช้รายการนี้ต้องทบทวน</div>`;
+}
+function priceModal(code){
+  const c=CATALOG.find(x=>x.code===code);
+  openModal('แก้ไขราคา — '+c.n,
+   `<div class="frow"><div class="field"><label>ราคาปัจจุบันในระบบ</label><input value="${c.cur}" disabled></div>
+     <div class="field"><label>ราคาใหม่ (บาท/${c.u})</label><input id="pm-v" type="number" step="0.01" value="${c.cur}"></div></div>
+    <div class="field"><label>แหล่งที่มาของราคาใหม่</label><select id="pm-s"><option>ใบเสนอราคา Vendor</option><option>ราคาตลาด (D-1)</option><option>ผู้แทนจำหน่าย</option><option>สัญญาราคาปี 2569</option></select></div>
+    <div class="note">การแก้ราคาจะมีผลกับ BOQ ทุกฉบับที่อ้างอิงรายการนี้ ระบบจะทำเครื่องหมายให้ฝ่ายประมาณราคาทบทวน</div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="savePrice('${code}')">บันทึกราคาใหม่</button>`);
+}
+function savePrice(code){
+  const c=CATALOG.find(x=>x.code===code), nv=numv('pm-v');
+  if(nv<=0){toast('ราคาต้องมากกว่าศูนย์','warn');return;}
+  c.prev=c.y[3]; c.y=[...c.y.slice(1),nv]; c.cur=nv; c.src=val('pm-s'); c.upd='เมื่อสักครู่';
+  const hit=Object.keys(BOQ).filter(k=>BOQ[k].some(i=>i.u===c.u&&i.d.slice(0,8)===c.n.slice(0,8))).length;
+  closeModal(); render();
+  toast(`อัปเดตราคา ${c.n} เป็น ${F(nv)} บ./${c.u}${hit?` — มี BOQ ${hit} ฉบับที่ต้องทบทวน`:''}`);
+}
+function newMatModal(){
+  openModal('เพิ่มรายการในฐานข้อมูลต้นทุน',
+   `<div class="field"><label>ชื่อรายการ</label><input id="nm-n" placeholder="เช่น ท่อ HDPE PN10 Ø200 มม."></div>
+    <div class="frow"><div class="field"><label>หมวด</label><select id="nm-c">${[...new Set(CATALOG.map(c=>c.cat))].map(c=>`<option>${c}</option>`).join('')}</select></div>
+      <div class="field"><label>หน่วย</label><select id="nm-u">${MASTER.units.map(u=>`<option>${u}</option>`).join('')}</select></div></div>
+    <div class="frow"><div class="field"><label>ราคาปัจจุบัน (บาท)</label><input id="nm-p" type="number" value="0"></div>
+      <div class="field"><label>ความผันผวน</label><select id="nm-v"><option>ต่ำ</option><option>กลาง</option><option>สูง</option><option>สูงมาก</option></select></div></div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveMat()">เพิ่มรายการ</button>`);
+}
+function saveMat(){
+  const n=val('nm-n').trim(); const p=numv('nm-p');
+  if(!n||p<=0){toast('กรุณากรอกชื่อรายการและราคาให้ครบ','warn');return;}
+  CATALOG.unshift({code:'MAT-NEW-'+String(CATALOG.length+1).padStart(3,'0'),n,u:val('nm-u'),cur:p,prev:p,
+    y:[p,p,p,p,p,p],fc:0,vola:val('nm-v'),src:'บันทึกด้วยผู้ใช้',upd:'เมื่อสักครู่',cat:val('nm-c')});
+  closeModal(); render(); toast('เพิ่มรายการเข้าฐานข้อมูลต้นทุนแล้ว');
+}
+
+
+function matDrawer(code){
+  const c=CATALOG.find(x=>x.code===code);
+  const used=Object.entries(BOQ).flatMap(([k,v])=>v.filter(i=>i.d.includes(c.n.split(' ')[0])).map(i=>({k,i})));
+  const fcast=[...c.y, c.cur*(1+c.fc/300), c.cur*(1+c.fc/150), c.cur*(1+c.fc/100)];
+  openDrawer(`
+  <div class="drawer-head"><button class="xbtn" onclick="closeDrawer()">✕</button>
+    <div class="eyebrow">${c.code} · หมวด${c.cat}</div><h2>${c.n}</h2>
+    <div class="metaline"><span>ราคาปัจจุบัน <b>${F(c.cur)} บาท/${c.u}</b></span><span>ความผันผวน <b>${c.vola}</b></span><span>อัปเดต <b>${c.upd}</b></span></div>
+    <div style="margin-top:10px"><button class="btn amber" onclick="closeDrawer();priceModal('${c.code}')">แก้ราคาในฐานข้อมูล</button></div>
+  </div>
+  <div class="drawer-body">
+    <div class="card" style="margin-bottom:14px">
+      <div class="cardhead"><div><h3>ราคาย้อนหลังและการพยากรณ์</h3><div class="sub"><span class="ai">AI</span> พยากรณ์จากราคาย้อนหลัง ใบเสนอราคา Vendor และดัชนีวัสดุก่อสร้าง</div></div></div>
+      ${lineChart([
+        {d:[...c.y,null,null,null],c:'#25473D',fill:true},
+        {d:[null,null,null,null,null,c.cur,...fcast.slice(6)],c:'#6A5A9E',dash:'5 4'}
+      ],[...MONTHS6,'ก.ย.','ต.ค.','พ.ย.'],{h:200,fmt:v=>v>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0)})}
+      <div class="legend"><span><i style="background:#25473D"></i>ราคาจริง</span><span><i style="background:#6A5A9E"></i>พยากรณ์ 90 วัน (${c.fc>0?'+':''}${c.fc}%)</span></div>
+    </div>
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="cardhead"><div><h3>ราคาจาก Vendor ล่าสุด</h3></div></div>
+        ${[['เสนอราคาต่ำสุด',(c.cur*0.965)],['ราคาเฉลี่ย',c.cur],['เสนอราคาสูงสุด',(c.cur*1.058)],['ราคาที่ใช้ใน BOQ',c.cur]].map(r=>
+          `<div class="stat-row"><span class="k">${r[0]}</span><span class="v">${r[1].toLocaleString('th-TH',{maximumFractionDigits:2})} บาท</span></div>`).join('')}
+        <div class="hint">ระบบเก็บทุกใบเสนอราคาที่เคยได้รับ จึงรู้ว่า Vendor รายไหนแข่งขันได้จริงในวัสดุตัวไหน</div>
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>ผลกระทบต่องานที่กำลังเสนอ</h3></div></div>
+        ${used.length?used.map(u=>{
+          const o=OPPS.find(x=>x.id===u.k);
+          return `<div class="stat-row"><span class="k">${o.name.slice(0,26)}…</span><span class="v ${c.fc>0?'down':'up'}">${c.fc>0?'+':''}${F(u.i.q*c.cur*c.fc/100)} บาท</span></div>`;
+        }).join(''):'<div class="hint">ยังไม่มี BOQ ที่กำลังเปิดอยู่ใช้รายการนี้</div>'}
+        <div class="note" style="margin-top:10px">${c.fc>3?'<b>แนะนำให้ล็อกราคา</b> — ทำสัญญาซื้อล่วงหน้ากับ Vendor เกรด A ก่อนยื่นซอง':'<b>ราคานิ่ง</b> — ใช้ราคาปัจจุบันในการเสนอราคาได้'}</div>
+      </div>
+    </div>
+  </div>`);
+}
+
+/* =======================================================================
+   VIEW 5 — พยากรณ์ราคาวัสดุ
+   ======================================================================= */
+function vForecast(){
+  const up=CATALOG.filter(c=>c.fc>0).sort((a,b)=>b.fc-a.fc);
+  const down=CATALOG.filter(c=>c.fc<0).sort((a,b)=>a.fc-b.fc);
+  const exposure=OPPS.filter(o=>o.status==='กำลังเสนอ').map(o=>({o, e:o.cost*0.62*0.041}));
+  return phead('การพยากรณ์และเฝ้าระวังราคา','แนวโน้มราคาวัสดุ 90 วันข้างหน้า','ระบบเรียนรู้จากราคาย้อนหลัง ใบเสนอราคาที่เคยได้รับ และดัชนีวัสดุก่อสร้าง เพื่อบอกว่าควรล็อกราคาตอนไหน และควรเผื่อความเสี่ยงเท่าไหร่',
+    `<div class="seg"><button class="on">90 วัน</button><button>180 วัน</button></div>`)
+  + `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">ดัชนีต้นทุนวัสดุรวม</div><div class="val">+3.4<small>%</small></div><div class="delta down">คาดการณ์ไตรมาสหน้า</div></div>
+      <div class="card kpi accent-t"><div class="lbl">มูลค่าที่มีความเสี่ยงราคา</div><div class="val">${M(exposure.reduce((a,e)=>a+e.o.cost*0.62,0))}<small>ลบ.</small></div><div class="delta">ค่าวัสดุในงานที่ยังไม่ล็อกราคา</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ผลกระทบถ้าไม่ทำอะไร</div><div class="val" style="color:var(--red)">${(exposure.reduce((a,e)=>a+e.e,0)/1e6).toFixed(2)}<small>ลบ.</small></div><div class="delta down">ต้นทุนที่อาจเพิ่มใน 90 วัน</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ประหยัดได้จากการล็อกราคา</div><div class="val" style="color:var(--green)">1.90<small>ลบ.</small></div><div class="delta up">จากสัญญาที่ทำไปแล้วปีนี้</div></div>
+     </div>
+
+     <div class="grid g3" style="margin-bottom:14px">
+       <div class="card" style="grid-column:span 2">
+         <div class="cardhead"><div><h3>ดัชนีราคาวัสดุหลัก 6 เดือนย้อนหลัง</h3><div class="sub">ตั้งฐาน 100 ที่เดือน มี.ค. 2569</div></div></div>
+         ${(()=>{const pick=['MAT-STL-010','MAT-ELE-011','MAT-CON-001','MAT-PV-006'];
+           const cs=['#B8443A','#E39B1F','#2C6E8F','#2C8461'];
+           return lineChart(pick.map((p,i)=>{const m=CATALOG.find(c=>c.code===p);
+             return {d:m.y.map(v=>v/m.y[0]*100),c:cs[i]};}),MONTHS6,{h:220,fmt:v=>v.toFixed(0)});})()}
+         <div class="legend"><span><i style="background:#B8443A"></i>เหล็กรูปพรรณ</span><span><i style="background:#E39B1F"></i>สายไฟทองแดง</span><span><i style="background:#2C6E8F"></i>คอนกรีตผสมเสร็จ</span><span><i style="background:#2C8461"></i>แผงโซลาร์</span></div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>คำแนะนำการจัดซื้อ</h3><div class="sub"><span class="ai">AI</span></div></div></div>
+         <div class="pain"><b>ซื้อเลย</b> — สายไฟทองแดง คาด +6.5% ใน 90 วัน มูลค่าที่กระทบ 3.2 ลบ.</div>
+         <div class="pain"><b>ซื้อเลย</b> — เหล็กรูปพรรณ H-Beam คาด +5.1% ล็อกราคาได้กับ V-014 และ V-031</div>
+         <div class="gain"><b>รอได้</b> — แผงโซลาร์ คาด −3.6% การเลื่อนสั่งซื้อไปไตรมาสหน้าประหยัด 527,000 บาท</div>
+         <div class="gain"><b>รอได้</b> — อินเวอร์เตอร์ คาด −1.8% แต่ต้องระวังคิวส่งมอบ 55–60 วัน</div>
+       </div>
+     </div>
+
+     <div class="grid g2">
+       <div class="card">
+         <div class="cardhead"><div><h3>วัสดุที่ราคากำลังขึ้น</h3><div class="sub">เรียงตามความรุนแรงของผลกระทบ</div></div></div>
+         <table><thead><tr><th>รายการ</th><th class="c">แนวโน้ม</th><th class="r">คาดการณ์</th><th class="c">ความเชื่อมั่น</th></tr></thead><tbody>
+         ${up.map(c=>`<tr class="clickable" onclick="matDrawer('${c.code}')"><td><div class="t-title">${c.n}</div><div class="t-sub mono">${c.code}</div></td>
+           <td class="c">${spark(c.y,'#B8443A',70,22)}</td>
+           <td class="r num down">+${c.fc.toFixed(1)}%</td>
+           <td class="c"><span class="chip ${c.vola.includes('สูง')?'c-amber':'c-green'}">${c.vola.includes('สูง')?'ปานกลาง':'สูง'}</span></td></tr>`).join('')}
+         </tbody></table>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>ความเสี่ยงต่องานที่กำลังเสนอราคา</h3><div class="sub">ถ้าราคาวัสดุขึ้นตามคาด กำไรจะเหลือเท่าไหร่</div></div></div>
+         <table><thead><tr><th>งาน</th><th class="r">กำไรที่ตั้งไว้</th><th class="r">ถ้าราคาขึ้น</th><th class="c">สถานะ</th></tr></thead><tbody>
+         ${exposure.map(({o,e})=>{
+           const m0=(o.bid-o.cost)/o.bid*100, m1=(o.bid-o.cost-e)/o.bid*100;
+           return `<tr class="clickable" onclick="oppDrawer('${o.id}')"><td><div class="t-title">${o.name.slice(0,28)}${o.name.length>28?'…':''}</div><div class="t-sub mono">${o.id}</div></td>
+           <td class="r num">${m0.toFixed(1)}%</td><td class="r num ${m1<10?'down':''}">${m1.toFixed(1)}%</td>
+           <td class="c"><span class="chip ${m1<10?'c-red':m1<14?'c-amber':'c-green'}">${m1<10?'ต้องล็อกราคา':m1<14?'เฝ้าระวัง':'รับได้'}</span></td></tr>`}).join('')}
+         </tbody></table>
+         <div class="hint">คำนวณจากสัดส่วนค่าวัสดุ 62% ของต้นทุน และดัชนีคาดการณ์ +4.1%</div>
+       </div>
+     </div>`;
+}
+
+/* =======================================================================
+   VIEW 6 — จัดซื้อและสรรหาผู้รับเหมา
+   ======================================================================= */
+function vProcurement(){
+  const tot=RFQS.reduce((a,r)=>a+r.budget,0);
+  const done=RFQS.filter(r=>r.quotes.length);
+  const saving=done.reduce((a,r)=>a+(r.budget-Math.min(...r.quotes.map(q=>q.p))),0);
+  const stc=s=>({'รวบรวมเอกสาร':'c-gray','ส่งขอราคา':'c-blue','รอใบเสนอราคา':'c-amber','เปรียบเทียบราคา':'c-violet','ออก PO แล้ว':'c-green'}[s]);
+  return phead('ฝ่ายจัดซื้อ','สรรหาผู้รับเหมาและจัดซื้อ','งานที่รับมาจากฝ่ายประมาณราคาจะมาพร้อม BOQ เปล่า TOR มาตรฐาน แบบ และรายชื่อ Vendor ที่แนะนำ — ระบบตรวจให้ว่าเอกสารครบก่อนส่งขอราคา',
+   `<button class="btn ghost" onclick="go('vendors')">ดูทะเบียนผู้รับเหมา</button><button class="btn" onclick="genModal()">สร้างชุดขอราคาจากงบประมาณโครงการ</button>`)
+  + `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">มูลค่างานที่กำลังจัดซื้อ</div><div class="val">${M(tot)}<small>ลบ.</small></div><div class="delta">${RFQS.length} แพ็กเกจงาน</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ประหยัดจากต้นทุนกลาง</div><div class="val" style="color:var(--green)">${(saving/1e6).toFixed(2)}<small>ลบ.</small></div><div class="delta up">เฉลี่ยต่ำกว่างบ ${(saving/done.reduce((a,r)=>a+r.budget,0)*100).toFixed(1)}%</div></div>
+      <div class="card kpi accent-t"><div class="lbl">รอบเวลาขอราคาเฉลี่ย</div><div class="val">6.4<small>วัน</small></div><div class="delta up">▼ จาก 14 วันก่อนใช้ระบบ</div></div>
+      <div class="card kpi accent-t"><div class="lbl">เอกสารไม่ครบ</div><div class="val" style="color:var(--red)">${RFQS.filter(r=>Object.values(r.docs).some(v=>!v)).length}</div><div class="delta down">ต้องขอเพิ่มจากฝ่ายวิศวกรรม</div></div>
+     </div>
+     <div class="card tight" style="margin-bottom:14px"><div class="tbl-wrap"><table>
+       <thead><tr><th>รหัส</th><th>แพ็กเกจงาน / โครงการ</th><th class="c">เอกสาร</th><th class="r">ต้นทุนกลาง</th><th class="c">ผู้เสนอราคา</th><th class="r">ราคาต่ำสุด</th><th class="r">ต่าง</th><th class="c">สถานะ</th><th class="c">ดำเนินการ</th></tr></thead>
+       <tbody>${RFQS.map(r=>{
+         const dk=Object.values(r.docs).filter(Boolean).length, dt=Object.keys(r.docs).length;
+         const best=r.quotes.length?Math.min(...r.quotes.map(q=>q.p)):null;
+         const diff=best?(best-r.budget)/r.budget*100:null;
+         return `<tr>
+          <td class="mono clickable" style="font-size:11px" onclick="rfqDrawer('${r.id}')">${r.id}</td>
+          <td class="clickable" onclick="rfqDrawer('${r.id}')"><div class="t-title">${r.pkg}</div><div class="t-sub">${r.prjn} · ${r.buyer} · ต้องการใช้ ${r.need}</div></td>
+          <td class="c"><span class="num" style="font-size:11.5px">${dk}/${dt}</span>${bar(dk/dt*100,dk<dt?'red':'green')}</td>
+          <td class="r num">${F(r.budget)}</td>
+          <td class="c">${r.quotes.length?r.quotes.length+' ราย':'<span class="t-sub">—</span>'}</td>
+          <td class="r num">${best?F(best):'—'}</td>
+          <td class="r num ${diff===null?'':diff<0?'up':'down'}">${diff===null?'—':(diff>0?'+':'')+diff.toFixed(1)+'%'}</td>
+          <td class="c"><span class="chip ${stc(r.status)}">${r.status}</span></td>
+          <td class="c">${r.status==='ออก PO แล้ว'?`<span class="t-sub">${r.win||'ออก PO แล้ว'}</span>`
+            :`<button class="btn ghost" style="padding:4px 9px;font-size:11.5px" onclick="quoteModal('${r.id}')">บันทึกใบเสนอราคา</button>`}</td></tr>`}).join('')}
+       </tbody></table></div></div>
+     <div class="grid g2">
+       <div class="card">
+         <div class="cardhead"><div><h3>ชุดเอกสารมาตรฐานที่ส่งพร้อมทุกงาน</h3><div class="sub">ระบบไม่ยอมให้ส่งขอราคาถ้าเอกสารไม่ครบ ทำให้ Vendor เสนอราคาบนพื้นฐานเดียวกัน</div></div></div>
+         ${[['BOQ เปล่า (Blank Form)','ตารางรายการเดียวกันทุกราย เทียบราคาได้ตรงบรรทัด'],
+            ['TOR / ข้อกำหนดงาน','เงื่อนไขงาน ความปลอดภัย และเกณฑ์ตรวจรับ'],
+            ['แบบก่อสร้าง','ไฟล์ล่าสุดพร้อมเลขเวอร์ชัน'],
+            ['Specification วัสดุ','ยี่ห้อและมาตรฐานที่ยอมรับ'],
+            ['ข้อกำหนดความปลอดภัย','กฎหน้างานและเอกสารที่ต้องยื่นก่อนเข้าพื้นที่']].map(d=>
+            `<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line-2)">
+              <span style="color:var(--green);font-size:15px">✓</span>
+              <div><div style="font-weight:500">${d[0]}</div><div class="t-sub">${d[1]}</div></div></div>`).join('')}
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>ปริมาณการซื้อรวมต่อ Vendor</h3><div class="sub">ใช้ต่อรองราคาแบบรวมศูนย์แทนการต่อรองรายโครงการ</div></div></div>
+         ${stackBar(VENDORS.slice().sort((a,b)=>b.val-a.val).slice(0,7).map(v=>({l:v.n.replace(/^(บจก\.|หจก\.)\s*/,''),v:v.val/1e6,t:M(v.val)+' ลบ. · '+v.jobs+' งาน',c:gradeOf(savgW(v.s))==='A'?'#2C8461':gradeOf(savgW(v.s))==='B'?'#2C6E8F':'#E39B1F'})),{rh:29,pl:140})}
+         <div class="hint">Vendor 3 อันดับแรกรวมกันคิดเป็น 43% ของมูลค่าจัดซื้อทั้งหมด — มีอำนาจต่อรองสูงพอที่จะขอราคาสัญญาประจำปี</div>
+       </div>
+     </div>`;
+}
+function quoteModal(id){
+  const r=RFQS.find(x=>x.id===id);
+  openModal('บันทึกใบเสนอราคา — '+r.pkg,
+   `<div class="note" style="margin-bottom:12px">ต้นทุนกลางของแพ็กเกจนี้คือ <b>${F(r.budget)} บาท</b></div>
+    <div class="field"><label>ผู้เสนอราคา</label><select id="q-v">${VENDORS.filter(v=>v.status!=='ระงับชั่วคราว').map(v=>`<option value="${v.code}">${v.n} (${v.code} · เกรด ${gradeOf(savgW(v.s))})</option>`).join('')}</select></div>
+    <div class="frow"><div class="field"><label>ราคาที่เสนอ (บาท)</label><input id="q-p" type="number" value="${Math.round(r.budget*0.97)}"></div>
+      <div class="field"><label>ระยะเวลาทำงาน (วัน)</label><input id="q-d" type="number" value="40"></div></div>
+    <div class="frow"><div class="field"><label>เงื่อนไขชำระเงิน</label><select id="q-t"><option>เครดิต 30 วัน</option><option>เครดิต 45 วัน</option><option>เครดิต 60 วัน</option><option>เงินสด</option></select></div>
+      <div class="field"><label>ยืนราคา</label><select id="q-va"><option>30 วัน</option><option>15 วัน</option><option>7 วัน</option></select></div></div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveQuote('${id}')">บันทึกใบเสนอราคา</button>`);
+}
+function saveQuote(id){
+  const r=RFQS.find(x=>x.id===id), vc=val('q-v'), v=VENDORS.find(x=>x.code===vc), p=numv('q-p');
+  if(p<=0){toast('กรุณากรอกราคาที่เสนอ','warn');return;}
+  if(r.quotes.some(q=>q.v===vc)){toast('ผู้เสนอราคารายนี้บันทึกไว้แล้ว','warn');return;}
+  r.quotes.push({v:vc,n:v.n,p,days:numv('q-d'),term:val('q-t'),valid:val('q-va'),score:savgW(v.s),note:'บันทึกโดยฝ่ายจัดซื้อ'});
+  r.status='เปรียบเทียบราคา';
+  closeModal(); render();
+  const d=(p-r.budget)/r.budget*100;
+  toast(`บันทึกใบเสนอราคาของ ${v.n} แล้ว — ${d<0?'ต่ำกว่า':'สูงกว่า'}ต้นทุนกลาง ${Math.abs(d).toFixed(1)}%`);
+}
+function awardPO(id,vc){
+  const r=RFQS.find(x=>x.id===id), q=r.quotes.find(x=>x.v===vc);
+  r.status='ออก PO แล้ว'; r.win=q.n;
+  const v=VENDORS.find(x=>x.code===vc); if(v){v.jobs+=1; v.val+=q.p; v.last='ส.ค. 2026';}
+  closeDrawer(); render();
+  toast(`ออก PO ให้ ${q.n} มูลค่า ${F(q.p)} บาท — ส่งต่อเป็นภาระผูกพันในหน้าบริหารโครงการแล้ว`);
+}
+
+
+function rfqDrawer(id){
+  const r=RFQS.find(x=>x.id===id);
+  const best=r.quotes.length?Math.min(...r.quotes.map(q=>q.p)):null;
+  const dl=[['boq','BOQ เปล่า'],['tor','TOR / ข้อกำหนดงาน'],['dwg','แบบก่อสร้าง'],['spec','Specification วัสดุ'],['safety','ข้อกำหนดความปลอดภัย']];
+  openDrawer(`
+  <div class="drawer-head"><button class="xbtn" onclick="closeDrawer()">✕</button>
+    <div class="eyebrow">${r.id} · ${r.prjn}</div><h2>${r.pkg}</h2>
+    <div class="metaline"><span>ต้นทุนกลาง <b>${F(r.budget)} บาท</b></span><span>ผู้รับผิดชอบ <b>${r.buyer}</b></span><span>ต้องการใช้ <b>${r.need}</b></span></div>
+  </div>
+  <div class="drawer-body">
+    <div class="tabs"><button class="on" onclick="dtab(this,'q1')">เปรียบเทียบราคา</button><button onclick="dtab(this,'q2')">เอกสารประกอบ</button><button onclick="dtab(this,'q3')">ใบสั่งซื้อ</button></div>
+    <div data-pane="q1">
+    ${r.quotes.length?`
+      <div class="card tight" style="margin-bottom:12px"><table>
+        <thead><tr><th>ผู้เสนอราคา</th><th class="r">ราคาเสนอ</th><th class="r">เทียบต้นทุนกลาง</th><th class="c">ระยะเวลา</th><th>เงื่อนไขชำระ</th><th class="c">ยืนราคา</th><th class="c">คะแนน Vendor</th></tr></thead>
+        <tbody>${r.quotes.sort((a,b)=>a.p-b.p).map((q,i)=>{
+          const d=(q.p-r.budget)/r.budget*100;
+          return `<tr style="${i===0?'background:var(--green-soft)':''}">
+            <td><div class="t-title">${q.n}${i===0?' <span class="chip c-green">ราคาต่ำสุด</span>':''}</div><div class="t-sub mono">${q.v} · ${q.note}</div></td>
+            <td class="r num" style="font-weight:600">${F(q.p)}</td>
+            <td class="r num ${d<0?'up':'down'}">${d>0?'+':''}${d.toFixed(1)}%</td>
+            <td class="c num">${q.days} วัน</td><td style="font-size:12px">${q.term}</td>
+            <td class="c"><span class="chip ${parseInt(q.valid)<15?'c-red':'c-gray'}">${q.valid}</span></td>
+            <td class="c"><span class="num">${q.score}</span>${bar(q.score,q.score>=85?'green':q.score>=75?'amber':'red')}</td></tr>`}).join('')}
+        </tbody></table></div>
+      <div class="grid g2" style="margin-bottom:12px">
+        <div class="card"><div class="cardhead"><div><h3>ผลการเทียบราคา</h3></div></div>
+          <div class="stat-row"><span class="k">ต้นทุนกลางที่ตั้งไว้</span><span class="v">${F(r.budget)}</span></div>
+          <div class="stat-row"><span class="k">ราคาที่ดีที่สุด</span><span class="v">${F(best)}</span></div>
+          <div class="stat-row"><span class="k">ส่วนต่าง</span><span class="v" style="color:${best<r.budget?'var(--green)':'var(--red)'}">${best<r.budget?'ประหยัด ':'เกิน '}${F(Math.abs(r.budget-best))}</span></div>
+          <div class="stat-row"><span class="k">ช่วงราคาที่ได้รับ</span><span class="v">${((Math.max(...r.quotes.map(q=>q.p))-best)/best*100).toFixed(1)}%</span></div>
+        </div>
+        <div class="card"><div class="cardhead"><div><h3>ข้อสังเกตจากระบบ</h3></div></div>
+          ${r.quotes.some(q=>parseInt(q.valid)<15)?'<div class="pain"><b>มีใบเสนอราคายืนราคาสั้นกว่า 15 วัน</b> — ต้องตัดสินใจก่อนหมดอายุ ไม่งั้นต้องขอราคาใหม่</div>':''}
+          ${r.quotes.some(q=>q.score<75)?'<div class="pain"><b>มีผู้เสนอราคาคะแนนต่ำกว่าเกณฑ์ 75</b> — หากเลือกต้องมีเหตุผลประกอบและผู้บริหารอนุมัติ</div>':''}
+          <div class="gain"><b>ราคาต่ำสุดต่ำกว่าต้นทุนกลาง ${Math.abs((best-r.budget)/r.budget*100).toFixed(1)}%</b> — ส่วนต่างนี้จะถูกบันทึกกลับเข้าฐานข้อมูลต้นทุน เพื่อให้การประเมินครั้งหน้าแม่นขึ้น</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${r.quotes.map(q=>`<button class="btn" onclick="awardPO('${r.id}','${q.v}')">ออก PO ให้ ${q.n.replace(/^(บจก\.|หจก\.)\s*/,'')}</button>`).join('')}<button class="btn ghost" onclick="quoteModal('${r.id}')">เพิ่มใบเสนอราคา</button></div>
+    `:`<div class="note"><b>ยังไม่มีใบเสนอราคาเข้ามา</b> — สถานะปัจจุบันคือ ${r.status}${r.status==='รวบรวมเอกสาร'?' ระบบจะยังไม่เปิดให้ส่งขอราคาจนกว่าเอกสารจะครบ':''}</div>
+      <div class="card" style="margin-top:12px"><div class="cardhead"><div><h3>Vendor ที่ระบบแนะนำสำหรับงานนี้</h3><div class="sub">คัดจากประเภทงาน คะแนนประเมิน และประวัติราคา</div></div></div>
+      ${VENDORS.filter(v=>v.status==='ใช้งาน').slice(0,4).map(v=>`<div class="stat-row"><span class="k">${v.n} <span class="chip ${gcls(gradeOf(savgW(v.s)))}">เกรด ${gradeOf(savgW(v.s))}</span></span><span class="v">${v.jobs} งาน · ${savgW(v.s)} คะแนน</span></div>`).join('')}
+      <button class="btn" style="margin-top:10px" onclick="quoteModal('${r.id}')">บันทึกใบเสนอราคาที่ได้รับ</button></div>`}
+    </div>
+    <div data-pane="q2" style="display:none">
+      <div class="card">
+        <div class="cardhead"><div><h3>ความครบถ้วนของเอกสาร</h3><div class="sub">ต้องครบทุกรายการก่อนส่งขอราคา</div></div></div>
+        ${dl.map(d=>`<div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line-2)">
+          <span style="font-size:15px;color:${r.docs[d[0]]?'var(--green)':'var(--red)'}">${r.docs[d[0]]?'✓':'✕'}</span>
+          <div style="flex:1"><div style="font-weight:500">${d[1]}</div><div class="t-sub">${r.docs[d[0]]?'แนบแล้ว · เวอร์ชันล่าสุด':'ยังไม่ได้รับจากฝ่ายวิศวกรรม'}</div></div>
+          ${r.docs[d[0]]?'<button class="btn ghost" style="padding:5px 10px;font-size:12px">เปิดดู</button>':'<button class="btn amber" style="padding:5px 10px;font-size:12px">ขอเอกสาร</button>'}</div>`).join('')}
+      </div>
+    </div>
+    <div data-pane="q3" style="display:none">
+      ${r.status==='ออก PO แล้ว'?`
+      <div class="card"><div class="cardhead"><div><h3>ใบสั่งซื้อ PO-68-0413</h3><div class="sub">ออกนอกระบบและบันทึกกลับเข้ามาแล้ว</div></div><div class="right"><span class="chip c-green">บันทึกครบถ้วน</span></div></div>
+        <div class="stat-row"><span class="k">ผู้รับจ้าง</span><span class="v">${r.quotes[0].n}</span></div>
+        <div class="stat-row"><span class="k">มูลค่าตามสัญญา</span><span class="v">${F(r.quotes[0].p)} บาท</span></div>
+        <div class="stat-row"><span class="k">วันที่ออก PO</span><span class="v">28 ก.ค. 2569</span></div>
+        <div class="stat-row"><span class="k">กำหนดส่งมอบ</span><span class="v">${r.need}</span></div>
+        <div class="stat-row"><span class="k">เงื่อนไขชำระ</span><span class="v">${r.quotes[0].term}</span></div>
+        <div class="stat-row"><span class="k">ผู้อนุมัติ</span><span class="v">ผู้จัดการฝ่ายจัดซื้อ · 28 ก.ค. 2569</span></div>
+        <div class="note" style="margin-top:12px">มูลค่านี้ถูกส่งต่อไปเป็น <b>ภาระผูกพัน</b> ในหน้าบริหารโครงการและกระแสเงินสดโดยอัตโนมัติ</div>
+      </div>`:`<div class="note">ยังไม่ได้ออกใบสั่งซื้อสำหรับแพ็กเกจนี้ — ต้องเลือกผู้ชนะจากหน้าเปรียบเทียบราคาก่อน</div>`}
+    </div>
+  </div>`);
+}
+
+/* =======================================================================
+   VIEW 7 — ทะเบียนและประเมินผู้รับเหมา
+   ======================================================================= */
+const savg=s=>Math.round((s.q+s.t+s.sf+s.pr+s.dc)/5);
+function vVendors(){
+  const types=[...new Set(VENDORS.map(v=>v.type))], f=FILT.ven;
+  const list=VENDORS.filter(v=>(!f.t||v.type===f.t)&&(!f.g||gradeOf(savgW(v.s))===f.g)&&(!f.q||(v.n+v.code).toLowerCase().includes(f.q.toLowerCase())));
+  return phead('ผู้รับเหมาและผู้ขาย','ทะเบียนและผลการประเมิน','ทุกครั้งที่งานจบ PM จะให้คะแนน 5 ด้าน คะแนนถ่วงน้ำหนักตามที่ตั้งไว้ใน Data Master แล้วแปลงเป็นเกรดโดยอัตโนมัติ',
+   `<button class="btn ghost" onclick="KTAB='dm';MTAB='dims';go('knowledge')">แก้เกณฑ์การให้คะแนน</button><button class="btn" onclick="toast('แบบฟอร์มขึ้นทะเบียน Vendor ใหม่','warn')">ขึ้นทะเบียน Vendor ใหม่</button>`)
+  + `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">Vendor ในทะเบียน</div><div class="val">${VENDORS.length*7}</div><div class="delta">ใช้งานจริงใน 12 เดือน ${VENDORS.length} ราย</div></div>
+      <div class="card kpi accent-t"><div class="lbl">เกรด A</div><div class="val" style="color:var(--green)">${VENDORS.filter(v=>gradeOf(savgW(v.s))==='A').length}</div><div class="delta">รับงานรวม ${M(VENDORS.filter(v=>gradeOf(savgW(v.s))==='A').reduce((a,v)=>a+v.val,0))} ลบ.</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ต้องเฝ้าระวัง</div><div class="val" style="color:var(--amber)">${VENDORS.filter(v=>v.status!=='ใช้งาน').length}</div><div class="delta down">คะแนนตรงเวลาต่ำกว่า 70</div></div>
+      <div class="card kpi accent-t"><div class="lbl">รอประเมินหลังปิดงาน</div><div class="val">2</div><div class="delta">ครบกำหนดภายใน 7 วัน</div></div>
+     </div>
+     <div class="filters">
+       <select onchange="setF('ven','t',this.value)"><option value="">ทุกประเภทงาน</option>${types.map(t=>`<option ${f.t===t?'selected':''}>${t}</option>`).join('')}</select>
+       <select onchange="setF('ven','g',this.value)"><option value="">ทุกเกรด</option>${MASTER.grade.map(g=>`<option ${f.g===g.g?'selected':''}>${g.g}</option>`).join('')}</select>
+       <input id="f-ven-q" value="${f.q}" oninput="FILT.ven.q=this.value;render()" placeholder="ค้นหาชื่อผู้รับเหมา" style="flex:1;min-width:180px">
+       <span class="tag">พบ ${list.length} ราย</span>
+     </div>
+     <div class="card tight"><div class="tbl-wrap"><table>
+      <thead><tr><th>รหัส</th><th>ชื่อผู้รับเหมา</th><th>ประเภทงาน</th><th class="c">เกรด</th><th class="c">งาน</th><th class="r">มูลค่าสะสม</th>
+      ${MASTER.dims.map(d=>`<th class="c">${d.n.replace('ความสามารถด้าน','').replace('ความครบถ้วน','')}</th>`).join('')}
+      <th class="c">คะแนนรวม</th><th class="c">ประเมิน</th></tr></thead>
+      <tbody>${list.map(v=>{
+        const av=savgW(v.s), g=gradeOf(av);
+        return `<tr>
+          <td class="mono clickable" style="font-size:11px" onclick="venDrawer('${v.code}')">${v.code}</td>
+          <td class="clickable" onclick="venDrawer('${v.code}')"><div class="t-title">${v.n}</div><div class="t-sub">ใช้งานล่าสุด ${v.last} · ${v.status}</div></td>
+          <td class="t-sub">${v.type}</td>
+          <td class="c"><span class="chip ${gcls(g)}">${g}</span></td>
+          <td class="c num">${v.jobs}</td><td class="r num">${M(v.val)} ลบ.</td>
+          ${MASTER.dims.map(d=>`<td class="c num" style="color:${v.s[d.k]<70?'var(--red)':v.s[d.k]<80?'var(--amber)':'var(--text)'}">${v.s[d.k]}</td>`).join('')}
+          <td class="c"><span class="num" style="font-weight:600">${av}</span>${bar(av,av>=85?'green':av>=75?'blue':av>=65?'amber':'red')}</td>
+          <td class="c"><button class="btn ghost" style="padding:4px 9px;font-size:11.5px" onclick="evalModal('${v.code}')">ให้คะแนน</button></td></tr>`}).join('')}
+     </tbody></table></div></div>
+     <div class="note" style="margin-top:14px"><b>เกณฑ์ให้เกรด</b> — ${MASTER.grade.map(g=>`${g.g}: ${g.min}+`).join(' · ')} · แก้เกณฑ์และน้ำหนักคะแนนได้ที่แท็บ Data Master</div>`;
+}
+function evalModal(code){
+  const v=VENDORS.find(x=>x.code===code);
+  openModal('ประเมินผลงาน — '+v.n,
+   `<div class="note" style="margin-bottom:12px">ให้คะแนน 0–100 ในแต่ละด้าน ระบบจะถ่วงน้ำหนักตามที่ตั้งไว้ใน Data Master แล้วคำนวณเกรดใหม่ทันที</div>
+    ${MASTER.dims.map(d=>`<div class="field"><label>${d.n} (น้ำหนัก ${d.w}%)</label><input id="ev-${d.k}" type="number" min="0" max="100" value="${v.s[d.k]}"></div>`).join('')}
+    <div class="field"><label>บันทึกของผู้ประเมิน</label><textarea id="ev-note" rows="2" placeholder="สิ่งที่ทำได้ดี และสิ่งที่ต้องปรับปรุง"></textarea></div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveEval('${code}')">บันทึกผลประเมิน</button>`);
+}
+function saveEval(code){
+  const v=VENDORS.find(x=>x.code===code), old=savgW(v.s), og=gradeOf(old);
+  MASTER.dims.forEach(d=>{const n=numv('ev-'+d.k); v.s[d.k]=Math.max(0,Math.min(100,Math.round(n)));});
+  const av=savgW(v.s), g=gradeOf(av);
+  v.status = MASTER.dims.some(d=>v.s[d.k]<70) ? (av<65?'ระงับชั่วคราว':'เฝ้าระวัง') : 'ใช้งาน';
+  v.last='ส.ค. 2026';
+  closeModal(); render();
+  toast(`บันทึกผลประเมิน ${v.n} แล้ว — คะแนน ${old} → ${av}${g!==og?` · เกรดเปลี่ยนจาก ${og} เป็น ${g}`:''}`);
+}
+
+function venDrawer(code){
+  const v=VENDORS.find(x=>x.code===code), av=savgW(v.s);
+  const dims=MASTER.dims.map(d=>[d.n,d.k]);
+  openDrawer(`
+  <div class="drawer-head"><button class="xbtn" onclick="closeDrawer()">✕</button>
+    <div class="eyebrow">${v.code} · ${v.type}</div><h2>${v.n}</h2>
+    <div class="metaline"><span>เกรด <b>${gradeOf(av)}</b></span><span>คะแนนรวม <b>${av}</b></span><span>งานที่ทำร่วมกัน <b>${v.jobs} งาน</b></span><span>มูลค่าสะสม <b>${M(v.val)} ลบ.</b></span></div>
+  </div>
+  <div class="drawer-body">
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card"><div class="cardhead"><div><h3>คะแนนประเมิน 5 ด้าน</h3><div class="sub">เฉลี่ยจากการประเมินหลังปิดงานทุกครั้ง</div></div></div>
+        <div class="scorebars">${dims.map(d=>`<div><span class="lb">${d[0]}</span>${bar(v.s[d[1]],v.s[d[1]]>=85?'green':v.s[d[1]]>=75?'blue':v.s[d[1]]>=65?'amber':'red')}<span class="vv">${v.s[d[1]]}</span></div>`).join('')}</div>
+        <div class="hint">คะแนนต่ำกว่า 70 ในด้านใดด้านหนึ่งจะทำให้ Vendor ถูกตั้งสถานะเฝ้าระวังโดยอัตโนมัติ</div>
+      </div>
+      <div class="card"><div class="cardhead"><div><h3>แนวโน้มคะแนน 6 งานหลังสุด</h3></div></div>
+        ${lineChart([{d:[av-8,av-4,av-6,av-1,av+2,av],c:'#25473D',fill:true}],['งาน 1','งาน 2','งาน 3','งาน 4','งาน 5','ล่าสุด'],{h:180,min:50,max:100})}
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="cardhead"><div><h3>ประวัติงานที่ทำร่วมกัน</h3></div></div>
+      <table><thead><tr><th>โครงการ</th><th>ขอบเขตงาน</th><th class="r">มูลค่า</th><th class="c">ส่งมอบ</th><th class="c">คะแนน</th></tr></thead><tbody>
+      ${[['PRJ-2601','งานฐานรากและเสาเข็ม',4368000,'ตามกำหนด',av+2],
+         ['PRJ-2588','งานฐานรากอาคารสำนักงาน',3120000,'ช้า 4 วัน',av-3],
+         ['PRJ-2571','งานปรับปรุงฐานรากเครื่องจักร',1840000,'ตามกำหนด',av+1]].map(r=>
+        `<tr><td class="mono" style="font-size:11.5px">${r[0]}</td><td>${r[1]}</td><td class="r num">${F(r[2])}</td>
+         <td class="c"><span class="chip ${r[3]==='ตามกำหนด'?'c-green':'c-amber'}">${r[3]}</span></td><td class="c num">${r[4]}</td></tr>`).join('')}
+      </tbody></table>
+    </div>
+    <div class="card">
+      <div class="cardhead"><div><h3>บันทึกการประเมินล่าสุด</h3><div class="sub">โดย ${PROJECTS[0].pm} · ${v.last}</div></div></div>
+      <div class="${av>=80?'gain':'pain'}">${av>=80
+        ?'ทีมงานเข้าใจแบบดี ประสานงานหน้างานคล่อง ส่งเอกสารความปลอดภัยครบก่อนเข้าพื้นที่ แนะนำให้ใช้ต่อในงานลักษณะเดียวกัน'
+        :'พบปัญหาเรื่องกำลังคนไม่พอในช่วงเร่งงาน และส่งเอกสารตรวจรับล่าช้า ควรจำกัดให้รับเฉพาะงานที่ไม่เร่งด่วน'}</div>
+      <button class="btn" style="margin-top:10px" onclick="closeDrawer();evalModal('${v.code}')">ให้คะแนนรอบใหม่</button>
+    </div>
+  </div>`);
+}
+
+/* =======================================================================
+   VIEW 8 — บริหารโครงการ
+   ======================================================================= */
+function vProjects(){
+  const act=PROJECTS.filter(p=>p.act[p.cursor]<100);
+  const totV=PROJECTS.reduce((a,p)=>a+p.value,0);
+  const totC=PROJECTS.reduce((a,p)=>a+p.actual+p.commit,0);
+  const totB=PROJECTS.reduce((a,p)=>a+p.budget,0);
+  return phead('ฝ่าย PM โครงการ','บริหารโครงการหน้างาน','เมื่อจัดซื้อได้ผู้รับเหมาครบ งานจะถูกส่งต่อมาที่นี่พร้อมต้นทุนที่ตั้งไว้ ทำให้เทียบได้ทุกวันว่าใช้เงินไปเท่าไหร่เทียบกับงานที่ทำได้จริง',
+   `<div class="seg"><button class="on">กำลังดำเนินการ</button><button>ปิดงานแล้ว</button></div>`)
+  + `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">มูลค่าสัญญารวม</div><div class="val">${M(totV)}<small>ลบ.</small></div><div class="delta">${PROJECTS.length} โครงการ</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ต้นทุนที่ใช้ไป + ผูกพัน</div><div class="val">${M(totC)}<small>ลบ.</small></div><div class="delta">${(totC/totB*100).toFixed(0)}% ของงบต้นทุน</div></div>
+      <div class="card kpi accent-t"><div class="lbl">งานคงเหลือ (Backlog)</div><div class="val">${M(act.reduce((a,p)=>a+p.value*(1-p.act[p.cursor]/100),0))}<small>ลบ.</small></div><div class="delta">รับรู้รายได้ใน 8 เดือนข้างหน้า</div></div>
+      <div class="card kpi accent-t"><div class="lbl">โครงการที่ล่าช้ากว่าแผน</div><div class="val" style="color:var(--red)">${PROJECTS.filter(p=>p.act[p.cursor]-p.plan[p.cursor]<-3).length}</div><div class="delta down">ต้องมีแผนเร่งรัดภายในสัปดาห์นี้</div></div>
+     </div>
+     <div class="grid g2">
+     ${PROJECTS.map(p=>{
+       const a=p.act[p.cursor], pl=p.plan[p.cursor], d=a-pl;
+       const used=p.actual+p.commit, cv=(p.value*a/100)-p.actual;
+       const st=d<-5?['c-red','ล่าช้า']:d<0?['c-amber','ช้ากว่าแผน']:['c-green','ตามแผน'];
+       return `<div class="card">
+         <div class="cardhead"><div><h3>${p.name}</h3><div class="sub mono">${p.code} · ${p.cust} · PM ${p.pm}</div></div>
+           <div class="right"><span class="chip ${st[0]}">${st[1]}</span></div></div>
+         ${lineChart([
+            {d:p.plan,c:'#93A5A0',dash:'4 4',dots:false},
+            {d:p.act.map(v=>v||null),c:'#25473D',fill:true}
+         ],PMONTHS.slice(0,p.plan.length),{h:168,min:0,max:100,fmt:v=>v.toFixed(0)+'%'})}
+         <div class="legend" style="margin-bottom:10px"><span><i style="background:#93A5A0"></i>แผน</span><span><i style="background:#25473D"></i>ทำได้จริง</span></div>
+         <div class="stat-row"><span class="k">มูลค่าสัญญา / งบต้นทุน</span><span class="v">${M(p.value)} / ${M(p.budget)} ลบ.</span></div>
+         <div class="stat-row"><span class="k">จ่ายจริง + ภาระผูกพัน</span><span class="v">${M(used)} ลบ. (${(used/p.budget*100).toFixed(0)}%)</span></div>
+         <div class="stat-row"><span class="k">คืบหน้า จริง / แผน</span><span class="v">${a}% / ${pl}%</span></div>
+         <div class="stat-row"><span class="k">มูลค่างานที่ทำได้ − ต้นทุนจ่ายจริง</span><span class="v" style="color:${cv>0?'var(--green)':'var(--red)'}">${cv>0?'+':''}${M(cv)} ลบ.</span></div>
+         <button class="btn ghost" style="width:100%;margin-top:10px" onclick="prjDrawer('${p.code}')">เปิดรายละเอียดโครงการ</button>
+       </div>`}).join('')}
+     </div>`;
+}
+function prjDrawer(code){
+  const p=PROJECTS.find(x=>x.code===code);
+  const a=p.act[p.cursor], pl=p.plan[p.cursor];
+  const net=p.cin.map((v,i)=>v-p.cout[i]);
+  let cum=0; const cumm=net.map(v=>cum+=v);
+  openDrawer(`
+  <div class="drawer-head"><button class="xbtn" onclick="closeDrawer()">✕</button>
+    <div class="eyebrow">${p.code} · ${p.sector} · ${p.wt}</div><h2>${p.name}</h2>
+    <div class="metaline"><span>ลูกค้า <b>${p.cust}</b></span><span>PM <b>${p.pm}</b></span><span>ระยะเวลา <b>${p.start} ถึง ${p.end}</b></span></div>
+  </div>
+  <div class="drawer-body">
+    <div class="tabs"><button class="on" onclick="dtab(this,'p1')">ความคืบหน้าและต้นทุน</button><button onclick="dtab(this,'p2')">กระแสเงินสดโครงการ</button><button onclick="dtab(this,'p3')">ผู้รับเหมาและความเสี่ยง</button></div>
+    <div data-pane="p1">
+      <div class="grid g4" style="margin-bottom:14px">
+        <div class="card kpi"><div class="lbl">คืบหน้าจริง</div><div class="val">${a}<small>%</small></div><div class="delta ${a>=pl?'up':'down'}">แผน ${pl}%</div></div>
+        <div class="card kpi"><div class="lbl">ต้นทุนใช้ไป</div><div class="val">${M(p.actual)}<small>ลบ.</small></div><div class="delta">${(p.actual/p.budget*100).toFixed(0)}% ของงบ</div></div>
+        <div class="card kpi"><div class="lbl">ภาระผูกพันตาม PO</div><div class="val">${M(p.commit)}<small>ลบ.</small></div><div class="delta">รอส่งมอบและตรวจรับ</div></div>
+        <div class="card kpi"><div class="lbl">งบคงเหลือ</div><div class="val" style="color:${p.budget-p.actual-p.commit>0?'var(--green)':'var(--red)'}">${M(p.budget-p.actual-p.commit)}<small>ลบ.</small></div><div class="delta">สำหรับงานที่เหลือ ${100-a}%</div></div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="cardhead"><div><h3>เส้นความคืบหน้าสะสม (S-Curve)</h3><div class="sub">เทียบแผนกับที่ทำได้จริง พร้อมสัดส่วนต้นทุนที่ใช้ไป</div></div></div>
+        ${lineChart([
+          {d:p.plan,c:'#93A5A0',dash:'4 4',dots:false},
+          {d:p.act.map(v=>v||null),c:'#25473D',fill:true},
+          {d:p.act.map((v,i)=>v?Math.round(p.actual/p.budget*100*(v/a)):null),c:'#E39B1F'}
+        ],PMONTHS.slice(0,p.plan.length),{h:220,min:0,max:100,fmt:v=>v.toFixed(0)+'%'})}
+        <div class="legend"><span><i style="background:#93A5A0"></i>แผนงาน</span><span><i style="background:#25473D"></i>ผลงานจริง</span><span><i style="background:#E39B1F"></i>ต้นทุนที่ใช้ไปสะสม</span></div>
+        <div class="note" style="margin-top:12px">${a<pl
+          ?`<b>งานช้ากว่าแผน ${pl-a}%</b> ขณะที่ต้นทุนใช้ไปแล้ว ${(p.actual/p.budget*100).toFixed(0)}% — ควรตรวจว่าเป็นเพราะงานช้าหรือเพราะต้นทุนบานปลาย`
+          :`<b>งานเร็วกว่าแผน ${a-pl}%</b> และต้นทุนอยู่ในกรอบ — สามารถเบิกงวดงานได้เร็วขึ้น ช่วยกระแสเงินสด`}</div>
+      </div>
+    </div>
+    <div data-pane="p2" style="display:none">
+      <div class="card" style="margin-bottom:14px">
+        <div class="cardhead"><div><h3>เงินเข้า–ออกรายเดือนของโครงการ</h3><div class="sub">หน่วย: พันบาท · เงินเข้าตามงวดงาน เงินออกตามเงื่อนไขชำระผู้รับเหมา</div></div></div>
+        ${barChart(PMONTHS.slice(0,p.cin.length).map((m,i)=>({l:m,v:p.cin[i],v2:p.cout[i]})),{h:210,c:'#2C8461',c2:'#B8443A'})}
+        <div class="legend"><span><i style="background:#2C8461"></i>เงินรับจากลูกค้า</span><span><i style="background:#B8443A"></i>เงินจ่ายผู้รับเหมาและวัสดุ</span></div>
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>เงินสดสะสมของโครงการ</h3><div class="sub">ช่วงที่ติดลบคือช่วงที่บริษัทต้องออกเงินก่อน</div></div></div>
+        ${lineChart([{d:cumm,c:'#2C6E8F',fill:true}],PMONTHS.slice(0,cumm.length),{h:180,fmt:v=>v.toFixed(0)})}
+        <div class="note" style="margin-top:12px">จุดต่ำสุดอยู่ที่ <b>${Math.min(...cumm).toLocaleString()} พันบาท</b> ในเดือน${PMONTHS[cumm.indexOf(Math.min(...cumm))]} — เป็นตัวเลขที่ใช้วางแผนวงเงินหมุนเวียนล่วงหน้า</div>
+      </div>
+    </div>
+    <div data-pane="p3" style="display:none">
+      <div class="card" style="margin-bottom:14px">
+        <div class="cardhead"><div><h3>ผู้รับเหมาในโครงการ</h3></div></div>
+        <table><thead><tr><th>ผู้รับเหมา</th><th>ขอบเขตงาน</th><th class="r">มูลค่า PO</th><th class="c">คืบหน้า</th><th class="c">สถานะ</th></tr></thead><tbody>
+        ${VENDORS.slice(0,4).map((v,i)=>{const pr=[92,68,45,20][i];
+          return `<tr class="clickable" onclick="venDrawer('${v.code}')"><td><div class="t-title">${v.n}</div><div class="t-sub mono">${v.code} · เกรด ${v.grade}</div></td>
+          <td class="t-sub">${v.type}</td><td class="r num">${F([4368000,6240000,2180000,1450000][i])}</td>
+          <td class="c"><span class="num">${pr}%</span>${bar(pr)}</td>
+          <td class="c"><span class="chip ${pr>90?'c-green':'c-blue'}">${pr>90?'ใกล้ปิดงาน':'กำลังทำงาน'}</span></td></tr>`}).join('')}
+        </tbody></table>
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>ความเสี่ยงที่ต้องจัดการ</h3></div></div>
+        ${p.risks.length?p.risks.map(r=>`<div class="${r.i==='สูง'?'pain':'note'}" style="margin-bottom:8px"><b>${r.r}</b><div style="margin-top:4px;color:var(--muted)">แนวทางจัดการ: ${r.a}</div></div>`).join('')
+          :'<div class="gain">ไม่พบความเสี่ยงที่ต้องจัดการในรอบนี้ โครงการเดินตามแผนและปิดงานเรียบร้อย</div>'}
+      </div>
+    </div>
+  </div>`);
+}
+
+/* =======================================================================
+   VIEW 9 — การเงินและกระแสเงินสด
+   ======================================================================= */
+function vCash(){
+  const inA=CASH.in.slice(0,CASH.actualTo+1).reduce((a,b)=>a+b,0);
+  const outA=CASH.out.slice(0,CASH.actualTo+1).reduce((a,b)=>a+b,0);
+  const bal=CASH.open+inA-outA;
+  let c=CASH.open; const cum=CASH.in.map((v,i)=>c+=v-CASH.out[i]);
+  const low=Math.min(...cum);
+  return phead('การเงินและสภาพคล่อง','กระแสเงินสดและการวางแผนเงินทุน','ตัวเลขนี้ไม่ได้มาจากการกรอกมือ แต่ประกอบขึ้นจากงวดงานในสัญญา ใบสั่งซื้อที่ออกไปแล้ว และเงื่อนไขเครดิตของผู้รับเหมาแต่ละราย',
+    `<button class="btn ghost">ส่งออกรายงาน</button>`)
+  + `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">เงินสดคงเหลือปัจจุบัน</div><div class="val">${bal.toFixed(1)}<small>ลบ.</small></div><div class="delta">ยกมาต้นงวด ${CASH.open} ลบ.</div></div>
+      <div class="card kpi accent-t"><div class="lbl">จุดต่ำสุดที่คาดการณ์</div><div class="val" style="color:${low<10?'var(--red)':'var(--amber)'}">${low.toFixed(1)}<small>ลบ.</small></div><div class="delta down">เดือน${CASH.m[cum.indexOf(low)]} ต้องเตรียมวงเงิน</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ลูกหนี้คงค้าง</div><div class="val">${CASH.ar.reduce((a,b)=>a+b.v,0).toFixed(1)}<small>ลบ.</small></div><div class="delta down">เกินกำหนด ${(CASH.ar[1].v+CASH.ar[2].v+CASH.ar[3].v).toFixed(1)} ลบ.</div></div>
+      <div class="card kpi accent-t"><div class="lbl">วงเงินสินเชื่อคงเหลือ</div><div class="val">${(CASH.credit.limit-CASH.credit.used).toFixed(1)}<small>ลบ.</small></div><div class="delta">ใช้ไปแล้ว ${(CASH.credit.used/CASH.credit.limit*100).toFixed(0)}% ของวงเงิน</div></div>
+     </div>
+
+     <div class="grid g3" style="margin-bottom:14px">
+       <div class="card" style="grid-column:span 2">
+         <div class="cardhead"><div><h3>เงินสดสะสมทั้งบริษัท</h3><div class="sub">เส้นทึบคือเกิดขึ้นจริง เส้นประคือคาดการณ์จากแผนงานและ PO ที่ออกแล้ว</div></div><div class="right">หน่วย: ล้านบาท</div></div>
+         ${lineChart([
+           {d:cum.map((v,i)=>i<=CASH.actualTo?v:null),c:'#25473D',fill:true},
+           {d:cum.map((v,i)=>i>=CASH.actualTo?v:null),c:'#2C6E8F',dash:'5 4'}
+         ],CASH.m,{h:230,fmt:v=>v.toFixed(0)})}
+         <div class="note" style="margin-top:10px">คาดว่าเงินสดจะลดต่ำสุดที่ <b>${low.toFixed(1)} ลบ.</b> ในเดือน${CASH.m[cum.indexOf(low)]} จากการจ่ายค่าแผงโซลาร์และเหล็กพร้อมกัน — แนะนำให้เจรจาขยายเครดิตกับ V-008 เป็น 90 วัน หรือเลื่อนคำสั่งซื้อ 3 สัปดาห์</div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>อายุลูกหนี้</h3><div class="sub">หน่วย: ล้านบาท</div></div></div>
+         ${stackBar(CASH.ar.map((r,i)=>({l:r.b,v:r.v,t:r.v.toFixed(1),c:['#2C8461','#E39B1F','#B8443A','#8E2F27'][i]})),{rh:30,pl:112,w:400})}
+         <div style="height:10px"></div>
+         <div class="cardhead" style="margin-top:8px"><div><h3>เจ้าหนี้ที่ต้องจ่าย</h3></div></div>
+         ${stackBar(CASH.ap.map((r,i)=>({l:r.b,v:r.v,t:r.v.toFixed(1),c:['#25473D','#3F6B5C','#6E948A'][i]})),{rh:30,pl:112,w:400})}
+       </div>
+     </div>
+
+     <div class="grid g2">
+       <div class="card">
+         <div class="cardhead"><div><h3>เงินเข้า–ออกรายเดือน</h3><div class="sub">หน่วย: ล้านบาท</div></div></div>
+         ${barChart(CASH.m.map((m,i)=>({l:m,v:CASH.in[i],v2:CASH.out[i]})),{h:210,c:'#2C8461',c2:'#B8443A',pl:34})}
+         <div class="legend"><span><i style="background:#2C8461"></i>เงินรับ</span><span><i style="background:#B8443A"></i>เงินจ่าย</span></div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>ความต้องการเงินทุนของแต่ละโครงการ</h3><div class="sub">เงินที่บริษัทต้องออกก่อนได้รับชำระ</div></div></div>
+         <table><thead><tr><th>โครงการ</th><th class="r">มูลค่าสัญญา</th><th class="r">เงินที่ต้องออกก่อน</th><th class="c">คืนทุนเมื่อ</th></tr></thead><tbody>
+         ${PROJECTS.map(p=>{let x=0;const cm=p.cin.map((v,i)=>x+=v-p.cout[i]);const mn=Math.min(...cm);
+           return `<tr class="clickable" onclick="prjDrawer('${p.code}')"><td><div class="t-title">${p.name.slice(0,26)}…</div><div class="t-sub mono">${p.code}</div></td>
+           <td class="r num">${M(p.value)} ลบ.</td>
+           <td class="r num" style="color:${mn<0?'var(--red)':'var(--green)'}">${mn<0?F(Math.abs(mn)*1000):'ไม่ต้องออกก่อน'}</td>
+           <td class="c t-sub">${PMONTHS[cm.findIndex(v=>v>0)]||'—'}</td></tr>`}).join('')}
+         </tbody></table>
+         <div class="hint">รวมความต้องการเงินทุนหมุนเวียนสูงสุดของทุกโครงการพร้อมกัน ใช้กำหนดวงเงิน O/D ที่ควรขอกับธนาคาร</div>
+       </div>
+     </div>`;
+}
+
+/* =======================================================================
+   VIEW 10 — คลังข้อมูลและปรับปรุงราคา
+   ======================================================================= */
+function vKnowledge(){
+  const tabs=[['an','วิเคราะห์แพ้-ชนะ'],['ar','คลังงานย้อนหลัง'],['dm','Data Master']];
+  const head=phead('เรียนรู้และปรับปรุง','คลังข้อมูลงานเดิมและค่ามาตรฐานของระบบ',
+    'ทุกงานถูกเก็บพร้อมราคาและต้นทุน และค่ามาตรฐานทั้งหมดที่ระบบใช้คำนวณ แก้ไขได้จากแท็บ Data Master',
+    `<div class="seg">${tabs.map(t=>`<button class="${KTAB===t[0]?'on':''}" onclick="KTAB='${t[0]}';render()">${t[1]}</button>`).join('')}</div>`);
+  if(KTAB==='an')return head+kAnalysis();
+  if(KTAB==='ar')return head+kArchive();
+  return head+kMaster();
+}
+function kAnalysis(){
+  const wins=HISTBIDS.filter(h=>h.win).length;
+  return `<div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">งานที่เก็บข้อมูลไว้</div><div class="val">${HISTBIDS.length+OPPS.length}</div><div class="delta">ปิดผลแล้ว ${HISTBIDS.length} · กำลังเสนอ ${OPPS.filter(o=>o.status==='กำลังเสนอ').length}</div></div>
+      <div class="card kpi accent-t"><div class="lbl">อัตราชนะจากประวัติ</div><div class="val">${(wins/HISTBIDS.length*100).toFixed(0)}<small>%</small></div><div class="delta down">เป้าหมาย 45%</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ส่วนต่างเฉลี่ยเทียบผู้ชนะ</div><div class="val" style="color:var(--red)">-${(HISTBIDS.filter(h=>!h.win).reduce((a,h)=>a+h.gap,0)/HISTBIDS.filter(h=>!h.win).length).toFixed(1)}<small>%</small></div><div class="delta down">เราสูงกว่าผู้ชนะโดยเฉลี่ย</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ข้อเสนอปรับปรุงที่รอตัดสินใจ</div><div class="val" style="color:var(--amber)">${IMPROVE.filter(i=>i.st.includes('รอ')).length}</div><div class="delta">ประเมินผลกระทบไว้แล้วทุกข้อ</div></div>
+     </div>
+     <div class="grid g3" style="margin-bottom:14px">
+       <div class="card" style="grid-column:span 2">
+         <div class="cardhead"><div><h3>ผลการประมูลแยกตามประเภทงาน</h3><div class="sub">คำนวณสดจากประวัติการเสนอราคา ${HISTBIDS.length} งาน</div></div></div>
+         <table><thead><tr><th>ประเภทงาน</th><th class="c">ยื่น</th><th class="c">ชนะ</th><th class="c">อัตราชนะ</th><th class="r">กำไรเฉลี่ยที่ชนะ</th><th class="r">กำไรเฉลี่ยที่แพ้</th><th class="r">จุดพลิกผล</th><th class="c">เป้าหมาย</th></tr></thead><tbody>
+         ${WORKTYPES.map(wt=>{
+           const set=HISTBIDS.filter(h=>h.wt===wt); if(!set.length)return '';
+           const w=set.filter(h=>h.win), l=set.filter(h=>!h.win), wr=w.length/set.length*100;
+           const mo=bidModel(wt,'งานเอกชน'), pol=MASTER.wt.find(m=>m.n===wt)||{target:15};
+           return `<tr><td class="t-title">${wt}</td><td class="c num">${set.length}</td><td class="c num">${w.length}</td>
+           <td class="c"><span class="num">${wr.toFixed(0)}%</span>${bar(wr*2,wr>=45?'green':wr>=30?'amber':'red')}</td>
+           <td class="r num">${w.length?(w.reduce((a,h)=>a+h.mg,0)/w.length).toFixed(1):'—'}%</td>
+           <td class="r num">${l.length?(l.reduce((a,h)=>a+h.mg,0)/l.length).toFixed(1):'—'}%</td>
+           <td class="r num">${mo.m0.toFixed(1)}%</td>
+           <td class="c"><span class="chip ${pol.target<=mo.m0?'c-green':'c-amber'}">ตั้งไว้ ${pol.target}%</span></td></tr>`}).join('')}
+         </tbody></table>
+         <div class="note" style="margin-top:12px"><b>อ่านตารางนี้อย่างไร</b> — “จุดพลิกผล” คือระดับกำไรที่โอกาสชนะเหลือครึ่งหนึ่ง ถ้าเป้าหมายกำไรที่ตั้งไว้สูงกว่าจุดนี้ แปลว่านโยบายราคากำลังทำให้เราแพ้เป็นระบบ ไม่ใช่แพ้เป็นครั้งคราว</div>
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>สาเหตุที่ไม่ได้งาน</h3><div class="sub">28 งานล่าสุด</div></div></div>
+         <div style="display:flex;justify-content:center;margin:4px 0 12px">
+           ${donut(LOSS.map((l,i)=>({v:l.pct,c:['#B8443A','#D97757','#E39B1F','#2C6E8F','#6A5A9E','#93A5A0'][i]})),{s:158,center:'28',sub:'งานที่ไม่ได้'})}
+         </div>
+         ${LOSS.map((l,i)=>`<div class="stat-row"><span class="k"><i style="width:9px;height:9px;border-radius:2px;display:inline-block;background:${['#B8443A','#D97757','#E39B1F','#2C6E8F','#6A5A9E','#93A5A0'][i]};margin-right:6px"></i>${l.r}</span><span class="v">${l.pct}%</span></div>`).join('')}
+       </div>
+     </div>
+     <div class="grid g2">
+       <div class="card">
+         <div class="cardhead"><div><h3>ข้อเสนอปรับปรุงการตั้งราคา</h3><div class="sub"><span class="ai">สร้างจากข้อมูลจริง</span> กดอนุมัติเพื่อให้มีผลกับค่ามาตรฐานในระบบ</div></div></div>
+         ${IMPROVE.map((i,ix)=>`<div style="padding:11px 0;border-bottom:1px dashed var(--line-2)">
+           <div style="display:flex;gap:8px;align-items:flex-start"><div style="flex:1;font-weight:500">${i.t}</div>
+           <span class="chip ${i.st==='ดำเนินการแล้ว'?'c-green':i.st==='กำลังทำ'?'c-blue':'c-amber'}">${i.st}</span></div>
+           <div class="t-sub" style="margin-top:4px">${i.why}</div>
+           <div style="margin-top:5px;font-size:12px;color:var(--green)">ผลที่คาดว่าจะได้: ${i.impact}</div>
+           ${i.st.includes('รอ')?`<div style="margin-top:7px;display:flex;gap:6px">
+             <button class="btn" style="padding:4px 11px;font-size:12px" onclick="approveImp(${ix})">อนุมัติ</button>
+             <button class="btn ghost" style="padding:4px 11px;font-size:12px" onclick="IMPROVE[${ix}].st='ไม่อนุมัติ';render();toast('บันทึกว่าไม่อนุมัติข้อเสนอนี้')">ไม่อนุมัติ</button></div>`:''}</div>`).join('')}
+       </div>
+       <div class="card">
+         <div class="cardhead"><div><h3>ต้นทุนที่ประเมิน เทียบกับต้นทุนจริงหลังปิดงาน</h3><div class="sub">ค่าเฉลี่ยจากโครงการอ้างอิงทุกงาน</div></div></div>
+         ${(()=>{const cats=MASTER.cats['งานก่อสร้าง'], r=REFPRJ['งานก่อสร้าง'];
+            return barChart(cats.map(c=>{
+              const act=r.prj.reduce((a,p)=>a+(p.cats[c]||0),0)/r.prj.length;
+              const est=act/(1+(r.prj.reduce((a,p)=>a+(p.act-p.est)/p.est,0)/r.prj.length));
+              return {l:c.replace('งาน',''),l2:'+'+((act-est)/est*100).toFixed(1)+'%',v:est,v2:act};
+            }),{h:210,c:'#93A5A0',c2:'#25473D',pl:40});})()}
+         <div class="legend"><span><i style="background:#93A5A0"></i>ต้นทุนที่ประเมินไว้</span><span><i style="background:#25473D"></i>ต้นทุนจริงหลังปิดงาน</span></div>
+         <div class="note" style="margin-top:10px">ตัวเลขชุดนี้คือค่าอ้างอิงที่หน้า <b>ตรวจต้นทุนก่อนส่งฝ่ายขาย</b> ใช้เทียบ — ยิ่งเก็บข้อมูลปิดงานครบ การประเมินยิ่งแม่น</div>
+       </div>
+     </div>`;
+}
+function approveImp(ix){
+  const i=IMPROVE[ix]; i.st='ดำเนินการแล้ว';
+  if(i.t.includes('งานโยธา')){const w=MASTER.wt.find(x=>x.n==='งานโยธา'); if(w){w.risk=5;w.target=11;w.min=9;}}
+  if(i.t.includes('เกรด C')){const g=MASTER.grade.find(x=>x.g==='C'); if(g)g.rule='ห้ามใช้กับงานเร่งด่วนทุกกรณี';}
+  render(); toast('อนุมัติแล้ว — ค่ามาตรฐานที่เกี่ยวข้องใน Data Master ถูกปรับตามข้อเสนอ');
+}
+function kArchive(){
+  const f=FILT.kn;
+  const rows=[...HISTBIDS.map(h=>({id:h.id,n:h.n,wt:h.wt,sector:h.sector,yr:h.yr,ub:h.ub,u:h.u,mg:h.mg,res:h.win?'ชนะ':'แพ้',gap:h.gap})),
+    ...OPPS.filter(o=>o.status!=='กำลังเสนอ'&&SIZE[o.id]).map(o=>({id:o.id,n:o.name,wt:o.wt,sector:o.sector,yr:2569,
+      ub:o.bid/SIZE[o.id].q,u:SIZE[o.id].u,mg:(o.bid-o.cost)/o.bid*100,res:o.status==='ได้งาน'?'ชนะ':'แพ้',gap:Math.abs(o.gap)}))]
+    .filter(r=>(!f.wt||r.wt===f.wt)&&(!f.r||r.res===f.r)&&(!f.q||r.n.toLowerCase().includes(f.q.toLowerCase())));
+  return `<div class="filters">
+      <select onchange="setF('kn','wt',this.value)"><option value="">ทุกประเภทงาน</option>${WORKTYPES.map(w=>`<option ${f.wt===w?'selected':''}>${w}</option>`).join('')}</select>
+      <select onchange="setF('kn','r',this.value)"><option value="">ทุกผลลัพธ์</option><option ${f.r==='ชนะ'?'selected':''}>ชนะ</option><option ${f.r==='แพ้'?'selected':''}>แพ้</option></select>
+      <input id="f-kn-q" value="${f.q}" oninput="FILT.kn.q=this.value;render()" placeholder="ค้นหาชื่องาน" style="flex:1;min-width:200px">
+      <span class="tag">พบ ${rows.length} งาน</span></div>
+    <div class="card tight"><div class="tbl-wrap"><table>
+      <thead><tr><th>รหัส</th><th>งาน</th><th>ประเภท</th><th class="c">ลูกค้า</th><th class="c">ปี</th><th class="r">ราคาต่อหน่วย</th><th class="r">กำไรที่ตั้งไว้</th><th class="c">ผล</th><th>ส่วนต่างจากผู้ชนะ</th></tr></thead>
+      <tbody>${rows.map(r=>`<tr>
+        <td class="mono" style="font-size:11px">${r.id}</td><td class="t-title">${r.n}</td>
+        <td><span class="chip c-gray">${r.wt.replace('งาน','')}</span></td>
+        <td class="c t-sub">${r.sector.replace('งาน','')}</td><td class="c num">${r.yr}</td>
+        <td class="r num">${uf(r.ub,r.u)}</td><td class="r num">${r.mg.toFixed(1)}%</td>
+        <td class="c"><span class="chip ${r.res==='ชนะ'?'c-green':'c-red'}">${r.res}</span></td>
+        <td class="t-sub">${r.res==='ชนะ'?'บริษัทเราเป็นผู้ชนะ':'เราสูงกว่าผู้ชนะ '+r.gap+'%'}</td></tr>`).join('')}
+      </tbody></table></div></div>
+    <div class="hint">ข้อมูลชุดนี้คือฐานที่หน้า “วิเคราะห์ราคาก่อนเสนอ” ใช้คำนวณโอกาสชนะ — ยิ่งบันทึกผลแพ้-ชนะครบ เส้นโค้งยิ่งแม่น</div>`;
+}
+function kMaster(){
+  const subs=[['wt','ประเภทงานและนโยบายกำไร'],['sector','ประเภทลูกค้า'],['cats','หมวดงานใน BOQ'],['units','หน่วยนับ'],['grade','เกณฑ์เกรด Vendor'],['dims','เกณฑ์ประเมิน Vendor'],['tol','เกณฑ์ตรวจต้นทุน']];
+  let body='';
+  if(MTAB==='wt'){
+    body=`<div class="card tight"><div style="padding:15px 16px 6px"><h3>ประเภทงานและนโยบายกำไร</h3>
+      <div class="sub">ค่าเหล่านี้ถูกใช้จริงในหน้าประมาณราคาและหน้าวิเคราะห์ราคาก่อนเสนอ — ลองแก้แล้วกลับไปดูผล</div></div>
+      <table><thead><tr><th>ประเภทงาน</th><th class="c">ค่าดำเนินการ %</th><th class="c">ค่าเผื่อความเสี่ยง %</th><th class="c">กำไรเป้าหมาย %</th><th class="c">กำไรขั้นต่ำ %</th><th class="c">จุดพลิกผลจากข้อมูลจริง</th></tr></thead><tbody>
+      ${MASTER.wt.map((w,i)=>`<tr><td class="t-title">${w.n}</td>
+        ${['oh','risk','target','min'].map(k=>`<td class="c"><input class="cell" style="width:64px;text-align:center" id="mw-${i}-${k}" value="${w[k]}" onchange="mSet('wt',${i},'${k}',this.value)"></td>`).join('')}
+        <td class="c num">${bidModel(w.n,'งานเอกชน').m0.toFixed(1)}%</td></tr>`).join('')}
+      </tbody></table></div>
+      <div class="note" style="margin-top:12px">ถ้ากำไรเป้าหมายสูงกว่าจุดพลิกผล แปลว่าตั้งราคาสูงเกินกว่าที่ตลาดยอมรับในงานประเภทนั้น</div>`;
+  }
+  if(MTAB==='sector'){
+    body=`<div class="card tight"><div style="padding:15px 16px 6px"><h3>ประเภทลูกค้า</h3><div class="sub">ค่าปรับจุดพลิกผลใช้ในการคำนวณโอกาสชนะ ค่าติดลบแปลว่าลูกค้ากลุ่มนี้อ่อนไหวต่อราคามากกว่า</div></div>
+      <table><thead><tr><th>ประเภทลูกค้า</th><th class="c">ปรับจุดพลิกผล (%)</th><th>ลักษณะการแข่งขัน</th><th class="c">จำนวนงานในระบบ</th></tr></thead><tbody>
+      ${MASTER.sector.map((s,i)=>`<tr><td class="t-title">${s.n}</td>
+        <td class="c"><input class="cell" style="width:64px;text-align:center" value="${s.adj}" onchange="mSet('sector',${i},'adj',this.value)"></td>
+        <td class="t-sub">${s.note}</td><td class="c num">${HISTBIDS.filter(h=>h.sector===s.n).length+OPPS.filter(o=>o.sector===s.n).length}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  if(MTAB==='cats'){
+    body=`<div class="grid g2">${Object.keys(MASTER.cats).map(wt=>`
+      <div class="card"><div class="cardhead"><div><h3>หมวดงานของ${wt}</h3><div class="sub">ใช้จัดกลุ่มรายการใน BOQ และใช้เทียบต้นทุนรายหมวด</div></div></div>
+      ${MASTER.cats[wt].map((c,i)=>`<div class="stat-row"><span class="k">${i+1}. ${c}</span>
+        <span class="v"><button class="btn ghost" style="padding:3px 8px;font-size:11px" onclick="mDelCat('${wt}',${i})">ลบ</button></span></div>`).join('')}
+      <div style="display:flex;gap:6px;margin-top:10px"><input id="nc-${wt}" placeholder="ชื่อหมวดงานใหม่" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 10px">
+      <button class="btn" onclick="mAddCat('${wt}')">เพิ่ม</button></div></div>`).join('')}</div>`;
+  }
+  if(MTAB==='units'){
+    body=`<div class="card"><div class="cardhead"><div><h3>หน่วยนับที่ใช้ในระบบ</h3><div class="sub">ใช้ในฐานข้อมูลต้นทุน BOQ และการรับงานใหม่</div></div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      ${MASTER.units.map((u,i)=>`<span class="pill" style="padding:5px 10px">${u} <a onclick="mDelUnit(${i})" style="cursor:pointer;color:var(--red);margin-left:4px">✕</a></span>`).join('')}</div>
+      <div style="display:flex;gap:6px;max-width:340px"><input id="nu" placeholder="เพิ่มหน่วยนับ เช่น ชั่วโมง" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 10px">
+      <button class="btn" onclick="mAddUnit()">เพิ่ม</button></div></div>`;
+  }
+  if(MTAB==='grade'){
+    body=`<div class="card tight"><div style="padding:15px 16px 6px"><h3>เกณฑ์เกรดผู้รับเหมา</h3><div class="sub">เปลี่ยนเกณฑ์แล้วเกรดของทุกรายจะคำนวณใหม่ทันที</div></div>
+      <table><thead><tr><th class="c">เกรด</th><th class="c">คะแนนขั้นต่ำ</th><th>สิทธิ์ในการเชิญขอราคา</th><th class="c">จำนวน Vendor ปัจจุบัน</th></tr></thead><tbody>
+      ${MASTER.grade.map((g,i)=>`<tr><td class="c"><span class="chip ${gcls(g.g)}">${g.g}</span></td>
+        <td class="c"><input class="cell" style="width:64px;text-align:center" value="${g.min}" onchange="mSet('grade',${i},'min',this.value)"></td>
+        <td class="t-sub">${g.rule}</td>
+        <td class="c num">${VENDORS.filter(v=>gradeOf(savgW(v.s))===g.g).length}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  if(MTAB==='dims'){
+    const tw=MASTER.dims.reduce((a,d)=>a+d.w,0);
+    body=`<div class="card tight"><div style="padding:15px 16px 6px"><h3>เกณฑ์และน้ำหนักการประเมินผู้รับเหมา</h3>
+      <div class="sub">น้ำหนักรวมปัจจุบัน ${tw}% ${tw!==100?'<span class="chip c-amber">ยังไม่ครบ 100%</span>':'<span class="chip c-green">ครบ 100%</span>'}</div></div>
+      <table><thead><tr><th>ด้านที่ประเมิน</th><th class="c">น้ำหนัก %</th><th class="c">คะแนนเฉลี่ยของ Vendor ทั้งหมด</th><th class="c">ต่ำสุด</th></tr></thead><tbody>
+      ${MASTER.dims.map((d,i)=>{const vs=VENDORS.map(v=>v.s[d.k]);
+        return `<tr><td class="t-title">${d.n}</td>
+        <td class="c"><input class="cell" style="width:64px;text-align:center" value="${d.w}" onchange="mSet('dims',${i},'w',this.value)"></td>
+        <td class="c num">${Math.round(vs.reduce((a,b)=>a+b,0)/vs.length)}</td>
+        <td class="c num" style="color:var(--red)">${Math.min(...vs)}</td></tr>`}).join('')}
+      </tbody></table></div>
+      <div class="note" style="margin-top:12px">ลองเพิ่มน้ำหนัก “ส่งมอบตรงเวลา” เป็น 40 แล้วไปดูหน้าทะเบียนผู้รับเหมา จะเห็นว่าเกรดของผู้รับเหมาที่ส่งงานช้าถูกปรับลดทันที</div>`;
+  }
+  if(MTAB==='tol'){
+    body=`<div class="card"><div class="cardhead"><div><h3>เกณฑ์การตรวจต้นทุนเทียบงานเดิม</h3><div class="sub">ใช้ตัดสินว่าต้นทุนหมวดไหน “หลุดกรอบ” ในหน้าตรวจต้นทุนก่อนส่งฝ่ายขาย</div></div></div>
+      <div class="frow" style="max-width:520px">
+        <div class="field"><label>เกณฑ์เตือนรายหมวด (± %)</label><input value="${MASTER.tol.cat}" onchange="MASTER.tol.cat=parseFloat(this.value)||8;render();toast('อัปเดตเกณฑ์ตรวจต้นทุนรายหมวดแล้ว')"></div>
+        <div class="field"><label>เกณฑ์เตือนภาพรวม (± %)</label><input value="${MASTER.tol.total}" onchange="MASTER.tol.total=parseFloat(this.value)||5;render();toast('อัปเดตเกณฑ์ตรวจต้นทุนภาพรวมแล้ว')"></div></div>
+      <div class="note">ตั้งแคบเกินไปจะเตือนบ่อยจนคนเลิกสนใจ ตั้งกว้างเกินไปจะจับความผิดปกติไม่ได้ — ค่าที่แนะนำจากข้อมูลเดิมคือ ±8% รายหมวด และ ±5% ภาพรวม</div></div>`;
+  }
+  return `<div class="tabs" style="margin-bottom:16px">${subs.map(t=>`<button class="${MTAB===t[0]?'on':''}" onclick="MTAB='${t[0]}';render()">${t[1]}</button>`).join('')}</div>`+body;
+}
+function mSet(g,i,k,v){
+  const n=parseFloat(v); if(isNaN(n)){toast('กรุณากรอกตัวเลข','warn');render();return;}
+  MASTER[g][i][k]=n; render(); toast('บันทึกค่ามาตรฐานใหม่แล้ว — มีผลกับทุกหน้าที่ใช้ค่านี้ทันที');
+}
+function mAddUnit(){const v=val('nu').trim(); if(!v)return; MASTER.units.push(v); render(); toast('เพิ่มหน่วยนับ "'+v+'" แล้ว');}
+function mDelUnit(i){const u=MASTER.units[i]; MASTER.units.splice(i,1); render(); toast('ลบหน่วยนับ "'+u+'" แล้ว');}
+function mAddCat(wt){const el=document.getElementById('nc-'+wt); const v=el.value.trim(); if(!v)return; MASTER.cats[wt].push(v); render(); toast('เพิ่มหมวดงาน "'+v+'" แล้ว');}
+function mDelCat(wt,i){const c=MASTER.cats[wt][i]; MASTER.cats[wt].splice(i,1); render(); toast('ลบหมวดงาน "'+c+'" แล้ว');}
+
+/* =======================================================================
+   ส่วนเพิ่มเติม: ข้อมูลอ้างอิงสำหรับการวิเคราะห์ก่อนเสนอราคา
+   ======================================================================= */
+
+/* ขนาดงานสำหรับเทียบราคาต่อหน่วย */
+const SIZE={
+ 'OPP-68-014':{u:'ตร.ม.',q:4200},   'OPP-68-021':{u:'ตร.ม.',q:8500},
+ 'OPP-68-027':{u:'Wp',q:2400000},   'OPP-68-031':{u:'กม.',q:3.2},
+ 'OPP-68-033':{u:'ไลน์',q:1},        'OPP-68-036':{u:'สถานี',q:1},
+ 'OPP-68-038':{u:'ตร.ม.',q:5200},   'OPP-68-040':{u:'ตร.ม.',q:6200},
+ 'OPP-68-042':{u:'kW',q:1500},      'OPP-68-045':{u:'ม.',q:4200},
+};
+
+/* ประวัติการเสนอราคาที่ปิดผลแล้ว 26 งาน (ใช้เป็นฐานเทียบ) */
+const HB_RAW=[
+ ['H-01','อาคารคลังสินค้า ABC เฟส 1','งานก่อสร้าง','งานเอกชน',2568,'ตร.ม.',3800,9950,13.2,1,0],
+ ['H-02','โรงงานผลิตชิ้นส่วนยานยนต์','งานก่อสร้าง','งานเอกชน',2567,'ตร.ม.',5200,9120,16.5,0,4.8],
+ ['H-03','อาคารสำนักงาน 3 ชั้น','งานก่อสร้าง','งานเอกชน',2568,'ตร.ม.',2400,9610,14.0,1,0],
+ ['H-04','คลังสินค้าห้องเย็น','งานก่อสร้าง','งานเอกชน',2568,'ตร.ม.',3100,12400,19.0,0,7.1],
+ ['H-05','อาคารพาณิชย์ 4 คูหา','งานก่อสร้าง','งานเอกชน',2567,'ตร.ม.',1800,10200,11.0,1,0],
+ ['H-06','โรงงานประกอบชิ้นงาน','งานก่อสร้าง','งานเอกชน',2569,'ตร.ม.',6400,8950,15.8,0,3.4],
+ ['H-07','อาคารเรียน 3 ชั้น','งานก่อสร้าง','งานราชการ',2568,'ตร.ม.',2900,9400,12.6,1,0],
+ ['H-08','อาคารซ่อมบำรุงยานพาหนะ','งานก่อสร้าง','งานราชการ',2569,'ตร.ม.',3400,9700,17.4,0,5.9],
+ ['H-09','ถนน คสล. พร้อมระบายน้ำ 3.2 กม.','งานโยธา','งานราชการ',2569,'กม.',3.2,10770000,12.9,0,6.4],
+ ['H-10','ถนนลาดยาง 5 กม.','งานโยธา','งานราชการ',2568,'กม.',5,8900000,10.5,1,0],
+ ['H-11','ปรับปรุงถนนในนิคมอุตสาหกรรม','งานโยธา','งานเอกชน',2568,'กม.',2.4,11400000,14.2,1,0],
+ ['H-12','ถนน คสล. 4.1 กม.','งานโยธา','งานราชการ',2567,'กม.',4.1,9600000,16.8,0,8.2],
+ ['H-13','ถนนและท่อระบายน้ำ 2.8 กม.','งานโยธา','งานราชการ',2569,'กม.',2.8,10200000,13.6,0,4.1],
+ ['H-14','ระบบไฟฟ้าอาคารสำนักงาน','งาน MEP','งานเอกชน',2568,'ตร.ม.',7200,2310,15.4,1,0],
+ ['H-15','เปลี่ยนระบบ Chiller และ AHU','งาน MEP','งานเอกชน',2569,'ตร.ม.',6200,2452,18.7,0,2.1],
+ ['H-16','ระบบดับเพลิงโรงงาน','งาน MEP','งานเอกชน',2568,'ตร.ม.',9400,1860,13.1,1,0],
+ ['H-17','ระบบไฟฟ้าอาคารโรงพยาบาล','งาน MEP','งานราชการ',2567,'ตร.ม.',11000,2050,11.8,1,0],
+ ['H-18','ระบบปรับอากาศศูนย์ประชุม','งาน MEP','งานราชการ',2568,'ตร.ม.',8800,2640,21.5,0,9.8],
+ ['H-19','ระบบสุขาภิบาลอาคารพาณิชย์','งาน MEP','งานเอกชน',2569,'ตร.ม.',5400,1880,18.1,0,3.2],
+ ['H-20','Solar Rooftop 1.2 MWp','งานพลังงานทดแทน','งานเอกชน',2568,'Wp',1200000,16.90,19.7,0,6.2],
+ ['H-21','Solar Rooftop 3.0 MWp','งานพลังงานทดแทน','งานเอกชน',2568,'Wp',3000000,15.20,16.4,1,0],
+ ['H-22','Solar Carpark 0.8 MWp','งานพลังงานทดแทน','งานเอกชน',2569,'Wp',800000,18.20,14.8,1,0],
+ ['H-23','Solar Ground Mount 5 MWp','งานพลังงานทดแทน','งานเอกชน',2567,'Wp',5000000,14.60,22.3,0,11.4],
+ ['H-24','สายการผลิตบรรจุภัณฑ์ Line 3','งานเครื่องจักรอุตสาหกรรม','งานเอกชน',2568,'ไลน์',1,21400000,17.9,0,4.4],
+ ['H-25','สายการผลิตอาหารแช่แข็ง','งานเครื่องจักรอุตสาหกรรม','งานเอกชน',2567,'ไลน์',1,18900000,20.4,0,6.8],
+ ['H-26','ระบบลำเลียงอัตโนมัติ','งานเครื่องจักรอุตสาหกรรม','งานเอกชน',2569,'ไลน์',1,12600000,15.2,1,0],
+];
+const HISTBIDS=HB_RAW.map(r=>({id:r[0],n:r[1],wt:r[2],sector:r[3],yr:r[4],u:r[5],q:r[6],uc:r[7],mg:r[8],
+  win:!!r[9],gap:r[10],ub:r[7]/(1-r[8]/100)}));
+
+/* ต้นทุนจริงของโครงการที่ปิดงานแล้ว ใช้ตรวจสอบต้นทุนก่อนส่งฝ่ายขาย */
+const REFPRJ={
+ 'งานก่อสร้าง':{u:'ตร.ม.',prj:[
+   {code:'PRJ-2588',n:'อาคารสำนักงาน 3 ชั้น เฟส 1',yr:2568,size:2400,est:8700,act:8950,
+    cats:{'งานฐานราก':1655,'งานโครงสร้าง':2905,'งานสถาปัตยกรรม':1605,'งานระบบ':2340,'งานภายนอก':445}},
+   {code:'PRJ-2571',n:'โรงงานผลิต 1 ชั้น พร้อมงานระบบ',yr:2567,size:5200,est:8480,act:8738,
+    cats:{'งานฐานราก':1498,'งานโครงสร้าง':3065,'งานสถาปัตยกรรม':1470,'งานระบบ':2140,'งานภายนอก':565}},
+   {code:'PRJ-2566',n:'คลังสินค้าและลานจอด',yr:2568,size:3800,est:8940,act:9262,
+    cats:{'งานฐานราก':1712,'งานโครงสร้าง':3240,'งานสถาปัตยกรรม':1535,'งานระบบ':2245,'งานภายนอก':530}},
+   {code:'PRJ-2559',n:'อาคารประกอบชิ้นงาน',yr:2569,size:4600,est:8555,act:8770,
+    cats:{'งานฐานราก':1535,'งานโครงสร้าง':3050,'งานสถาปัตยกรรม':1510,'งานระบบ':2135,'งานภายนอก':540}},
+ ]},
+ 'งานพลังงานทดแทน':{u:'Wp',prj:[
+   {code:'PRJ-2577',n:'Solar Rooftop 1.2 MWp',yr:2568,size:1200000,est:18.65,act:19.11,
+    cats:{'งานโครงสร้างรองรับ':4.07,'อุปกรณ์หลัก':10.85,'งานไฟฟ้า':2.67,'งานระบบควบคุม':0.42,'งานทดสอบและอื่นๆ':1.10}},
+   {code:'PRJ-2582',n:'Solar Rooftop 3.0 MWp',yr:2568,size:3000000,est:16.74,act:16.91,
+    cats:{'งานโครงสร้างรองรับ':3.51,'อุปกรณ์หลัก':9.65,'งานไฟฟ้า':2.43,'งานระบบควบคุม':0.35,'งานทดสอบและอื่นๆ':0.97}},
+   {code:'PRJ-2590',n:'Solar Carpark 0.8 MWp',yr:2569,size:800000,est:17.79,act:18.09,
+    cats:{'งานโครงสร้างรองรับ':3.73,'อุปกรณ์หลัก':10.37,'งานไฟฟ้า':2.58,'งานระบบควบคุม':0.39,'งานทดสอบและอื่นๆ':1.02}},
+ ]},
+};
+
+/* Data Master — แก้ไขได้จริงจากหน้าเรียนรู้และปรับปรุง */
+const MASTER={
+ wt:[
+  {n:'งานก่อสร้าง',oh:6,risk:3,target:15,min:12},
+  {n:'งานโยธา',oh:5,risk:5,target:13,min:10},
+  {n:'งาน MEP',oh:6,risk:3,target:16,min:12},
+  {n:'งานพลังงานทดแทน',oh:6,risk:3,target:18,min:14},
+  {n:'งานเครื่องจักรอุตสาหกรรม',oh:7,risk:4,target:17,min:13},
+ ],
+ sector:[{n:'งานเอกชน',adj:0,note:'แข่งขันด้วยคุณภาพและกำหนดส่งมอบ'},
+         {n:'งานราชการ',adj:-1.5,note:'e-bidding ตัดสินด้วยราคาเป็นหลัก'},
+         {n:'งานต่างประเทศ',adj:-0.8,note:'มีความเสี่ยงค่าเงินและภาษีนำเข้า'}],
+ units:['ตร.ม.','ลบ.ม.','กก.','ตัน','ม.','ต้น','ชุด','แผง','ระบบ','งาน','วัน','ก้อน','ถุง','กม.','Wp'],
+ cats:{'งานก่อสร้าง':['งานฐานราก','งานโครงสร้าง','งานสถาปัตยกรรม','งานระบบ','งานภายนอก'],
+       'งานพลังงานทดแทน':['งานโครงสร้างรองรับ','อุปกรณ์หลัก','งานไฟฟ้า','งานระบบควบคุม','งานทดสอบและอื่นๆ'],
+       'งานโยธา':['งานดินและเตรียมพื้นที่','งานถนนและลาน','งานระบายน้ำ','งานป้องกันดินและงานประกอบ'],
+       'งาน MEP':['งานไฟฟ้ากำลัง','งานสื่อสารและควบคุม','งานปรับอากาศและระบายอากาศ','งานสุขาภิบาลและดับเพลิง','งานทดสอบและส่งมอบ'],
+       'งานเครื่องจักรอุตสาหกรรม':['งานฐานรากและโครงสร้างรองรับ','เครื่องจักรและอุปกรณ์หลัก','งานติดตั้งและ Alignment','งานไฟฟ้าและระบบควบคุม','งานทดสอบและ Commissioning']},
+ grade:[{g:'A',min:85,rule:'เชิญเข้าขอราคาอัตโนมัติทุกงาน'},
+        {g:'B',min:75,rule:'เชิญเข้าขอราคาได้ตามปกติ'},
+        {g:'C',min:65,rule:'เชิญได้เฉพาะงานที่ไม่เร่งด่วน'},
+        {g:'D',min:0,rule:'ต้องขออนุมัติผู้บริหารก่อนใช้งาน'}],
+ dims:[{k:'q',n:'คุณภาพงาน',w:25},{k:'t',n:'ส่งมอบตรงเวลา',w:25},{k:'sf',n:'ความปลอดภัย',w:20},
+       {k:'pr',n:'ความสามารถด้านราคา',w:20},{k:'dc',n:'ความครบถ้วนเอกสาร',w:10}],
+ tol:{cat:8, total:5},
+};
+
+/* สถานะที่เปลี่ยนได้ระหว่างใช้งาน */
+const IND={'OPP-68-014':1.20,'OPP-68-027':1.15};
+function boqTot(k){return BOQ[k].reduce((a,i)=>a+i.q*(i.mat+i.lab),0);}
+function recalcCost(id){const o=OPPS.find(x=>x.id===id); if(BOQ[id]&&BOQ[id].length) o.cost=Math.round(boqTot(id)*(IND[id]||1.09));}
+Object.keys(BOQ).forEach(recalcCost);
+const REVIEW={};            // ผลตรวจต้นทุนรายงาน
+let ESTID2='OPP-68-014';    // งานที่กำลังตรวจต้นทุน
+let BIDID='OPP-68-027';     // งานที่กำลังวิเคราะห์ราคา
+let BIDM=null;              // % กำไรที่ผู้ใช้กำลังลอง
+let KTAB='an';              // แท็บหน้าเรียนรู้และปรับปรุง
+let MTAB='wt';              // แท็บย่อยของ Data Master
+const FILT={sales:{sector:'',wt:'',status:'',q:''},cat:{c:'',v:'',q:''},ven:{t:'',g:'',q:''},kn:{wt:'',r:'',q:''}};
+
+/* =======================================================================
+   ตัวช่วยที่ใช้ร่วมกัน
+   ======================================================================= */
+function toast(msg,kind='ok'){
+  const d=document.createElement('div'); d.className='toast '+kind; d.innerHTML=msg;
+  document.getElementById('toasts').appendChild(d);
+  setTimeout(()=>{d.style.opacity='0';d.style.transition='opacity .3s';setTimeout(()=>d.remove(),300)},2800);
+}
+function openModal(title,body,foot){
+  document.getElementById('modalbox').innerHTML=
+   `<header><h3>${title}</h3><button onclick="closeModal()">✕</button></header>
+    <div class="mbody">${body}</div><div class="mfoot">${foot||'<button class="btn ghost" onclick="closeModal()">ปิด</button>'}</div>`;
+  document.getElementById('modalwrap').classList.add('on');
+}
+function closeModal(){document.getElementById('modalwrap').classList.remove('on');}
+document.getElementById('modalwrap').addEventListener('click',e=>{if(e.target.id==='modalwrap')closeModal();});
+const val=id=>document.getElementById(id).value;
+const numv=id=>parseFloat(String(document.getElementById(id).value).replace(/,/g,''))||0;
+function setF(g,k,v){FILT[g][k]=v;render();}
+
+/* คะแนน Vendor ถ่วงน้ำหนักตาม Data Master */
+function savgW(sc){
+  const tw=MASTER.dims.reduce((a,d)=>a+d.w,0)||1;
+  return Math.round(MASTER.dims.reduce((a,d)=>a+sc[d.k]*d.w,0)/tw);
+}
+function gradeOf(av){return (MASTER.grade.find(g=>av>=g.min)||MASTER.grade[MASTER.grade.length-1]).g;}
+const gcls=g=>g==='A'?'c-green':g==='B'?'c-blue':g==='C'?'c-amber':'c-red';
+
+/* เส้นโค้งโอกาสชนะ: สร้างจากประวัติการเสนอราคาจริงของงานประเภทนั้น */
+function bidModel(wt,sector){
+  const set=HISTBIDS.filter(h=>h.wt===wt);
+  const w=set.filter(h=>h.win), l=set.filter(h=>!h.win);
+  const avg=a=>a.reduce((x,y)=>x+y.mg,0)/(a.length||1);
+  let m0 = (w.length&&l.length)?(avg(w)+avg(l))/2 : 15;
+  m0 += (MASTER.sector.find(x=>x.n===sector)||{adj:0}).adj;
+  return {m0, s:2.2, n:set.length, wins:w.length, set};
+}
+function winProb(model,m){return 0.85/(1+Math.exp((m-model.m0)/model.s));}
+
+/* กราฟกระจาย ใช้ในหน้าวิเคราะห์ราคา */
+function scatter(pts,opt={}){
+  const w=opt.w||620,h=opt.h||220,pl=54,pr=14,pt=14,pb=32;
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const x0=Math.min(...xs)*0.96,x1=Math.max(...xs)*1.04,y0=Math.min(...ys)*0.94,y1=Math.max(...ys)*1.06;
+  const X=v=>pl+(v-x0)/((x1-x0)||1)*(w-pl-pr), Y=v=>pt+(1-(v-y0)/((y1-y0)||1))*(h-pt-pb);
+  let g='';
+  for(let i=0;i<=4;i++){const yv=y0+(y1-y0)*i/4,y=Y(yv);
+    g+=`<line x1="${pl}" y1="${y}" x2="${w-pr}" y2="${y}" stroke="#E7EDEB"/>`;
+    g+=`<text x="${pl-7}" y="${y+3.5}" text-anchor="end" font-size="9.5" fill="#61756F" font-family="IBM Plex Mono">${opt.fy?opt.fy(yv):Math.round(yv)}</text>`;}
+  for(let i=0;i<=4;i++){const xv=x0+(x1-x0)*i/4,x=X(xv);
+    g+=`<text x="${x}" y="${h-10}" text-anchor="middle" font-size="9.5" fill="#61756F" font-family="IBM Plex Mono">${opt.fx?opt.fx(xv):xv.toFixed(0)}</text>`;}
+  pts.forEach(p=>{
+    if(p.star){
+      g+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="9" fill="#E39B1F" opacity=".25"/>
+          <circle cx="${X(p.x)}" cy="${Y(p.y)}" r="5" fill="#E39B1F" stroke="#fff" stroke-width="2"/>
+          <text x="${X(p.x)}" y="${Y(p.y)-13}" text-anchor="middle" font-size="10" font-weight="600" fill="#8A5D06">ราคาที่กำลังพิจารณา</text>`;
+    } else {
+      g+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="4.5" fill="${p.win?'#2C8461':'#B8443A'}" opacity=".85"><title>${p.t}</title></circle>`;
+    }
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg>`;
+}
+const uf=(v,u)=>u==='Wp'?v.toFixed(2)+' บ./Wp':(v>=1e6?(v/1e6).toFixed(2)+' ลบ./'+u:F(Math.round(v))+' บ./'+u);
+
+
+/* =======================================================================
+   VIEW 11 — ตรวจสอบต้นทุนก่อนส่งฝ่ายขาย
+   ======================================================================= */
+function refStat(wt,cat){
+  const r=REFPRJ[wt]; if(!r)return null;
+  const vs=r.prj.map(p=>p.cats[cat]).filter(v=>v!==undefined);
+  if(!vs.length)return null;
+  return {avg:vs.reduce((a,b)=>a+b,0)/vs.length, min:Math.min(...vs), max:Math.max(...vs), n:vs.length};
+}
+function catBreak(id){
+  const o=OPPS.find(x=>x.id===id), items=BOQ[id], sz=SIZE[id].q;
+  const tot=boqTot(id);
+  return [...new Set(items.map(i=>i.cat))].map(c=>{
+    const sum=items.filter(i=>i.cat===c).reduce((a,i)=>a+i.q*(i.mat+i.lab),0);
+    const cost=sum/tot*o.cost;
+    return {c, share:sum/tot, cost, unit:cost/sz, ref:refStat(o.wt,c)};
+  });
+}
+function vCostcheck(){
+  if(!BOQ[ESTID2]||!OPPS.find(x=>x.id===ESTID2)) ESTID2=Object.keys(BOQ)[0];
+  const o=OPPS.find(x=>x.id===ESTID2), sz=SIZE[o.id]||{u:'หน่วย',q:1}, rows=catBreak(o.id);
+  const ref=REFPRJ[o.wt];
+  if(!ref) return phead('ฝ่ายวิศวกรรมประมาณราคา','ตรวจสอบต้นทุนกับโครงการที่เคยทำจริง',
+    'ระบบเทียบต้นทุนต่อหน่วยกับต้นทุนจริงหลังปิดงานของโครงการประเภทเดียวกัน',
+    `<select onchange="ESTID2=this.value;render()" style="border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff">
+      ${Object.keys(BOQ).map(k=>`<option value="${k}" ${k===ESTID2?'selected':''}>${k} — ${OPPS.find(x=>x.id===k).name.slice(0,26)}…</option>`).join('')}</select>`)
+    + `<div class="card" style="text-align:center;padding:34px 20px">
+        <h3 style="font-size:16px">ยังไม่มีโครงการอ้างอิงของ${o.wt}</h3>
+        <p style="color:var(--muted);margin:8px 0 4px;font-size:13px">ระบบต้องมีโครงการประเภทเดียวกันที่ปิดงานและปิดต้นทุนแล้วอย่างน้อย 1 งาน จึงจะเทียบต้นทุนรายหมวดได้</p>
+        <p style="color:var(--muted);font-size:12.5px">ระหว่างนี้ใช้การเทียบกับราคาที่เคยเสนอในหน้าวิเคราะห์ราคาก่อนเสนอแทนได้</p>
+        <button class="btn" style="margin-top:12px" onclick="BIDID='${o.id}';BIDM=null;go('bidsim')">ไปหน้าวิเคราะห์ราคาก่อนเสนอ</button></div>`;
+  const ourU=o.cost/sz.q;
+  const refU=ref?ref.prj.reduce((a,p)=>a+p.act,0)/ref.prj.length:0;
+  const devTot=(ourU-refU)/refU*100;
+  const over=rows.filter(r=>r.ref&&(r.unit-r.ref.avg)/r.ref.avg*100>MASTER.tol.cat);
+  const under=rows.filter(r=>r.ref&&(r.unit-r.ref.avg)/r.ref.avg*100<-MASTER.tol.cat);
+  const rv=REVIEW[o.id];
+  const avgOver=ref?ref.prj.reduce((a,p)=>a+(p.act-p.est)/p.est*100,0)/ref.prj.length:0;
+
+  return phead('ฝ่ายวิศวกรรมประมาณราคา','ตรวจสอบต้นทุนกับโครงการที่เคยทำจริง',
+   'ก่อนส่งต้นทุนให้ฝ่ายขาย ระบบจะแปลงต้นทุนเป็นราคาต่อหน่วยแล้วเทียบกับต้นทุนจริงหลังปิดงานของโครงการใกล้เคียง — ถ้าหมวดไหนหลุดกรอบจะเห็นก่อนเสนอราคา ไม่ใช่รู้ตอนทำงานจริง',
+   `<select id="cc-pick" onchange="ESTID2=this.value;render()" style="border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff">
+      ${Object.keys(BOQ).map(k=>`<option value="${k}" ${k===ESTID2?'selected':''}>${k} — ${OPPS.find(x=>x.id===k).name.slice(0,26)}…</option>`).join('')}
+    </select>`)
+  + `${rv?`<div class="gain" style="margin-bottom:14px"><b>ผ่านการตรวจแล้ว</b> — ยืนยันโดย ${rv.by} เมื่อ ${rv.at} · ส่งต่อให้ฝ่ายขายเรียบร้อย <a onclick="BIDID='${o.id}';go('bidsim')" style="color:var(--blue);cursor:pointer;text-decoration:underline">ไปหน้าวิเคราะห์ราคาก่อนเสนอ</a></div>`:''}
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="card kpi accent-t"><div class="lbl">ต้นทุนรวมที่ประเมิน</div><div class="val">${M(o.cost)}<small>ลบ.</small></div><div class="delta">ขนาดงาน ${F(sz.q)} ${sz.u}</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ต้นทุนต่อหน่วยของเรา</div><div class="val">${sz.u==='Wp'?ourU.toFixed(2):F(Math.round(ourU))}<small>บ./${sz.u}</small></div><div class="delta">คำนวณจาก BOQ ฉบับปัจจุบัน</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ต้นทุนจริงเฉลี่ยงานใกล้เคียง</div><div class="val">${sz.u==='Wp'?refU.toFixed(2):F(Math.round(refU))}<small>บ./${sz.u}</small></div><div class="delta">จาก ${ref?ref.prj.length:0} โครงการที่ปิดงานแล้ว</div></div>
+      <div class="card kpi accent-t"><div class="lbl">ส่วนต่างรวม</div><div class="val" style="color:${Math.abs(devTot)<=MASTER.tol.total?'var(--green)':'var(--amber)'}">${devTot>0?'+':''}${devTot.toFixed(1)}<small>%</small></div><div class="delta">เกณฑ์ที่ยอมรับ ±${MASTER.tol.total}%</div></div>
+    </div>
+
+    <div class="card tight" style="margin-bottom:14px">
+      <div style="padding:15px 16px 6px"><h3>เทียบต้นทุนรายหมวดกับงานที่เคยทำจริง</h3>
+      <div class="sub">ค่าอ้างอิงคือต้นทุนจริงหลังปิดงาน ไม่ใช่ตัวเลขที่เคยประเมินไว้ · เกณฑ์เตือนรายหมวด ±${MASTER.tol.cat}%</div></div>
+      <table><thead><tr><th>หมวดงาน</th><th class="r">สัดส่วน</th><th class="r">ต้นทุนในงานนี้</th><th class="r">ต่อหน่วยของเรา</th><th class="r">ค่าจริงเฉลี่ย</th><th class="c">ช่วงที่เคยเกิดขึ้น</th><th class="r">ส่วนต่าง</th><th class="c">ผลตรวจ</th><th class="c">แก้ไข</th></tr></thead>
+      <tbody>${rows.map(r=>{
+        if(!r.ref)return `<tr><td class="t-title">${r.c}</td><td class="r num">${(r.share*100).toFixed(1)}%</td><td class="r num">${F(Math.round(r.cost))}</td>
+          <td class="r num">${sz.u==='Wp'?r.unit.toFixed(2):F(Math.round(r.unit))}</td><td colspan="5" class="t-sub">ไม่มีข้อมูลอ้างอิงสำหรับหมวดนี้</td></tr>`;
+        const d=(r.unit-r.ref.avg)/r.ref.avg*100;
+        const st=d>MASTER.tol.cat?['c-red','สูงกว่าอ้างอิง']:d<-MASTER.tol.cat?['c-amber','ต่ำผิดปกติ']:['c-green','อยู่ในกรอบ'];
+        const fm=v=>sz.u==='Wp'?v.toFixed(2):F(Math.round(v));
+        return `<tr><td class="t-title">${r.c}</td>
+          <td class="r num">${(r.share*100).toFixed(1)}%</td>
+          <td class="r num">${F(Math.round(r.cost))}</td>
+          <td class="r num" style="font-weight:600">${fm(r.unit)}</td>
+          <td class="r num">${fm(r.ref.avg)}</td>
+          <td class="c t-sub mono">${fm(r.ref.min)} – ${fm(r.ref.max)}</td>
+          <td class="r num" style="color:${Math.abs(d)>MASTER.tol.cat?(d>0?'var(--red)':'var(--amber)'):'var(--text)'}">${d>0?'+':''}${d.toFixed(1)}%</td>
+          <td class="c"><span class="chip ${st[0]}">${st[1]}</span></td>
+          <td class="c">${Math.abs(d)>MASTER.tol.cat?`<button class="btn ghost" style="padding:4px 9px;font-size:11.5px" onclick="applyRef('${o.id}','${r.c}')">ปรับเท่าค่าอ้างอิง</button>`:'<span class="t-sub">—</span>'}</td></tr>`;
+      }).join('')}
+      </tbody></table>
+    </div>
+
+    <div class="grid g3" style="margin-bottom:14px">
+      <div class="card" style="grid-column:span 2">
+        <div class="cardhead"><div><h3>ต้นทุนต่อหน่วยของเรา เทียบค่าจริงเฉลี่ย</h3><div class="sub">หน่วย: บาทต่อ ${sz.u}</div></div></div>
+        ${barChart(rows.filter(r=>r.ref).map(r=>({l:r.c.replace('งาน',''),l2:((r.unit-r.ref.avg)/r.ref.avg*100>0?'+':'')+((r.unit-r.ref.avg)/r.ref.avg*100).toFixed(1)+'%',v:r.unit,v2:r.ref.avg})),{h:220,c:'#25473D',c2:'#93A5A0',pl:46})}
+        <div class="legend"><span><i style="background:#25473D"></i>ต้นทุนที่ประเมินในงานนี้</span><span><i style="background:#93A5A0"></i>ต้นทุนจริงเฉลี่ยของงานใกล้เคียง</span></div>
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>สรุปผลตรวจ</h3></div></div>
+        ${over.length?over.map(r=>`<div class="pain"><b>${r.c} สูงกว่าค่าจริง ${((r.unit-r.ref.avg)/r.ref.avg*100).toFixed(1)}%</b> — ถ้าไม่ปรับ ราคาเสนอจะแพงกว่าคู่แข่งประมาณ ${F(Math.round((r.unit-r.ref.avg)*sz.q))} บาท</div>`).join(''):''}
+        ${under.length?under.map(r=>`<div class="pain"><b>${r.c} ต่ำกว่าค่าจริง ${Math.abs((r.unit-r.ref.avg)/r.ref.avg*100).toFixed(1)}%</b> — เสี่ยงประเมินขาด ตรวจว่ามีรายการตกหล่นหรือปริมาณคลาดเคลื่อนหรือไม่</div>`).join(''):''}
+        ${!over.length&&!under.length?'<div class="gain"><b>ทุกหมวดอยู่ในกรอบที่ยอมรับได้</b> — ต้นทุนชุดนี้สอดคล้องกับสิ่งที่เคยเกิดขึ้นจริง</div>':''}
+        <div class="note" style="margin-top:8px">โครงการอ้างอิงมีต้นทุนจริงสูงกว่าที่ประเมินไว้เฉลี่ย <b>${avgOver.toFixed(1)}%</b> — ควรเผื่อไว้ในค่าความเสี่ยงของงานนี้ด้วย</div>
+        ${rv?'':`<button class="btn" style="width:100%;margin-top:10px" onclick="approveCost('${o.id}')">ยืนยันผลตรวจและส่งให้ฝ่ายขาย</button>
+        <button class="btn ghost" style="width:100%;margin-top:8px" onclick="go('estimate')">กลับไปแก้ไข BOQ</button>`}
+      </div>
+    </div>
+
+    <div class="card tight">
+      <div style="padding:15px 16px 6px"><h3>โครงการอ้างอิงที่ใช้เทียบ</h3><div class="sub">งานประเภท${o.wt} ที่ปิดงานและปิดต้นทุนแล้ว</div></div>
+      <table><thead><tr><th>รหัส</th><th>โครงการ</th><th class="c">ปี</th><th class="r">ขนาดงาน</th><th class="r">ต้นทุนที่ประเมิน</th><th class="r">ต้นทุนจริง</th><th class="r">บานปลาย</th><th class="c">ใช้เทียบ</th></tr></thead>
+      <tbody>${(ref?ref.prj:[]).map(pr=>{
+        const ov=(pr.act-pr.est)/pr.est*100; const fm=v=>sz.u==='Wp'?v.toFixed(2):F(Math.round(v));
+        return `<tr><td class="mono" style="font-size:11.5px">${pr.code}</td><td class="t-title">${pr.n}</td>
+        <td class="c num">${pr.yr}</td><td class="r num">${F(pr.size)} ${sz.u}</td>
+        <td class="r num">${fm(pr.est)}</td><td class="r num" style="font-weight:600">${fm(pr.act)}</td>
+        <td class="r num down">+${ov.toFixed(1)}%</td>
+        <td class="c"><span class="chip c-green">ใช้</span></td></tr>`}).join('')}
+      </tbody></table>
+    </div>`;
+}
+function applyRef(id,cat){
+  const rows=catBreak(id), r=rows.find(x=>x.c===cat); if(!r||!r.ref)return;
+  const f=r.ref.avg/r.unit;
+  BOQ[id].filter(i=>i.cat===cat).forEach(i=>{i.mat=+(i.mat*f).toFixed(2); i.lab=+(i.lab*f).toFixed(2);});
+  recalcCost(id); delete REVIEW[id]; render();
+  toast(`ปรับต้นทุนหมวด ${cat} ให้เท่าค่าอ้างอิงแล้ว (${f>1?'เพิ่ม':'ลด'} ${Math.abs((f-1)*100).toFixed(1)}%)`);
+}
+function approveCost(id){
+  const o=OPPS.find(x=>x.id===id);
+  REVIEW[id]={ok:true, by:o.est, at:new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})};
+  if(o.stage==='ประมาณราคา') o.stage='ยื่นซองแล้ว';
+  render(); toast('ยืนยันต้นทุนแล้ว — ส่งให้ฝ่ายขายเรียบร้อย ไปวิเคราะห์ราคาก่อนเสนอได้เลย');
+}
+
+/* =======================================================================
+   VIEW 12 — วิเคราะห์ราคาก่อนเสนอลูกค้า
+   ======================================================================= */
+function vBidsim(){
+  const o=OPPS.find(x=>x.id===BIDID), sz=SIZE[o.id];
+  const cur=(o.bid-o.cost)/o.bid*100;
+  const m=(BIDM===null?cur:BIDM);
+  const pol=MASTER.wt.find(w=>w.n===o.wt)||{min:12,target:15};
+  const bid=o.cost/(1-m/100), profit=bid-o.cost, ub=bid/sz.q;
+  const mo=bidModel(o.wt,o.sector), p=winProb(mo,m), ev=profit*p;
+  const peers=HISTBIDS.filter(h=>h.wt===o.wt&&h.u===sz.u).sort((a,b)=>a.ub-b.ub);
+  const pct=peers.length?peers.filter(h=>h.ub<ub).length/peers.length*100:0;
+  const ms=[];for(let x=Math.max(6,pol.min-4);x<=Math.min(30,pol.min+18);x+=1)ms.push(x);
+  const evs=ms.map(x=>(o.cost/(1-x/100)-o.cost)*winProb(mo,x)/1e6);
+  const ps=ms.map(x=>winProb(mo,x)*100);
+  let best=ms[0],bev=-1; ms.forEach((x,i)=>{if(x>=pol.min&&evs[i]>bev){bev=evs[i];best=x;}});
+  const markIdx=ms.findIndex(x=>x>=m);
+  const rv=REVIEW[o.id];
+
+  return phead('วิเคราะห์ก่อนเสนอราคา','ถ้าเสนอราคานี้ โอกาสชนะเป็นอย่างไร',
+   'เทียบราคาที่กำลังจะเสนอกับราคาที่บริษัทเคยเสนอไปแล้วในงานประเภทเดียวกัน ทั้งงานที่ชนะและที่แพ้ เพื่อให้รู้ว่าราคานี้อยู่ตรงไหนของสนามแข่ง',
+   `<select id="bs-pick" onchange="BIDID=this.value;BIDM=null;render()" style="border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff">
+      ${OPPS.filter(x=>SIZE[x.id]).map(x=>`<option value="${x.id}" ${x.id===BIDID?'selected':''}>${x.id} — ${x.name.slice(0,26)}…</option>`).join('')}
+    </select>`)
+  + `${BOQ[o.id]&&!rv?`<div class="pain" style="margin-bottom:14px"><b>ต้นทุนของงานนี้ยังไม่ผ่านการตรวจเทียบงานเดิม</b> — ควร <a onclick="ESTID2='${o.id}';go('costcheck')" style="color:var(--red);cursor:pointer;text-decoration:underline">ตรวจต้นทุนก่อน</a> เพราะถ้าฐานต้นทุนผิด การวิเคราะห์ราคาก็ผิดตาม</div>`:''}
+    <div class="grid g3" style="margin-bottom:14px">
+      <div class="card">
+        <div class="cardhead"><div><h3>ปรับราคาที่จะเสนอ</h3><div class="sub">${o.name}</div></div></div>
+        <div class="stat-row"><span class="k">ต้นทุนที่ผ่านการตรวจ</span><span class="v">${F(o.cost)} บาท</span></div>
+        <div class="stat-row"><span class="k">ขนาดงาน</span><span class="v">${F(sz.q)} ${sz.u}</span></div>
+        <div class="stat-row"><span class="k">ประเภท</span><span class="v">${o.wt} · ${o.sector}</span></div>
+        <div style="margin:16px 0 6px;display:flex;justify-content:space-between;align-items:baseline">
+          <span class="lbl" style="font-size:11.5px;color:var(--muted)">กำไรที่ต้องการ</span>
+          <span class="num" style="font-size:22px;font-weight:600">${m.toFixed(1)}%</span></div>
+        <input id="bs-m" type="range" min="${Math.max(4,pol.min-6)}" max="30" step="0.5" value="${m}" oninput="BIDM=parseFloat(this.value);render()">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);font-family:var(--font-m)">
+          <span>${Math.max(4,pol.min-6)}%</span><span>ขั้นต่ำตามนโยบาย ${pol.min}%</span><span>30%</span></div>
+        <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="BIDM=${pol.min};render()">ขั้นต่ำ ${pol.min}%</button>
+          <button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="BIDM=${best};render()">จุดคุ้มที่สุด ${best}%</button>
+          <button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="BIDM=${pol.target};render()">เป้าหมาย ${pol.target}%</button>
+          <button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="BIDM=null;render()">ราคาปัจจุบัน</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>ถ้าเสนอราคานี้</h3></div></div>
+        <div class="kpi"><div class="lbl">ราคาเสนอลูกค้า</div><div class="val">${F(Math.round(bid))}<small>บาท</small></div>
+          <div class="delta">${uf(ub,sz.u)} · ${m>cur?'สูงกว่า':m<cur?'ต่ำกว่า':'เท่ากับ'}ราคาปัจจุบัน ${Math.abs(bid-o.bid)>1?F(Math.round(Math.abs(bid-o.bid)))+' บาท':'—'}</div></div>
+        <div style="height:12px"></div>
+        <div class="stat-row"><span class="k">กำไรเป็นเงิน</span><span class="v" style="color:var(--green)">${F(Math.round(profit))} บาท</span></div>
+        <div class="stat-row"><span class="k">โอกาสชนะที่ประเมิน</span><span class="v">${(p*100).toFixed(0)}%</span></div>
+        <div style="margin:4px 0 10px">${bar(p*100,p>0.5?'green':p>0.3?'amber':'red')}</div>
+        <div class="stat-row"><span class="k">กำไรคาดหวัง (กำไร × โอกาสชนะ)</span><span class="v" style="font-size:15px">${(ev/1e6).toFixed(2)} ลบ.</span></div>
+        <div class="stat-row"><span class="k">ตำแหน่งราคาในกลุ่มงานเดิม</span><span class="v">${peers.length?`ถูกกว่า ${pct.toFixed(0)}% ของราคาที่เคยเสนอ`:'ยังไม่มีงานหน่วยเดียวกันให้เทียบ'}</span></div>
+        <button class="btn" style="width:100%;margin-top:12px" onclick="applyBid('${o.id}',${m})">ใช้ราคานี้เป็นราคาเสนอ</button>
+        ${o.status==='กำลังเสนอ'?`<button class="btn ghost" style="width:100%;margin-top:8px" onclick="resultModal('${o.id}')">บันทึกผลการเสนอราคา</button>`:''}
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>ข้อสรุปจากข้อมูลเดิม</h3><div class="sub"><span class="ai">คำนวณจาก ${mo.n} งานที่ปิดผลแล้ว</span></div></div></div>
+        ${m<pol.min?`<div class="pain"><b>ต่ำกว่านโยบายกำไรขั้นต่ำ ${pol.min}%</b> — ต้องขออนุมัติผู้บริหารก่อนยื่นราคา</div>`:''}
+        ${Math.abs(m-best)<0.6?`<div class="gain"><b>อยู่ที่จุดกำไรคาดหวังสูงสุด</b> — ที่ ${best}% ระบบคำนวณกำไรคาดหวังได้ ${bev.toFixed(2)} ลบ. สูงกว่าการเสนอที่ ${pol.target}% ซึ่งได้ ${((o.cost/(1-pol.target/100)-o.cost)*winProb(mo,pol.target)/1e6).toFixed(2)} ลบ.</div>`
+          :`<div class="note"><b>จุดที่คุ้มที่สุดคือกำไร ${best}%</b> ให้กำไรคาดหวัง ${bev.toFixed(2)} ลบ. เทียบกับราคาที่กำลังพิจารณาซึ่งได้ ${(ev/1e6).toFixed(2)} ลบ.</div>`}
+        <div style="height:8px"></div>
+        <div class="stat-row"><span class="k">งานประเภทนี้ที่เคยยื่น</span><span class="v">${mo.n} งาน · ชนะ ${mo.wins}</span></div>
+        <div class="stat-row"><span class="k">กำไรเฉลี่ยของงานที่ชนะ</span><span class="v">${(mo.set.filter(h=>h.win).reduce((a,h)=>a+h.mg,0)/(mo.wins||1)).toFixed(1)}%</span></div>
+        <div class="stat-row"><span class="k">กำไรเฉลี่ยของงานที่แพ้</span><span class="v">${(mo.set.filter(h=>!h.win).reduce((a,h)=>a+h.mg,0)/((mo.n-mo.wins)||1)).toFixed(1)}%</span></div>
+        <div class="stat-row"><span class="k">จุดพลิกผล (ชนะ 50%)</span><span class="v">กำไรประมาณ ${mo.m0.toFixed(1)}%</span></div>
+        ${o.sector!=='งานเอกชน'?`<div class="hint">ปรับลดจุดพลิกผลแล้ว ${(MASTER.sector.find(x=>x.n===o.sector)||{adj:0}).adj}% เพราะ${(MASTER.sector.find(x=>x.n===o.sector)||{note:''}).note}</div>`:''}
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="cardhead"><div><h3>โอกาสชนะที่ระดับกำไรต่างๆ</h3><div class="sub">เส้นสร้างจากผลแพ้-ชนะจริงของงาน${o.wt}</div></div></div>
+        ${lineChart([{d:ps,c:'#2C6E8F',fill:true,dots:false}],ms.map(x=>x%3===0?x+'%':''),{h:200,min:0,max:90,fmt:v=>v.toFixed(0)+'%',mark:markIdx})}
+        <div class="hint">เส้นประสีเหลืองคือราคาที่กำลังพิจารณา · ยิ่งกำไรสูง โอกาสชนะยิ่งลด</div>
+      </div>
+      <div class="card">
+        <div class="cardhead"><div><h3>กำไรคาดหวัง (กำไร × โอกาสชนะ)</h3><div class="sub">หน่วย: ล้านบาท · จุดสูงสุดคือราคาที่คุ้มที่สุดในระยะยาว</div></div></div>
+        ${lineChart([{d:evs,c:'#2C8461',fill:true,dots:false}],ms.map(x=>x%3===0?x+'%':''),{h:200,fmt:v=>v.toFixed(1),mark:markIdx})}
+        <div class="hint">เสนอถูกเกินไปได้งานแต่กำไรน้อย เสนอแพงเกินไปกำไรดีแต่ไม่ได้งาน — จุดสูงสุดคือสมดุลจากข้อมูลจริง</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="cardhead"><div><h3>ราคาที่เคยเสนอในงานประเภทเดียวกัน</h3><div class="sub">แกนตั้ง = กำไรที่ตั้งไว้ · แกนนอน = ราคาต่อ ${sz.u} · จุดเขียว = ชนะ · จุดแดง = แพ้</div></div></div>
+      ${peers.length?scatter([...peers.map(h=>({x:h.ub,y:h.mg,win:h.win,t:h.n})),{x:ub,y:m,star:true}],
+        {h:250,fx:v=>sz.u==='Wp'?v.toFixed(1):(v>=1e6?(v/1e6).toFixed(1)+'ล':F(Math.round(v))),fy:v=>v.toFixed(0)+'%'}):'<div class="hint">ยังไม่มีงานประเภทนี้ในประวัติ</div>'}
+    </div>
+
+    <div class="card tight">
+      <div style="padding:15px 16px 6px"><h3>เทียบรายงานกับราคาที่เคยเสนอ</h3><div class="sub">${peers.length?'เรียงจากราคาต่อหน่วยต่ำไปสูง · ส่วนต่างคือราคานี้เทียบกับราคาที่เรากำลังจะเสนอ':'ยังไม่มีงานที่ใช้หน่วยเดียวกันในคลังข้อมูล — เส้นโค้งโอกาสชนะยังคำนวณจากผลแพ้-ชนะของงานประเภทเดียวกันได้'}</div></div>
+      <table><thead><tr><th>รหัส</th><th>งานที่เคยเสนอ</th><th class="c">ปี</th><th class="c">ลูกค้า</th><th class="r">ราคา/${sz.u}</th><th class="r">กำไรที่ตั้งไว้</th><th class="r">ส่วนต่างจากราคานี้</th><th class="c">ผล</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+      ${peers.map(h=>{
+        const d=(h.ub-ub)/ub*100;
+        return `<tr><td class="mono" style="font-size:11px">${h.id}</td><td class="t-title">${h.n}</td>
+        <td class="c num">${h.yr}</td><td class="c"><span class="chip c-gray">${h.sector.replace('งาน','')}</span></td>
+        <td class="r num">${uf(h.ub,sz.u)}</td><td class="r num">${h.mg.toFixed(1)}%</td>
+        <td class="r num ${d>0?'down':'up'}">${d>0?'+':''}${d.toFixed(1)}%</td>
+        <td class="c"><span class="chip ${h.win?'c-green':'c-red'}">${h.win?'ชนะ':'แพ้'}</span></td>
+        <td class="t-sub">${h.win?'ราคานี้เคยชนะมาแล้ว':'แพ้ผู้ชนะอยู่ '+h.gap+'%'}</td></tr>`}).join('')}
+      <tr style="background:var(--amber-soft)"><td class="mono" style="font-size:11px">${o.id}</td>
+        <td class="t-title">${o.name} <span class="chip c-amber">งานที่กำลังพิจารณา</span></td>
+        <td class="c num">2569</td><td class="c"><span class="chip c-gray">${o.sector.replace('งาน','')}</span></td>
+        <td class="r num" style="font-weight:600">${uf(ub,sz.u)}</td><td class="r num" style="font-weight:600">${m.toFixed(1)}%</td>
+        <td class="r num">—</td><td class="c"><span class="chip c-amber">รอตัดสินใจ</span></td>
+        <td class="t-sub">โอกาสชนะที่ประเมิน ${(p*100).toFixed(0)}%</td></tr>
+      </tbody></table>
+    </div>`;
+}
+function applyBid(id,m){
+  const o=OPPS.find(x=>x.id===id);
+  const mo=bidModel(o.wt,o.sector);
+  o.bid=Math.round(o.cost/(1-m/100)); o.prob=Math.round(winProb(mo,m)*100);
+  BIDM=null; render();
+  toast(`บันทึกราคาเสนอ ${F(o.bid)} บาท (กำไร ${m.toFixed(1)}%) — อัปเดตโอกาสชนะเป็น ${o.prob}% แล้ว`);
+}
+
+
+/* =======================================================================
+   บันทึกผลการเสนอราคา: ได้งาน → เปิดโครงการและตั้งชุดขอราคาตามงบประมาณ
+   ======================================================================= */
+const PMS=['วิชัย ป.','อนุชา ร.','ศักดิ์ชัย ม.','ธีรพงษ์ ค.'];
+function addMonths(d,n){const x=new Date(d); x.setMonth(x.getMonth()+n); return x.toISOString().slice(0,10);}
+function scurve(n){const a=[];for(let i=0;i<n;i++){const t=(i+1)/n;a.push(Math.round(100*(3*t*t-2*t*t*t)));}a[n-1]=100;return a;}
+
+function resultModal(id){
+  const o=OPPS.find(x=>x.id===id);
+  openModal('บันทึกผลการเสนอราคา — '+o.name,
+   `<div class="note" style="margin-bottom:14px">เสนอราคาไป <b>${F(o.bid)} บาท</b> · ต้นทุนที่ตั้งไว้ ${F(o.cost)} บาท · กำไร ${((o.bid-o.cost)/o.bid*100).toFixed(1)}%</div>
+    <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr">
+      <button class="btn" style="padding:16px" onclick="closeModal();winModal('${o.id}')">ได้งาน<div style="font-weight:400;font-size:11.5px;opacity:.8;margin-top:4px">เปิดโครงการและตั้งชุดขอราคา</div></button>
+      <button class="btn ghost" style="padding:16px" onclick="closeModal();lostModal('${o.id}')">ไม่ได้งาน<div style="font-weight:400;font-size:11.5px;color:var(--muted);margin-top:4px">เก็บข้อมูลไว้วิเคราะห์ครั้งหน้า</div></button>
+    </div>`,
+   `<button class="btn ghost" onclick="closeModal()">ปิด</button>`);
+}
+function winModal(id){
+  const o=OPPS.find(x=>x.id===id);
+  openModal('บันทึกว่าได้งาน — '+o.name,
+   `<div class="note" style="margin-bottom:12px">เมื่อบันทึกแล้ว ระบบจะเปิดโครงการให้ฝ่าย PM และตั้งชุดขอราคาให้ฝ่ายจัดซื้อตามงบประมาณที่ตั้งไว้ใน BOQ โดยอัตโนมัติ</div>
+    <div class="frow"><div class="field"><label>เลขที่สัญญา / ใบสั่งจ้าง</label><input id="w-ct" value="CT-2569-${String(PROJECTS.length+11).padStart(3,'0')}"></div>
+      <div class="field"><label>มูลค่าตามสัญญา (บาท)</label><input id="w-v" type="number" value="${Math.round(o.bid)}"></div></div>
+    <div class="frow"><div class="field"><label>งบประมาณต้นทุนที่อนุมัติ (บาท)</label><input id="w-b" type="number" value="${Math.round(o.cost)}"></div>
+      <div class="field"><label>ระยะเวลาก่อสร้าง (เดือน)</label><input id="w-d" type="number" value="${o.dur}"></div></div>
+    <div class="frow"><div class="field"><label>วันเริ่มงาน</label><input id="w-s" type="date" value="2026-09-01"></div>
+      <div class="field"><label>ผู้จัดการโครงการ</label><select id="w-pm">${PMS.map(x=>`<option>${x}</option>`).join('')}</select></div></div>
+    ${BOQ[id]?`<div class="field"><label><input type="checkbox" id="w-gen" checked style="width:auto;margin-right:7px">ตั้งชุดขอราคาจากหมวดงานใน BOQ ให้ฝ่ายจัดซื้อทันที (${[...new Set(BOQ[id].map(i=>i.cat))].length} แพ็กเกจ)</label></div>`
+      :`<div class="note">งานนี้ยังไม่มี BOQ แยกรายการ ระบบจะเปิดโครงการให้อย่างเดียว ฝ่ายจัดซื้อต้องสร้างชุดขอราคาเอง</div>`}`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveWin('${id}')">บันทึกว่าได้งาน</button>`);
+}
+function saveWin(id){
+  const o=OPPS.find(x=>x.id===id);
+  const value=numv('w-v'), budget=numv('w-b'), dur=Math.max(2,Math.min(9,numv('w-d')||o.dur)), start=val('w-s'), pm=val('w-pm');
+  const gen=BOQ[id]&&document.getElementById('w-gen')&&document.getElementById('w-gen').checked;
+  o.status='ได้งาน'; o.stage='ทำสัญญา'; o.prob=100; o.winner='เรา'; o.bid=value; o.contract=val('w-ct');
+  const code='PRJ-26'+String(PROJECTS.length+11).padStart(2,'0');
+  const n=dur, plan=scurve(n);
+  PROJECTS.unshift({code, name:o.name, cust:o.cust, wt:o.wt, sector:o.sector,
+    value, budget, actual:0, commit:0, pm, start, end:addMonths(start,dur),
+    plan, act:plan.map(()=>0), cursor:0,
+    cin:plan.map((v,i)=>i%2===0?Math.round(value/Math.ceil(n/2)/1000):0),
+    cout:plan.map(()=>Math.round(budget/n/1000)),
+    risks:[{r:'โครงการเพิ่งเปิด ยังไม่ได้ผู้รับเหมาครบทุกแพ็กเกจ',i:'กลาง',a:'ติดตามผลการขอราคาจากฝ่ายจัดซื้อ'}]});
+  let made=0;
+  if(gen) made=genPackages(id, code, start, dur);
+  closeModal(); render();
+  openModal('บันทึกเรียบร้อย — เปิดโครงการ '+code,
+   `<div class="gain"><b>${o.name}</b><div style="margin-top:6px">มูลค่าสัญญา ${F(value)} บาท · งบต้นทุน ${F(budget)} บาท · PM ${pm}</div></div>
+    ${made?`<div class="note" style="margin-top:10px"><b>ตั้งชุดขอราคาให้ฝ่ายจัดซื้อแล้ว ${made} แพ็กเกจ</b> — แต่ละแพ็กเกจมีต้นทุนกลางมาจากงบประมาณที่ตั้งไว้ใน BOQ หมวดนั้น ฝ่ายจัดซื้อเปิดดูและส่งขอราคาได้ทันที</div>`:''}
+    <div class="stat-row" style="margin-top:10px"><span class="k">ขั้นตอนถัดไป</span><span class="v">จัดซื้อเลือก Vendor และขอราคา</span></div>`,
+   `<button class="btn ghost" onclick="closeModal();go('projects')">ไปหน้าบริหารโครงการ</button>
+    <button class="btn" onclick="closeModal();go('procurement')">ไปหน้าจัดซื้อ</button>`);
+  toast(`บันทึกว่าได้งานแล้ว — เปิดโครงการ ${code}${made?` และตั้งชุดขอราคา ${made} แพ็กเกจ`:''}`);
+}
+function genPackages(id, prjCode, start, dur){
+  const o=OPPS.find(x=>x.id===id); if(!BOQ[id])return 0;
+  const cats=[...new Set(BOQ[id].map(i=>i.cat))];
+  let made=0;
+  cats.forEach((c,ix)=>{
+    if(RFQS.some(r=>r.prj===id&&r.pkg===c))return;
+    const items=BOQ[id].filter(i=>i.cat===c);
+    const budget=Math.round(items.reduce((a,i)=>a+i.q*(i.mat+i.lab),0));
+    const spec=items.every(i=>i.src&&!i.src.includes('ประสบการณ์'))?1:0;
+    RFQS.push({id:'RFQ-68-'+(120+RFQS.length), prj:id, prjn:o.name.slice(0,28), pkg:c, budget,
+      need: addMonths(start||'2026-09-01', Math.max(1,Math.round(dur*(ix+1)/cats.length))),
+      status:'รวบรวมเอกสาร', buyer: ix%2?'อรวรรณ ท.':'กิตติ พ.', prjCode,
+      docs:{boq:1,tor:1,dwg:1,spec,safety:0}, quotes:[]});
+    made++;
+  });
+  return made;
+}
+function lostModal(id){
+  const o=OPPS.find(x=>x.id===id);
+  openModal('บันทึกว่าไม่ได้งาน — '+o.name,
+   `<div class="note" style="margin-bottom:12px">ข้อมูลที่บันทึกจะเข้าคลังความรู้ทันที และถูกใช้คำนวณเส้นโค้งโอกาสชนะในหน้าวิเคราะห์ราคาก่อนเสนอ</div>
+    <div class="frow"><div class="field"><label>ผู้ชนะ</label><input id="l-w" placeholder="ชื่อบริษัทที่ได้งาน"></div>
+      <div class="field"><label>ราคาผู้ชนะ (บาท) ถ้าทราบ</label><input id="l-p" type="number" value="${Math.round(o.bid*0.95)}"></div></div>
+    <div class="field"><label>สาเหตุหลักที่ไม่ได้งาน</label><select id="l-r">${LOSS.map(l=>`<option>${l.r}</option>`).join('')}</select></div>
+    <div class="field"><label>บันทึกเพิ่มเติม</label><textarea id="l-n" rows="2" placeholder="สิ่งที่ควรทำต่างออกไปในครั้งหน้า"></textarea></div>`,
+   `<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="saveLost('${id}')">บันทึกว่าไม่ได้งาน</button>`);
+}
+function saveLost(id){
+  const o=OPPS.find(x=>x.id===id), wp=numv('l-p'), reason=val('l-r');
+  o.status='ไม่ได้งาน'; o.stage='แพ้ประมูล'; o.prob=0; o.winner=val('l-w')||'ไม่ทราบ';
+  o.gap=wp>0?-Math.abs((o.bid-wp)/wp*100):0; o.note=val('l-n')||o.note;
+  const L=LOSS.find(l=>l.r===reason); if(L)L.n+=1;
+  const tot=LOSS.reduce((a,l)=>a+l.n,0); LOSS.forEach(l=>l.pct=Math.round(l.n/tot*100));
+  if(SIZE[id])HISTBIDS.push({id:o.id,n:o.name,wt:o.wt,sector:o.sector,yr:2569,u:SIZE[id].u,q:SIZE[id].q,
+    uc:o.cost/SIZE[id].q,mg:(o.bid-o.cost)/o.bid*100,win:false,gap:+Math.abs(o.gap).toFixed(1),ub:o.bid/SIZE[id].q});
+  closeModal(); render();
+  toast(`บันทึกผลแล้ว — เพิ่มงานนี้เข้าคลังข้อมูลเพื่อใช้เทียบราคาครั้งหน้า (เราสูงกว่าผู้ชนะ ${Math.abs(o.gap).toFixed(1)}%)`);
+}
+function genModal(){
+  const cand=OPPS.filter(o=>o.status==='ได้งาน'&&BOQ[o.id]);
+  openModal('สร้างชุดขอราคาจากงบประมาณโครงการ',
+   cand.length?`<div class="note" style="margin-bottom:12px">เลือกโครงการที่ได้งานแล้ว ระบบจะแตกหมวดงานใน BOQ เป็นแพ็กเกจ พร้อมตั้งต้นทุนกลางจากงบประมาณของหมวดนั้น</div>
+    <div class="field"><label>โครงการ</label><select id="g-p">${cand.map(o=>`<option value="${o.id}">${o.name} (${o.id})</option>`).join('')}</select></div>
+    <div class="field"><label>วันเริ่มงาน</label><input id="g-s" type="date" value="2026-09-01"></div>`
+    :`<div class="note">ยังไม่มีโครงการที่ได้งานและมี BOQ แยกรายการ — ไปที่หน้าโอกาสการขายแล้วกด “บันทึกผล” เป็นได้งานก่อน</div>`,
+   cand.length?`<button class="btn ghost" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="runGen()">สร้างชุดขอราคา</button>`:'');
+}
+function runGen(){
+  const id=val('g-p'), made=genPackages(id, null, val('g-s'), OPPS.find(o=>o.id===id).dur);
+  closeModal(); render();
+  toast(made?`สร้างชุดขอราคา ${made} แพ็กเกจจากงบประมาณ BOQ แล้ว`:'โครงการนี้มีชุดขอราคาครบทุกหมวดแล้ว','ok');
+}
+
+/* =======================================================================
+   ROUTER
+   ======================================================================= */
+const VIEWS={exec:vExec,sales:vSales,estimate:vEstimate,costcheck:vCostcheck,bidsim:vBidsim,
+  catalog:vCatalog,forecast:vForecast,procurement:vProcurement,vendors:vVendors,projects:vProjects,
+  cash:vCash,knowledge:vKnowledge};
+function render(){
+  const ae=document.activeElement, aid=ae&&ae.id;
+  let ss=null; try{ss=ae&&ae.selectionStart;}catch(e){}
+  $('#main').innerHTML=(VIEWS[VIEW]||vExec)();
+  if(aid){const el=document.getElementById(aid);
+    if(el&&el.focus){el.focus(); try{if(ss!==null&&ss!==undefined)el.setSelectionRange(ss,ss);}catch(e){}}}
+}
+drawNav(); drawRail(); render();
+</script>
+</body>
+</html>

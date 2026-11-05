@@ -7,6 +7,214 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Construction aggregates are separate from the retained NTOP telecom workflow.
+model CpeOpportunity {
+  id String @id @default(cuid())
+  code String @unique @db.VarChar(40)
+  name String @db.VarChar(255)
+  customer String @db.VarChar(255)
+  sector String @db.VarChar(100)
+  workType String @db.VarChar(100)
+  organizationUnitId String @db.VarChar(191)
+  ownerId String @db.VarChar(191)
+  estimatorId String? @db.VarChar(191)
+  location String @db.VarChar(255)
+  unit String @db.VarChar(40)
+  quantity Decimal @db.Decimal(19,4)
+  cost Decimal @db.Decimal(19,4)
+  bid Decimal @db.Decimal(19,4)
+  margin Decimal @db.Decimal(9,4)
+  stage String @db.VarChar(64)
+  status String @db.VarChar(64)
+  dueAt DateTime?
+  technicalNotes String? @db.Text
+  contractNotes String? @db.Text
+  winner String? @db.VarChar(255)
+  winnerPrice Decimal? @db.Decimal(19,4)
+  lossReason String? @db.VarChar(255)
+  resultNotes String? @db.Text
+  reviewedById String? @db.VarChar(191)
+  reviewedAt DateTime?
+  version Int @default(1)
+  items CpeBoqItem[]
+  rfqs CpeRfq[]
+  project CpeProject?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([organizationUnitId, status, updatedAt, id])
+  @@index([organizationUnitId, workType, sector])
+}
+
+model CpeBoqItem {
+  id String @id @default(cuid())
+  opportunityId String
+  opportunity CpeOpportunity @relation(fields:[opportunityId], references:[id], onDelete:Restrict)
+  category String @db.VarChar(100)
+  code String @db.VarChar(64)
+  description String @db.VarChar(500)
+  unit String @db.VarChar(40)
+  quantity Decimal @db.Decimal(19,4)
+  material Decimal @db.Decimal(19,4)
+  labor Decimal @db.Decimal(19,4)
+  source String @db.VarChar(255)
+  catalogId String?
+  catalog CpeCatalogItem? @relation(fields:[catalogId], references:[id], onDelete:Restrict)
+  @@index([opportunityId, category, id])
+  @@index([catalogId])
+}
+
+model CpeCatalogItem {
+  id String @id @default(cuid())
+  code String @unique @db.VarChar(64)
+  name String @db.VarChar(255)
+  category String @db.VarChar(100)
+  unit String @db.VarChar(40)
+  price Decimal @db.Decimal(19,4)
+  forecastPercent Decimal @db.Decimal(9,4)
+  volatility String @db.VarChar(40)
+  source String @db.VarChar(255)
+  organizationUnitId String @db.VarChar(191)
+  version Int @default(1)
+  prices CpePriceHistory[]
+  boqItems CpeBoqItem[]
+  updatedAt DateTime @updatedAt
+  @@index([organizationUnitId, category, name])
+}
+
+model CpePriceHistory {
+  id String @id @default(cuid())
+  catalogId String
+  catalog CpeCatalogItem @relation(fields:[catalogId], references:[id], onDelete:Restrict)
+  price Decimal @db.Decimal(19,4)
+  source String @db.VarChar(255)
+  actorId String @db.VarChar(191)
+  vendorId String? @db.VarChar(191)
+  recordedAt DateTime @default(now())
+  @@index([catalogId, recordedAt])
+}
+
+model CpeVendor {
+  id String @id @default(cuid())
+  code String @unique @db.VarChar(40)
+  name String @db.VarChar(255)
+  workType String @db.VarChar(100)
+  organizationUnitId String @db.VarChar(191)
+  scores Json
+  score Decimal? @db.Decimal(9,4)
+  grade String? @db.VarChar(40)
+  suspended Boolean @default(false)
+  version Int @default(1)
+  quotes CpeVendorQuote[]
+  updatedAt DateTime @updatedAt
+  @@index([organizationUnitId, workType, name])
+}
+
+model CpeRfq {
+  id String @id @default(cuid())
+  code String @unique @db.VarChar(40)
+  opportunityId String
+  opportunity CpeOpportunity @relation(fields:[opportunityId], references:[id], onDelete:Restrict)
+  name String @db.VarChar(255)
+  category String @db.VarChar(100)
+  budget Decimal @db.Decimal(19,4)
+  needAt DateTime
+  documents Json
+  status String @db.VarChar(64)
+  awardedQuoteId String? @unique
+  poNumber String? @unique @db.VarChar(40)
+  version Int @default(1)
+  quotes CpeVendorQuote[]
+  createdAt DateTime @default(now())
+  @@unique([opportunityId, category])
+  @@index([opportunityId, status, id])
+}
+
+model CpeVendorQuote {
+  id String @id @default(cuid())
+  rfqId String
+  rfq CpeRfq @relation(fields:[rfqId], references:[id], onDelete:Restrict)
+  vendorId String
+  vendor CpeVendor @relation(fields:[vendorId], references:[id], onDelete:Restrict)
+  price Decimal @db.Decimal(19,4)
+  days Int
+  paymentTerms String @db.VarChar(255)
+  validityDays Int
+  notes String? @db.VarChar(1000)
+  createdAt DateTime @default(now())
+  @@unique([rfqId, vendorId])
+}
+
+model CpeProject {
+  id String @id @default(cuid())
+  code String @unique @db.VarChar(40)
+  opportunityId String @unique
+  opportunity CpeOpportunity @relation(fields:[opportunityId], references:[id], onDelete:Restrict)
+  contractNumber String @db.VarChar(100)
+  contractValue Decimal @db.Decimal(19,4)
+  budget Decimal @db.Decimal(19,4)
+  pmId String @db.VarChar(191)
+  startAt DateTime
+  durationMonths Int
+  status String @db.VarChar(64)
+  risks String? @db.Text
+  actualCategories Json?
+  closedAt DateTime?
+  version Int @default(1)
+  months CpeProjectMonth[]
+  financeEntries CpeFinanceEntry[]
+  @@index([pmId, status, id])
+}
+
+model CpeProjectMonth {
+  id String @id @default(cuid())
+  projectId String
+  project CpeProject @relation(fields:[projectId], references:[id], onDelete:Restrict)
+  month Int
+  plannedPercent Decimal @db.Decimal(9,4)
+  actualPercent Decimal? @db.Decimal(9,4)
+  cashIn Decimal @default(0) @db.Decimal(19,4)
+  cashOut Decimal @default(0) @db.Decimal(19,4)
+  forecastIn Decimal @default(0) @db.Decimal(19,4)
+  forecastOut Decimal @default(0) @db.Decimal(19,4)
+  poPayments Json
+  paidPo Decimal @default(0) @db.Decimal(19,4)
+  @@unique([projectId, month])
+}
+
+model CpeMasterData {
+  id String @id @default(cuid())
+  organizationUnitId String @unique @db.VarChar(191)
+  configuration Json
+  version Int @default(1)
+  updatedAt DateTime @updatedAt
+}
+
+model CpeImprovement {
+  id String @id @default(cuid())
+  organizationUnitId String @db.VarChar(191)
+  title String @db.VarChar(255)
+  reason String @db.VarChar(1000)
+  expectedEffect String @db.VarChar(1000)
+  proposedConfiguration Json
+  masterVersion Int
+  createdById String @db.VarChar(191)
+  decidedById String? @db.VarChar(191)
+  status String @db.VarChar(64)
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  @@index([organizationUnitId, status, id])
+}
+
+model CpeCommandReceipt {
+  id String @id @default(cuid())
+  actorId String @db.VarChar(191)
+  requestId String @db.VarChar(64)
+  fingerprint String @db.Char(64)
+  resultId String @db.VarChar(191)
+  createdAt DateTime @default(now())
+  @@unique([actorId, requestId])
+}
+
 enum Role {
   ADMIN
   SALES
@@ -3365,4 +3573,20 @@ model ContractNumberSequence {
   id        String   @id @db.VarChar(32)
   nextValue Int      @default(0)
   updatedAt DateTime @updatedAt
+}
+
+model CpeFinanceEntry {
+  id String @id @default(cuid())
+  organizationUnitId String @db.VarChar(191)
+  projectId String? @db.VarChar(191)
+  project CpeProject? @relation(fields:[projectId], references:[id], onDelete:Restrict)
+  createdById String @db.VarChar(191)
+  kind String @db.VarChar(40)
+  name String @db.VarChar(255)
+  amount Decimal @db.Decimal(19,4)
+  dueAt DateTime
+  settledAt DateTime?
+  version Int @default(1)
+  @@index([organizationUnitId, kind, dueAt])
+  @@index([organizationUnitId, createdById])
 }

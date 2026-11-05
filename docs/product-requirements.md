@@ -1,5 +1,7 @@
 # NTOP Enterprise Sales Platform — Product Requirements
 
+> Active application baseline (2026-11-05): the owner approved CPE Project Bid Excellence in `requirements/SRS.pdf` and its HTML prototype as the new product scope. See [CPE implementation and acceptance](cpe/implementation.md). The NTOP baseline below remains the retained legacy domain contract; its production platform, security and integrity controls continue to apply.
+
 | Metadata | Value |
 |---|---|
 | Status | Approved Baseline |
