@@ -3,6 +3,8 @@
 The owner explicitly confirmed this target on 2026-11-05:
 
 - SSH: `ntop`
+- Repository: `https://github.com/rattanan/cpe-bidex` (`origin`, `main`); do not push CPE changes to the former NTOP repository.
+- Public URL: `https://cpe-bidex.rattanan.dev`
 - Application: `/opt/apps/cpe-bidex`
 - PM2 process: `cpe-bidex`, bound to `127.0.0.1:3015`
 - MySQL: local `cpe_bidex` (MySQL 8.4 verified)
@@ -25,6 +27,20 @@ After activation, run the opt-in demo command from `/opt/apps/cpe-bidex` with
 Deliver generated credentials from a protected file, verify real login and all
 twelve CPE screens, and record the release hash and checks. Do not reuse or modify
 NTOP production configuration or restart its processes.
+
+## Deployment evidence — 2026-11-05
+
+- Active application revision: `1fe8332a5949917077b2a6ea5a096ca46c8ab809`, also pushed to CPE `origin/main`. The deployed `.cpe-release.json` records this revision and repository. Later documentation-only commits do not change the application revision.
+- All 51 forward migrations applied successfully to the initially empty `cpe_bidex` database; `prisma migrate status` confirms it is up to date.
+- Initialized one administrator and explicitly imported the prototype dataset into `CPE-DEMO-V1`: 44 opportunities, 20 BOQ items, 14 catalog items, 12 vendors, 15 RFQs, 19 quotes, 10 projects, 72 project-month records, 7 finance entries, 2 improvement proposals and 6 scoped test accounts. Initialization/import audit evidence is present.
+- Server gates passed: `npm run lint` (0 errors, 7 existing prospect warnings), `npm run typecheck`, `npm test` (811 passed, 34 opt-in tests skipped), `npm run build`.
+- Local isolated database suites: `npm run test:cpe:db` (14 passed). The final workflow assertions include chronological monthly cash amounts. A first strict-MariaDB experiment exposed Prisma aggregate behavior on empty scoped relations; the normal MariaDB suite passed and all twelve patched page queries were separately checked read-only on actual MySQL 8.4 with `ONLY_FULL_GROUP_BY` enabled. An attempted additional MySQL test database was denied by the application account; no privileges were expanded.
+- Live HTTPS Playwright acceptance passed: tester login, all twelve populated screens, prototype opportunity search, catalog and receivable aging, mobile overflow check, logout, restricted PM login/access denial and no browser runtime errors. Local port 3015 and public HTTPS login both return 200.
+- Live verification found a `GROUP BY month` collision with `CpeProjectMonth.month`; revision `1fe8332` groups by the full calendar expression, preserving strict SQL mode.
+- Credentials are generated separately for each account. Server files `/opt/apps/cpe-bidex-private/demo-accounts.json` and `/opt/apps/cpe-bidex-private/bootstrap-admin.json` are mode 0600, outside the web root; deliver only through a protected owner file. No credentials belong in Git or this record.
+- Document storage is isolated at `/opt/apps/cpe-bidex-private/documents`. Only PM2 `cpe-bidex` was restarted; NTOP process IDs and uptime remained unchanged.
+
+Rollback material is under `/opt/apps/cpe-bidex-private/backups`: original database dump `db-before-7673526.sql`, original application `app-before-7673526`, and pre-patch CPE application `app-before-1fe8332`. For a code rollback, stop only `cpe-bidex`, move the failed application aside, restore the chosen application directory at `/opt/apps/cpe-bidex`, then restart only that process. Keep the database and audit evidence; do not restore the empty database dump over populated CPE data without a separately approved recovery decision.
 
 ---
 
