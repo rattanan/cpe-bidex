@@ -69,7 +69,7 @@ export async function GET(request: Request) {
       headers: {
         accept: "application/json",
         "accept-language": "th,en;q=0.8",
-        "user-agent": process.env.OPENSTREETMAP_APP_USER_AGENT || "NTOP-Orchestration-Platform/0.1.1",
+        "user-agent": process.env.OPENSTREETMAP_APP_USER_AGENT || "CPE-BidEx/0.1.1",
       },
       signal: AbortSignal.timeout(8_000),
     });

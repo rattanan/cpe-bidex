@@ -6,6 +6,7 @@ import { Bot, BookOpen, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type { PageAssistantSource } from "@/lib/ai/page-assistant-service";
+import { PRODUCT } from "@/lib/company-profile";
 
 type ChatMessage = {
   id: string;
@@ -113,7 +114,7 @@ export function AiChatBalloon({ pageLabel }: { pageLabel: string }) {
     {open && <section id="ai-chat-panel" className="ai-chat-panel" role="dialog" aria-modal="false" aria-labelledby="ai-chat-title">
       <header className="ai-chat-head">
         <span className="ai-chat-avatar"><Bot aria-hidden="true"/></span>
-        <div><strong id="ai-chat-title">NTOP AI Assistant</strong><small><span aria-hidden="true"/>พร้อมช่วยอ่านหน้านี้</small></div>
+        <div><strong id="ai-chat-title">{PRODUCT.assistantName}</strong><small><span aria-hidden="true"/>พร้อมช่วยอ่านหน้านี้</small></div>
         <button type="button" onClick={close} aria-label="ปิด AI Assistant"><X/></button>
       </header>
       <div className="ai-chat-context"><Sparkles aria-hidden="true"/><span>กำลังอ้างอิงหน้า <strong>{pageLabel}</strong></span></div>

@@ -24,3 +24,5 @@ Self-hosted Noto Sans Thai 400/500/600/700 is sourced from Google Fonts and dist
 - E2E acceptance checks actual rendered font sizes, all twelve business screens, company contact links, light/dark appearance, mobile overflow and the existing PM denial case. Unit checks retain the original asset digest and verify contact link consistency.
 
 No database migration, seed, user change or new environment configuration is needed. Rollback is an application release change only.
+
+Product labels are shared through `PRODUCT` in `lib/company-profile.ts`: CPE Project Bid Excellence, CPE, and CPE AI Assistant. Help Center, administrative copy and handoff badges use this identity; spreadsheet author metadata uses the legal company name. The page assistant's identity prompt is versioned as `page-assistant.prompt.v2`; its grounding, read-only constraints and input isolation remain intact. Retained compatibility identifiers (session/storage keys, encryption context, integration environment variables and issued API key prefixes) are technical contracts, not product labels, and remain stable.

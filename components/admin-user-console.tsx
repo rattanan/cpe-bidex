@@ -1,5 +1,7 @@
 "use client";
 
+import { PRODUCT } from "@/lib/company-profile";
+
 import { useActionState, useState } from "react";
 import type { Role } from "@prisma/client";
 import { assignAdminRole, createAdminUser, revokeAdminRole, rotateAdminUserApiKey, updateAdminRoleOrganization, updateAdminUser } from "@/app/actions/identity-admin";
@@ -19,7 +21,7 @@ function ApiKeyReveal({ apiKey }: { apiKey: string }) {
     await navigator.clipboard.writeText(apiKey);
     setCopied(true);
   }
-  return <div className="notice success" role="status" aria-live="polite"><strong>API Key ใหม่ — แสดงครั้งเดียว</strong><code style={{display:"block", margin:"8px 0", overflowWrap:"anywhere"}}>{apiKey}</code><button className="secondary" type="button" onClick={copy}>{copied ? "คัดลอกแล้ว" : "Copy API Key"}</button><small className="help" style={{display:"block", marginTop:8}}>นำ Key นี้ไปบันทึกใน InsightKM ระบบ NTOP จะเก็บเฉพาะค่า hash และไม่สามารถแสดงค่าเดิมอีกได้</small></div>;
+  return <div className="notice success" role="status" aria-live="polite"><strong>API Key ใหม่ — แสดงครั้งเดียว</strong><code style={{display:"block", margin:"8px 0", overflowWrap:"anywhere"}}>{apiKey}</code><button className="secondary" type="button" onClick={copy}>{copied ? "คัดลอกแล้ว" : "Copy API Key"}</button><small className="help" style={{display:"block", marginTop:8}}>นำ Key นี้ไปบันทึกใน InsightKM ระบบ {PRODUCT.shortName} จะเก็บเฉพาะค่า hash และไม่สามารถแสดงค่าเดิมอีกได้</small></div>;
 }
 
 export function CreateUserForm() {

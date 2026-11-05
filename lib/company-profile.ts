@@ -1,3 +1,9 @@
+export const PRODUCT = {
+  name: "CPE Project Bid Excellence",
+  shortName: "CPE",
+  assistantName: "CPE AI Assistant",
+} as const;
+
 /** Public company information verified against the owner's reference on 2026-11-05. */
 export const COMPANY = {
   name: "บริษัท เจริญโภคภัณฑ์วิศวกรรม จำกัด",

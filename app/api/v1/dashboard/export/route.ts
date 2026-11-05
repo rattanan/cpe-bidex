@@ -1,3 +1,4 @@
+import { COMPANY } from "@/lib/company-profile";
 import ExcelJS from "exceljs";
 import { NextResponse } from "next/server";
 
@@ -64,7 +65,7 @@ export async function GET(request: Request) {
     }
 
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = "NTOP";
+    workbook.creator = COMPANY.englishName;
     workbook.created = new Date(data.updatedAt);
     const sheet = workbook.addWorksheet("Dashboard");
     sheet.columns = [

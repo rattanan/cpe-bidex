@@ -6,6 +6,7 @@ import { CPE_ROLE_GRANTS } from "../lib/cpe/config";
 import { DASHBOARD_PERMISSIONS } from "../lib/dashboard/dashboard-permissions";
 import { THAI_DISTRICTS } from "../lib/customer/district-reference-data";
 import { THAI_PROVINCES } from "../lib/customer/province-reference";
+import { PRODUCT } from "../lib/company-profile";
 
 const prisma = new PrismaClient();
 
@@ -21,7 +22,7 @@ async function main() {
     admin = await prisma.user.upsert({
       where: { email },
       update: { role: Role.ADMIN },
-      create: { email, name: "ผู้ดูแลระบบ NTOP", passwordHash: await hash(password, 12), role: Role.ADMIN },
+      create: { email, name: `ผู้ดูแลระบบ ${PRODUCT.shortName}`, passwordHash: await hash(password, 12), role: Role.ADMIN },
     });
   } else if (demoMode) {
     admin = await prisma.user.findFirst({ where: { role: Role.ADMIN, active: true }, orderBy: { createdAt: "asc" } });

@@ -25,6 +25,10 @@ describe("PageAssistantService", () => {
     expect(result.sources.length).toBeGreaterThan(1);
     const messages = createChatCompletion.mock.calls[0][0];
     expect(messages[0].role).toBe("system");
+    expect(messages[0].content).toContain("CPE AI Assistant");
+    expect(messages[0].content).toContain("CPE Project Bid Excellence");
+    expect(messages[0].content).not.toContain("NTOP");
+    expect(messages[0].content).toContain("read-only");
     expect(messages[1].content).toContain("Opportunity ABC");
     expect(messages[1].content).toContain("helpArticles");
   });

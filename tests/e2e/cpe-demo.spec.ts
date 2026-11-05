@@ -98,6 +98,13 @@ test.describe("CPE seeded prototype preview", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.screenshot({ path: "/tmp/cpe-demo-preview/company-dark.png", fullPage: true });
     await page.getByRole("button", { name: "ใช้โหมดสว่าง", exact: true }).click();
+    await page.goto("/help");
+    await expect(page.getByRole("heading", { name: "ศูนย์ช่วยเหลือ CPE", exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "เปิด AI Assistant", exact: true }).click();
+    await expect(page.getByRole("dialog", { name: "CPE AI Assistant", exact: true })).toBeVisible();
+    await expect(page.getByText("NTOP AI Assistant", { exact: true })).toHaveCount(0);
+    await page.screenshot({ path: "/tmp/cpe-demo-preview/ai-assistant.png", fullPage: true });
+    await page.getByRole("button", { name: "ปิด AI Assistant", exact: true }).first().click();
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/company");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

@@ -1,5 +1,7 @@
 "use client";
 
+import { PRODUCT } from "@/lib/company-profile";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -43,7 +45,7 @@ export function ContractWorkflowControls({ contractId, version, currentStatusLab
       <div className="field full"><button className="primary" data-testid="contract-transition-submit" disabled={pending !== null}>{pending === "transition" ? "กำลังเปลี่ยนสถานะ…" : "ยืนยัน Transition"}</button></div>
     </div></form> : <section className="card contract-workflow-card contract-workflow-unavailable" data-testid="contract-workflow-panel"><div className="card-header"><strong>Contract Workflow</strong><span className="badge muted">{currentStatusLabel}</span></div><div className="card-body"><strong>ยังไม่มี Transition ที่คุณดำเนินการได้</strong><p>{workflowUnavailableReason}</p></div></section>}
 
-    {(canCreateServiceOrder || serviceOrders.length > 0) && <section className="card" data-testid="contract-service-order-panel"><div className="card-header"><strong>Order Handoff</strong><span className="badge muted">NTOP orchestration record</span></div><div className="card-body">
+    {(canCreateServiceOrder || serviceOrders.length > 0) && <section className="card" data-testid="contract-service-order-panel"><div className="card-header"><strong>Order Handoff</strong><span className="badge muted">{PRODUCT.shortName} orchestration record</span></div><div className="card-body">
       {serviceOrders.length > 0 ? <div className="contract-order-list">{serviceOrders.map((order) => <article key={order.id}><div><span>Service Order</span><strong>{order.orderNo}</strong></div><small>{order.status} · ยังไม่ถือว่า NTSP integration สำเร็จ</small></article>)}</div> : <form onSubmit={async (event) => {
         event.preventDefault();
         if (!window.confirm("ยืนยันสร้าง Service Order จาก Contract Version ปัจจุบัน?")) return;
