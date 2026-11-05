@@ -54,12 +54,21 @@ Rollback material is under `/opt/apps/cpe-bidex-private/backups`: original datab
 
 ## Contrast and administrator demo access — 2026-11-06
 
-- Active application revision: `df2d0766995d45fcf21882ba8f82fbcdfddb2a45`. The login card defines local color tokens to prevent shared dark-mode labels becoming white on its white surface, with explicit typed-text/caret/autofill colors. Changed CSS and regression coverage are documented in [brand guidelines](brand-guidelines.md).
+- Contrast application revision: `df2d0766995d45fcf21882ba8f82fbcdfddb2a45`. The login card defines local color tokens to prevent shared dark-mode labels becoming white on its white surface, with explicit typed-text/caret/autofill colors. Changed CSS and regression coverage are documented in [brand guidelines](brand-guidelines.md).
 - Owner explicitly requested demo access for `admin@cpe-bidex.local`. One-time scoped `ADMIN` / `ORG_UNIT` provisioning to `CPE-DEMO-V1` was recorded in append-only audit; interactive self-assignment rules remain unchanged. A protected backup preceded the assignment: `/opt/apps/cpe-bidex-private/backups/db-before-admin-demo-scope-20261106.sql` (0600).
 - The explicit CPE demo seed returned `already-seeded`: existing 44 opportunities, 10 projects, other sample records, user edits and passwords remain intact. No second dataset, account reset, schema change or migration was needed.
 - Local and server `lint`, `typecheck`, `test` (813 passed, 34 opt-in tests skipped) and production build passed; lint retains 7 existing prospect warnings.
 - Live HTTPS Playwright acceptance: **3 passed**. It measures text/background contrast >= 4.5:1 for login labels and filled inputs in light/dark desktop/mobile views, verifies the actual administrator's populated dashboard and sales list, checks controls on all twelve CPE pages and sales/catalog/vendor/finance drawers in both themes, and retains company/chat/mobile/PM-denial coverage.
 - The release delta was verified file-by-file against SHA-256 checksums before building. Only PM2 `cpe-bidex` was restarted; `.cpe-release.json` confirms the active revision and local login returns HTTP 200. Prior application is `/opt/apps/cpe-bidex-private/backups/app-before-df2d076` for code rollback; preserve current database/audit and the owner-approved scope assignment.
+
+## Reliable form dialogs — 2026-11-06
+
+- Active application revision: `4145d2b6abe8cac0e27433694cacb1e76cb6f3a9`, pushed to CPE `origin/main`. Estimate/BOQ, cost review, bid simulation and archive details now use the same visible modal as other records; they no longer open below a long table. The URL drives create-dialog state, fixing same-page quick-create. Stage text such as “ทำสัญญา” is separate from the explicit “เปิดรายละเอียด” action.
+- Dialogs are centered, responsive and internally scrollable, with a dim backdrop, record heading/focus, clear header/footer close buttons and navigation loading feedback. Historical closed BOQs explain their existing read-only behavior. [Implementation notes](cpe/implementation.md) list the UI contract; business workflow, permissions, search/sort/pagination, accounts and data are retained.
+- Local and server lint/typecheck/test/build passed: 813 tests passed, 34 opt-in tests skipped; lint retains 7 pre-existing prospect warnings. Local opt-in browser suites passed 4 tests (administrator-file case skipped locally), including the real BOQ → review → bid → won/project flow. A final dark-mode repeated-dialog regression also passed.
+- Live HTTPS acceptance: **4 passed**. It checks repeated record opening on ten screens, header and same-page quick-create in four create areas, direct links/back/forward, mobile modal bounds and visible close controls, existing contrast checks, real admin demo access, company/chat and PM access denial. Live tests do not submit business mutations.
+- Changed files were verified against SHA-256 before staging build. Only PM2 `cpe-bidex` was restarted. Active metadata matches the revision and local login returns HTTP 200. No migration or configuration change is required.
+- Protected database snapshot: `/opt/apps/cpe-bidex-private/backups/db-before-4145d2b.sql`; prior application: `/opt/apps/cpe-bidex-private/backups/app-before-4145d2b`. Code rollback uses the retained application directory and preserves current business data/audit and admin organization scope.
 
 ---
 
