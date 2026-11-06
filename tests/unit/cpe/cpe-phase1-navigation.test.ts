@@ -3,10 +3,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { CPE_ROLE_GRANTS, LATER_PHASE_MESSAGE, PROCESS, isPhase1Screen } from "../../../lib/cpe/config";
 import { enabledCpeNavigation, visibleCpeNavigation, visibleCpeQuickCreate } from "../../../components/cpe/navigation";
+import { NAVIGATION_PERMISSIONS } from "../../../lib/authorization/navigation-permissions";
 import { CpeNavigationLink } from "../../../components/cpe/navigation-link";
 
 describe("Phase 1 navigation", () => {
-  const permissions = [...CPE_ROLE_GRANTS.ADMIN, "admin.users.manage", "admin.organization.manage", "admin.audit.view"];
+  const permissions = [...CPE_ROLE_GRANTS.ADMIN, NAVIGATION_PERMISSIONS.adminUsers, NAVIGATION_PERMISSIONS.adminOrganization, NAVIGATION_PERMISSIONS.adminAudit];
   const later = ["forecast", "procurement", "vendors", "projects", "cash", "knowledge"];
 
   it("keeps all authorized menus visible and disables exactly the six later workspaces", () => {
@@ -14,7 +15,9 @@ describe("Phase 1 navigation", () => {
     expect(items.filter(item => item.disabledReason).map(item => item.href)).toEqual(later.map(screen => `/cpe/${screen}`));
     expect(items.filter(item => item.href.startsWith("/cpe/") && !item.disabledReason).map(item => item.href))
       .toEqual(["/cpe/exec", "/cpe/sales", "/cpe/estimate", "/cpe/costcheck", "/cpe/bidsim", "/cpe/catalog"]);
-    expect(items.filter(item => item.href.startsWith("/admin/")).every(item => !item.disabledReason)).toBe(true);
+    const adminItems = items.filter(item => item.href.startsWith("/admin/"));
+    expect(adminItems.map(item => item.href)).toEqual(["/admin/users", "/admin/organization", "/admin/audit"]);
+    expect(adminItems.every(item => !item.disabledReason)).toBe(true);
     expect(PROCESS.filter(([, screen]) => isPhase1Screen(screen))).toHaveLength(5);
   });
 

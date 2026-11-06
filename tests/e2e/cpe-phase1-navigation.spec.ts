@@ -36,9 +36,9 @@ test("Phase 1 menus, search, shortcuts and mobile navigation use the same scope"
   await page.evaluate(() => localStorage.setItem("ntop-favorite-routes", JSON.stringify(["/cpe/projects"])));
   await page.reload();
   await page.getByRole("button", { name: "เปิดการค้นหาและเมนูคำสั่ง" }).click();
-  await page.getByRole("combobox").fill("บริหารโครงการ");
+  await page.getByRole("combobox", { name: "ค้นหาเมนูและคำสั่ง" }).fill("บริหารโครงการ");
   await expect(page.locator(".command-result-main")).toHaveCount(0);
-  await page.getByRole("combobox").fill("ประมาณราคา");
+  await page.getByRole("combobox", { name: "ค้นหาเมนูและคำสั่ง" }).fill("ประมาณราคา");
   await expect(page.locator(".command-result-main")).toHaveCount(1);
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/cpe\/estimate/);
@@ -50,6 +50,9 @@ test("Phase 1 menus, search, shortcuts and mobile navigation use the same scope"
   await expect(mobile.locator('a[href="/cpe/sales"]')).toHaveCount(1);
   await expect(mobile.locator('a[href="/cpe/projects"]')).toHaveCount(0);
   await expect(mobile.locator('[aria-disabled="true"]').first()).toHaveAttribute("title", /เปิดใช้ในเฟสถัดไป/);
-  await page.screenshot({ path: "/tmp/cpe-phase1-mobile.png", fullPage: true });
+  // The sidebar margin animates on resize; inspect the final mobile geometry.
+  await expect.poll(() => page.locator(".app-workspace").evaluate(element => element.getBoundingClientRect().left)).toBe(0);
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.screenshot({ path: "/tmp/cpe-phase1-mobile.png" });
   expect(errors).toEqual([]);
 });

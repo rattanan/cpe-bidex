@@ -59,6 +59,53 @@ and push to **https://github.com/rattanan/cpe-bidex**, `origin/main`.
 The older NTOP section at the end of this document is historical context only.
 It must not determine the target or release procedure for this repository.
 
+## Phase 1 menu release — 2026-11-06 (Asia/Bangkok)
+
+- Deployed application revision: `b9afea234ace4e34d342fd767fcda41b3f62d953`,
+  pushed to `rattanan/cpe-bidex` `origin/main` and activated at
+  **https://cpe-bidex.rattanan.dev/**. The follow-up commit records acceptance
+  and tightens test selectors/assertions; it has no runtime application changes.
+- Source archive SHA-256:
+  `23c9a6eb6bca8c69bbbcccc5ba04db3123da7ab8c7b06d52b1185bd34454af5c`.
+  Verified before extraction into isolated staging.
+- Scope accepted: the six Phase 1 workspaces remain linked; forecast,
+  procurement, vendors, projects, cash and knowledge display disabled states.
+  Sidebar/mobile links have no destination, command search/favorites/recents
+  cannot reopen those menus, quick create contains sales/catalog only, and the
+  final four process stations are unavailable. Existing administration links,
+  permission filtering, retained routes and business workflows remain intact.
+- Local and server `npm run lint`, `npm run typecheck`, `npm test`,
+  `npm run build` passed. Lint has 7 existing prospect warnings and no errors;
+  tests: **832 passed, 34 opt-in skipped**. Local sandbox Chromium/Next build
+  restrictions required rerunning outside the sandbox; those reruns passed.
+- Responsive process layout: **14 passed**, 1 opt-in live-layout case skipped.
+  New live HTTPS Phase 1 acceptance: **1 passed**, including actual admin login,
+  disabled sidebar destinations, retained admin/BOQ links, five linked/four
+  disabled process stations, two quick-create links, persisted-favorite
+  exclusion, command keyboard navigation and mobile states after sidebar resize
+  settles, with no horizontal overflow or page errors.
+  The first live test used an ambiguous combobox locator; its named-input
+  correction passed without application changes. Additional database suites
+  and the full opt-in business-workflow E2E suite were not run for this menu-only
+  release; no domain/schema changes are included.
+- `/login` returns 200; unauthenticated `/cpe` redirects to `/login`. Only PM2
+  `cpe-bidex` restarted; all other process IDs/uptimes were verified unchanged.
+  `.cpe-release.json` matches the deployed application revision.
+- Protected database snapshot:
+  `/opt/apps/cpe-bidex-private/backups/db-before-b9afea2.sql` (0600).
+  Previous application:
+  `/opt/apps/cpe-bidex-private/backups/app-before-b9afea2`.
+  Roll back application code using the retained directory and preserve current
+  database/audit history. No migration, seed, new configuration, credential or
+  permission changes are required.
+- Changed runtime files: `lib/cpe/config.ts`, `components/app-navigation.ts`,
+  `components/app-shell.tsx`, `components/cpe/navigation.ts`,
+  `components/cpe/navigation-link.tsx`, `components/cpe/cpe.css`,
+  `components/cpe/workspace.tsx`, `components/enterprise-command-palette.tsx`.
+  Docs: `README.md`, `docs/cpe/implementation.md`, `docs/server-deployment.md`.
+  Tests: `tests/unit/cpe/cpe-phase1-navigation.test.ts`,
+  `tests/e2e/cpe-phase1-navigation.spec.ts`.
+
 ## Deployment evidence — 2026-11-05
 
 - Initial application revision: `1fe8332a5949917077b2a6ea5a096ca46c8ab809`, also pushed to CPE `origin/main`. Later documentation-only commits do not change an application revision.
