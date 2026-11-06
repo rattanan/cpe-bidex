@@ -1,6 +1,6 @@
 # CPE Project Bid Excellence
 
-The active application is the CPE construction sales, estimating, procurement, project and cash workspace at `/cpe`. See [the requirement trace, setup and migration guide](docs/cpe/implementation.md). Existing NTOP routes and data are retained; unused menus are hidden. Optional [prototype-style sample data and scoped test accounts](docs/cpe/demo-data.md) use a separate explicit development seed.
+The active application is the CPE construction sales, estimating, procurement, project and cash workspace at `/cpe`. See [the requirement trace, setup and migration guide](docs/cpe/implementation.md). Existing NTOP routes and data are retained. Phase 1 enables dashboard, sales, BOQ, cost review, bid pricing and the cost catalog; material forecasts, procurement, vendors, projects, cash and knowledge menus are disabled with a later-phase label. Command search, quick create, mobile and process navigation follow the same scope; server authorization and business workflows are retained. Optional [prototype-style sample data and scoped test accounts](docs/cpe/demo-data.md) use a separate explicit development seed.
 
 CPE requires MySQL 8-compatible JSON and analytical SQL. The MariaDB 5.5 bootstrap below applies to retained legacy NTOP tables and does not provision the new CPE workspace.
 
@@ -61,12 +61,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deployment
 
-The active development environment is deployed directly on the NTOP server
-without Docker or Cloud Run:
+- Repository: [rattanan/cpe-bidex](https://github.com/rattanan/cpe-bidex), branch `main`.
+- Application: [CPE Bid Excellence](https://cpe-bidex.rattanan.dev/).
+- SSH: `ntop`; application directory: `/opt/apps/cpe-bidex`.
+- Runtime: direct Node.js, PM2 process `cpe-bidex`, bound to `127.0.0.1:3015`.
+- Database: isolated local MySQL `cpe_bidex`; private files: `/opt/apps/cpe-bidex-private`.
 
-- Application path: `/opt/apps/ntop-dev`
-- Public URL: `https://ntop-dev.rattanan.dev`
-
-See [Self-hosted server deployment](docs/server-deployment.md) for the current
-deployment decision and acceptance criteria. The former Cloud Run deployment is
-retained only as historical documentation and is not an active target.
+Follow [the CPE deployment runbook](docs/server-deployment.md): push the reviewed
+revision, deliver a verified Git archive, build in a separate staging directory,
+retain the current release and protected database backup, then activate and restart
+only `cpe-bidex`. Verify HTTPS login and Phase 1 navigation after activation.
+The deployed directory has no Git checkout; do not run the legacy NTOP
+`deploy.sh`. NTOP/NTOP development and historical Cloud Run are separate targets.
+This navigation release requires no migration, seed or new configuration.

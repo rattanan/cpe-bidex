@@ -15,7 +15,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { SCREENS, type Screen } from "../../lib/cpe/config";
+import { SCREENS, isPhase1Screen, LATER_PHASE_MESSAGE, type Screen } from "../../lib/cpe/config";
 import type { NavGroup } from "../app-navigation";
 import { NAV_GROUPS as LEGACY_GROUPS } from "../app-navigation";
 const ICONS = {
@@ -42,6 +42,7 @@ export const CPE_NAV_GROUPS: NavGroup[] = [
     href: `/cpe/${s.id}`,
     icon: ICONS[s.id],
     requiredPermission: s.permission,
+    disabledReason: isPhase1Screen(s.id) ? undefined : LATER_PHASE_MESSAGE,
   })),
 }));
 CPE_NAV_GROUPS.push({
@@ -59,6 +60,11 @@ export function visibleCpeNavigation(permissions: readonly string[]) {
     ),
   })).filter((g) => g.items.length);
 }
+export function enabledCpeNavigation(permissions: readonly string[]) {
+  return visibleCpeNavigation(permissions).map(group => ({
+    ...group, items: group.items.filter(item => !item.disabledReason),
+  })).filter(group => group.items.length);
+}
 export function cpeNavigationLabel(pathname: string) {
   return (
     CPE_NAV_GROUPS.flatMap((g) => g.items)
@@ -70,18 +76,24 @@ export function cpeNavigationLabel(pathname: string) {
 export const CPE_QUICK_CREATE = [
   {
     label: "รับงานใหม่",
+    screen: "sales",
     href: "/cpe/sales?create=1",
     requiredPermission: "cpe.sales.manage",
   },
   {
     label: "เพิ่มฐานต้นทุน",
+    screen: "catalog",
     href: "/cpe/catalog?create=1",
     requiredPermission: "cpe.catalog.manage",
   },
   {
     label: "เพิ่มผู้รับเหมา",
+    screen: "vendors",
     href: "/cpe/vendors?create=1",
     requiredPermission: "cpe.vendors.manage",
   },
-];
+] satisfies { label: string; screen: Screen; href: string; requiredPermission: string }[];
+export function visibleCpeQuickCreate(permissions: readonly string[]) {
+  return CPE_QUICK_CREATE.filter(item => isPhase1Screen(item.screen) && permissions.includes(item.requiredPermission));
+}
 export const cpeNavigationIcons = { Building2, ClipboardList };

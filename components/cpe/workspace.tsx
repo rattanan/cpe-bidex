@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { CpeNavigationLink } from "@/components/cpe/navigation-link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition, type MouseEvent, type ReactNode } from "react";
 import { Plus, FolderOpen, Search, PanelRightOpen, LoaderCircle } from "lucide-react";
@@ -7,6 +8,8 @@ import { PageNumberNavigation } from "@/components/page-number-navigation";
 import { SortableTableHeader } from "@/components/sortable-table-header";
 import {
   PROCESS,
+  isPhase1Screen,
+  LATER_PHASE_MESSAGE,
   SCREENS,
   STAGES,
   OPPORTUNITY_STATUS as OS,
@@ -166,7 +169,7 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
       {isOpening && <div className="cpe-opening" role="status"><LoaderCircle aria-hidden="true" />กำลังโหลดข้อมูล…</div>}
       <nav className="cpe-process" aria-label="กระบวนการทำงาน 9 ขั้น">
         {PROCESS.map(([label, target], i) => {
-          const allowed = data.permissions.includes(
+          const allowed = isPhase1Screen(target) && data.permissions.includes(
             SCREENS.find((s) => s.id === target)!.permission,
           );
           return allowed ? (
@@ -179,7 +182,7 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
               <span>{label}</span>
             </Link>
           ) : (
-            <span key={i} className="unavailable">
+            <span key={i} className="unavailable" role="link" aria-disabled="true" title={isPhase1Screen(target) ? "คุณไม่มีสิทธิ์เข้าถึง" : LATER_PHASE_MESSAGE}>
               <small>{String(i + 1).padStart(2, "0")}</small>
               <span>{label}</span>
             </span>
@@ -307,12 +310,13 @@ export function CpeWorkspace({ data }: { data: CpePageData }) {
                 มูลค่าสัญญารวม {million(data.projectTotals._sum.contractValue)}{" "}
                 ลบ. · งบต้นทุน {million(data.projectTotals._sum.budget)} ลบ.
               </p>
-              <Link
+              <CpeNavigationLink
                 href={`/cpe/projects?org=${f.organizationId}`}
+                disabledReason={isPhase1Screen("projects") ? undefined : LATER_PHASE_MESSAGE}
                 className="link"
               >
                 ดู S-Curve และความเสี่ยงรายโครงการ →
-              </Link>
+              </CpeNavigationLink>
             </Card>
             <Card title="สาเหตุแพ้ประมูล">
               <BarList
@@ -774,7 +778,7 @@ function OpportunityPanel({ data }: { data: CpePageData }) {
         {o.project && (
           <p>
             เปิดโครงการแล้ว:{" "}
-            {permission(data, "cpe.projects.view") ? (
+            {isPhase1Screen("projects") && permission(data, "cpe.projects.view") ? (
               <Link
                 className="link"
                 href={`/cpe/projects?org=${org}&id=${o.project.id}`}
@@ -938,7 +942,7 @@ function OpportunityPanel({ data }: { data: CpePageData }) {
           {!o.items.some((i) => i.catalog) && (
             <Empty text="ยังไม่มีวัสดุใน BOQ ที่เชื่อมกับฐานต้นทุนกลาง" />
           )}
-          {permission(data, "cpe.forecast.view") && (
+          {isPhase1Screen("forecast") && permission(data, "cpe.forecast.view") && (
             <Link className="link" href={`/cpe/forecast?org=${org}`}>
               เปิดพยากรณ์ราคาวัสดุ →
             </Link>

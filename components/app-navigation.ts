@@ -28,6 +28,7 @@ export type NavItem = {
   icon: ComponentType<{ className?: string }>;
   keywords?: string;
   requiredPermission?: string;
+  disabledReason?: string;
 };
 
 export type NavGroup = {

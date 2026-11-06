@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Clock3, Search, Star, X } from "lucide-react";
 
-import { visibleCpeNavigation as visibleNavigation } from "@/components/cpe/navigation";
+import { enabledCpeNavigation as visibleNavigation } from "@/components/cpe/navigation";
 
 const FAVORITES_KEY = "ntop-favorite-routes";
 const RECENTS_KEY = "ntop-recent-routes";
@@ -151,7 +151,7 @@ export function EnterpriseCommandPalette({
           })}
           {!filtered.length && <div className="command-empty"><Search /><strong>ไม่พบหน้าที่ค้นหา</strong><p>ลองค้นหาโอกาสขาย ต้นทุน หรือโครงการ</p></div>}
         </div>
-        <footer className="command-footer"><span><kbd>↑</kbd><kbd>↓</kbd> เลือก</span><span><kbd>ENTER</kbd> เปิด</span><Link href="/cpe/knowledge" onClick={() => onOpenChange(false)}>คลังข้อมูล</Link></footer>
+        <footer className="command-footer"><span><kbd>↑</kbd><kbd>↓</kbd> เลือก</span><span><kbd>ENTER</kbd> เปิด</span><Link href="/help" onClick={() => onOpenChange(false)}>ศูนย์ช่วยเหลือ</Link></footer>
       </section>
     </div>
   );

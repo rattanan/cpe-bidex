@@ -22,11 +22,42 @@ activate the release while restarting only PM2 `cpe-bidex`. Keep CPE document
 storage under `/opt/apps/cpe-bidex-private/documents`. Retain the previous release
 and database backup for rollback; do not delete audit or existing records.
 
-After activation, run the opt-in demo command from `/opt/apps/cpe-bidex` with
-`--target cpe-bidex`; it checks the exact application path and local database.
-Deliver generated credentials from a protected file, verify real login and all
-twelve CPE screens, and record the release hash and checks. Do not reuse or modify
-NTOP production configuration or restart its processes.
+After activation, verify real login, Phase 1 navigation and the deployed revision.
+Demo seeding is a separate, explicit operation; do not run it for routine releases.
+Do not reuse or modify NTOP configuration or restart its processes.
+
+## Active CPE release procedure
+
+Reconfirmed by the owner on 2026-11-06: deploy to **https://cpe-bidex.rattanan.dev/**
+and push to **https://github.com/rattanan/cpe-bidex**, `origin/main`.
+
+1. Review `git status`; stage only the task's files, retaining unrelated local work.
+   Run `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` and the
+   relevant browser checks. Commit and push the exact source revision to `origin`.
+2. Connect using `ssh ntop`. Confirm `/opt/apps/cpe-bidex`, the current
+   `.cpe-release.json`, local `cpe_bidex` database and PM2 process `cpe-bidex`.
+   Record the other processes' IDs/uptime for comparison.
+3. Create a Git archive of that revision, verify its SHA-256 after transfer, and
+   extract into a separate staging directory. The live CPE directory has no Git
+   checkout: neither `git pull` nor the NTOP `deploy.sh` applies.
+4. Preserve the protected CPE environment and document-storage path. Install
+   locked dependencies if needed; generate Prisma client. Run all four quality
+   gates in staging. Never print environment secrets or account credentials.
+5. Preserve a transaction-consistent, mode-0600 backup of `cpe_bidex` under
+   `/opt/apps/cpe-bidex-private/backups` and retain the current application there.
+   Apply migrations only when required and explicitly authorized for this target.
+   This Phase 1 navigation release needs **no migrations, seed, account or
+   permission changes**.
+6. Write `.cpe-release.json` with the deployed source revision, activate staging at
+   `/opt/apps/cpe-bidex`, and restart only PM2 `cpe-bidex`. If activation fails,
+   restore the previous application and restart that process, preserving the database.
+7. Verify local port 3015, public HTTPS `/login`, unauthenticated redirect, real
+   login, desktop/mobile disabled states, command search and quick create.
+   Confirm the deployed revision and unchanged NTOP process IDs/uptime. Record
+   checks, backup location and rollback application directory below.
+
+The older NTOP section at the end of this document is historical context only.
+It must not determine the target or release procedure for this repository.
 
 ## Deployment evidence — 2026-11-05
 
@@ -98,11 +129,11 @@ Rollback material is under `/opt/apps/cpe-bidex-private/backups`: original datab
 - Only PM2 `cpe-bidex` restarted. Local login returned HTTP 200 and active release metadata matched. NTOP and NTOP development process IDs remained unchanged. No migrations, seed, account/permission or AI configuration changes were made. AI still requires provider configuration in `/admin/ai-settings`.
 - Protected database backup: `/opt/apps/cpe-bidex-private/backups/db-before-46a4747.sql`; prior application: `/opt/apps/cpe-bidex-private/backups/app-before-46a4747`. Code rollback retains current business data and audit history.
 
-# Self-hosted NTOP server deployment
+# Historical reference only — self-hosted NTOP server deployment
 
 ## Decision status
 
-- Status: Active development deployment target
+- Status: Historical NTOP reference; inactive for this CPE repository
 - Effective date: 2026-08-18
 - Supersedes: Google Cloud Run deployment
 

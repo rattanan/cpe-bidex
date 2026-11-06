@@ -8,7 +8,8 @@ import { Bell, ChevronDown, ChevronRight, CircleHelp, Home, LogOut, Menu, Moon, 
 import { logout } from "@/app/actions";
 import { AiChatBalloon } from "@/components/ai-chat-balloon";
 import { EnterpriseCommandPalette } from "@/components/enterprise-command-palette";
-import { CPE_NAV_GROUPS as NAV_GROUPS, cpeNavigationLabel as navigationLabel, visibleCpeNavigation as visibleNavigation, CPE_QUICK_CREATE } from "@/components/cpe/navigation";
+import { CPE_NAV_GROUPS as NAV_GROUPS, cpeNavigationLabel as navigationLabel, visibleCpeNavigation as visibleNavigation, visibleCpeQuickCreate } from "@/components/cpe/navigation";
+import { CpeNavigationLink } from "@/components/cpe/navigation-link";
 import { CPE_ROLE_GRANTS, CPE_ROLE_LABELS } from "@/lib/cpe/config";
 import { CompanyBrand } from "@/components/company-brand";
 import type { HeaderNotification } from "@/lib/notifications/header-notifications";
@@ -34,7 +35,7 @@ export function AppShell({ children, user, notifications, version }: { children:
   const [viewRole, setViewRole] = useState("all");
   const viewPermissions = viewRole === "all" ? user.grantedPermissions : user.grantedPermissions.filter(p => CPE_ROLE_GRANTS[viewRole]?.includes(p));
   const visibleGroups = visibleNavigation(viewPermissions);
-  const quickCreateItems = CPE_QUICK_CREATE.filter(item => user.grantedPermissions.includes(item.requiredPermission));
+  const quickCreateItems = visibleCpeQuickCreate(user.grantedPermissions);
   const displayedNotifications = pathname.startsWith("/cpe") ? [] : notifications;
   const currentLabel = pathname === "/company" ? "เกี่ยวกับบริษัท" : navigationLabel(pathname);
   const roleLabel = user.roles.map((role) => CPE_ROLE_LABELS[role] ?? role.replaceAll("_", " ")).join(" · ");
@@ -47,7 +48,7 @@ export function AppShell({ children, user, notifications, version }: { children:
         <button type="button" className="sidebar-group-button" onClick={() => setOpenGroups((value) => ({ ...value, [group.label]: !open }))} aria-expanded={open} title={group.label}>
           <GroupIcon className="sidebar-icon"/><span>{group.label}</span><ChevronDown className={`sidebar-chevron ${open ? "open" : ""}`}/>
         </button>
-        <div className={`sidebar-submenu ${open ? "open" : ""}`}><div className="sidebar-submenu-list">{group.items.map((item) => { const Icon = item.icon; return <Link href={item.href} onClick={() => setMobileOpen(false)} key={item.href} className={`sidebar-link sub ${isActive(pathname, item.href) ? "active" : ""}`} title={item.label}><Icon className="sidebar-icon"/><span>{item.label}</span>{isActive(pathname, item.href) && <ChevronRight className="sidebar-current"/>}</Link>; })}</div></div>
+        <div className={`sidebar-submenu ${open ? "open" : ""}`}><div className="sidebar-submenu-list">{group.items.map((item) => { const Icon = item.icon; return <CpeNavigationLink disabledReason={item.disabledReason} href={item.href} onClick={() => setMobileOpen(false)} key={item.href} className={`sidebar-link sub ${isActive(pathname, item.href) ? "active" : ""}`} title={item.label}><Icon className="sidebar-icon"/><span>{item.label}</span>{isActive(pathname, item.href) && <ChevronRight className="sidebar-current"/>}</CpeNavigationLink>; })}</div></div>
       </div>;
     })}
   </>;
@@ -77,7 +78,7 @@ export function AppShell({ children, user, notifications, version }: { children:
           <div className="user-chip"><span><strong>{user.name}</strong><small title={roleLabel}>{roleLabel}</small></span><form action={logout}><button type="submit" className="icon-button" aria-label="ออกจากระบบ"><LogOut/></button></form></div>
         </div>
       </header>
-      <nav className="cpe-mobile-nav" aria-label="เมนู CPE สำหรับจอเล็ก">{visibleGroups.flatMap(group=>group.items).map(item=><Link key={item.href} href={item.href} aria-current={isActive(pathname,item.href)?"page":undefined}>{item.label}</Link>)}<Link href="/company" aria-current={pathname === "/company" ? "page" : undefined}>เกี่ยวกับบริษัท</Link></nav>
+      <nav className="cpe-mobile-nav" aria-label="เมนู CPE สำหรับจอเล็ก">{visibleGroups.flatMap(group=>group.items).map(item=><CpeNavigationLink disabledReason={item.disabledReason} key={item.href} href={item.href} aria-current={isActive(pathname,item.href)?"page":undefined}>{item.label}</CpeNavigationLink>)}<Link href="/company" aria-current={pathname === "/company" ? "page" : undefined}>เกี่ยวกับบริษัท</Link></nav>
       <main className="content" id="main-content" tabIndex={-1}>{children}</main>
     </div>
     <AiChatBalloon key={pathname} pageLabel={currentLabel}/>

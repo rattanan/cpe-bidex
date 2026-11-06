@@ -75,6 +75,14 @@ export const SCREENS = [
   },
 ] as const;
 export type Screen = (typeof SCREENS)[number]["id"];
+// Phase 1 navigation scope; later workspaces and their server policies are retained.
+export const PHASE1_SCREENS: readonly Screen[] = [
+  "exec", "sales", "estimate", "costcheck", "bidsim", "catalog",
+];
+export const LATER_PHASE_MESSAGE = "เปิดใช้ในเฟสถัดไป";
+export function isPhase1Screen(screen: Screen) {
+  return PHASE1_SCREENS.includes(screen);
+}
 export const PROCESS = [
   ["รับแบบและศึกษาความต้องการ", "sales"],
   ["ออกแบบและทำ BOQ ต้นทุน", "estimate"],
